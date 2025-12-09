@@ -1,0 +1,215 @@
+https://github.com/unoforge/agency-landing-page-Astrojs.git
+https://bentogrids.com/
+https://minimals.cc/dashboard/booking
+https://www.figma.com/design/cAPz4pYPtQEXivqe11EcDE/-Preview--Minimal-Web.v6.0.0?node-id=0-1&p=f&t=rmTChJQTm6YxZNyZ-0
+
+Table usuarios {
+  id int [pk, increment]
+  cedula varchar
+  nombre varchar
+  correo varchar [not null, unique]
+  contraseña varchar [not null]
+  prefijo varchar
+  telefono varchar
+  direccion varchar
+  empresa varchar
+  rol varchar
+  pais varchar
+  ciudad varchar
+  foto varchar
+  verificado boolean
+  creado_en timestamp
+} - Ya
+
+Table redes_sociales {
+  id int [pk, increment]
+  id_usuario int [ref: > usuarios.id]
+  plataforma varchar
+  url varchar
+  username varchar
+  creado_en timestamp
+} - Ya
+
+Table suscripciones {
+  id int [pk, increment]
+  id_usuario int [ref: > usuarios.id]
+  nombre_plan varchar
+  estado varchar // activa, cancelada, prueba
+  inicio timestamp
+  fin timestamp
+}
+
+Table tareas {
+  id int [pk, increment]
+  id_usuario int [ref: > usuarios.id]
+  titulo varchar
+  descripcion text
+  estado varchar // pendiente, en_progreso, completada
+  prioridad varchar
+  fecha_limite date
+  creado_en timestamp
+} - Ya
+
+Table productos {
+  id int [pk, increment]
+  id_usuario int [ref: > usuarios.id]
+  nombre varchar
+  descripcion text
+  precio decimal
+  stock int
+  creado_en timestamp
+}
+
+Table pedidos {
+  id int [pk, increment]
+  id_usuario int [ref: > usuarios.id]
+  total decimal
+  estado varchar // pendiente, pagado, enviado
+  creado_en timestamp
+}
+
+Table detalle_pedido {
+  id int [pk, increment]
+  id_pedido int [ref: > pedidos.id]
+  id_producto int [ref: > productos.id]
+  cantidad int
+  precio decimal
+}
+
+Table publicaciones {
+  id int [pk, increment]
+  id_autor int [ref: > usuarios.id]
+  titulo varchar
+  contenido text
+  etiquetas varchar
+  publicado boolean
+  creado_en timestamp
+}
+
+Table comentarios {
+  id int [pk, increment]
+  id_publicacion int [ref: > publicaciones.id]
+  id_usuario int [ref: > usuarios.id]
+  contenido text
+  creado_en timestamp
+}
+
+Table notificaciones {
+  id int [pk, increment]
+  id_usuario int [ref: > usuarios.id]
+  tipo varchar
+  contenido text
+  leido boolean
+  creado_en timestamp
+}
+
+Table prestamos {
+  id int [pk, increment]
+  id_usuario int [ref: > usuarios.id]
+  id_persona int [ref: > usuarios.id]
+  monto decimal
+  fecha_prestamo date
+  pagado boolean
+  monto_pagado decimal
+  nota text
+  creado_en timestamp
+}
+
+Table ingresos {
+  id int [pk, increment]
+  id_usuario int [ref: > usuarios.id]
+  categoria varchar // salario, venta, inversión
+  monto decimal
+  descripcion text
+  fecha date
+  creado_en timestamp
+}
+
+Table egresos {
+  id int [pk, increment]
+  id_usuario int [ref: > usuarios.id]
+  categoria varchar // comida, transporte, etc.
+  monto decimal     // suma total de productos (opcional si usas subtotales)
+  descripcion text
+  fecha date
+  creado_en timestamp
+}
+
+Table egresos_productos {
+  id int [pk, increment]
+  id_egreso int [ref: > egresos.id]
+  id_producto int [ref: > productos_consumidos.id]
+  cantidad int
+  subtotal decimal         // cantidad * precio_unitario (opcional)
+}
+
+Table productos_consumidos {
+  id int [pk, increment]
+  nombre varchar           // Ej: "TV Samsung", "Coca-Cola", etc.
+  descripcion text
+  categoria varchar        // Opcional: si quieres algo como "Electrodoméstico"
+  precio_unitario decimal  // Si compras más de uno
+  creado_en timestamp
+}
+
+- savings
+Table ahorros {
+  id int [pk, increment]
+  id_usuario int [ref: > usuarios.id]
+  monto decimal
+  objetivo varchar
+  descripcion text
+  fecha_inicio date
+  fecha_fin date
+  creado_en timestamp
+} - Ya
+
+Table bancos {
+  id int [pk, increment]
+  id_usuario int [ref: > usuarios.id]
+  nombre_banco varchar // Nequi, Bancolombia, etc.
+  tipo_cuenta varchar // ahorro, corriente
+  numero_cuenta varchar
+  saldo decimal
+  creado_en timestamp
+} - Ya
+
+Table tarjetas {
+  id int [pk, increment]
+  id_banco int [ref: > bancos.id]
+  tipo varchar // crédito, débito
+  numero_tarjeta varchar
+  nombre_titular varchar
+  fecha_expiracion date
+  cvv varchar
+  creada_en timestamp
+} - Ya
+
+PowerShell
+.\venv\Scripts\Activate
+
+CMD
+venv\Scripts\activate
+python manage.py runserver
+python manage.py makemigrations
+python manage.py migrate
+
+django-admin startproject tasks .
+django-admin startapp products_consumed
+
+uvicorn
+
+Pgadmin = postgres - Juan123*
+
+
+Se necesita ->
+Django
+djangorestframework
+django-cors-headers
+
+
+SuperUser ->
+python manage.py createsuperuser
+Juan_admin
+Juanrealpe972@gmail.com
+Juan123*

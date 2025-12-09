@@ -27,6 +27,14 @@ urlpatterns = [
     path('api/v1/', include('social_networks.urls')),
     path('api/v1/', include('bank_accounts.urls')),
     path('api/v1/', include('bank_cards.urls')),
+    path('api/v1/', include('savings.urls')),
+    path('api/v1/', include('products_consumed.urls')),
+    path('api/v1/', include('subscriptions.urls')),
+    path('api/v1/', include('products.urls')),
+    path('api/v1/', include('orders.urls')),
+    path('api/v1/', include('order_detail.urls')),
+    path('api/v1/', include('publications.urls')),
+    path('api/v1/', include('comments.urls')),
 
     # Docs
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),

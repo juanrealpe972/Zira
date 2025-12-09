@@ -1,0 +1,43 @@
+# ==== Python ====
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ==== Entorno Virtual ====
+venv/
+env/
+ENV/
+.venv/
+
+# ==== Archivos de Django ====
+*.log
+*.pot
+*.pyc
+*.pyo
+*.db
+*.sqlite3
+db.sqlite3
+
+# ==== Archivos de configuración sensibles ====
+/*.env
+*.env
+.env.local
+.env.production
+.env.development
+secrets.json
+
+# ==== Archivos generados por Django ====
+media/
+staticfiles/
+static/
+
+# ==== Mac OS ====
+.DS_Store
+
+# ==== VSCode ====
+.vscode/
+
+# ==== Node (si usas frontend dentro del proyecto) ====
+node_modules/
+npm-debug.log
+yarn-error.log
