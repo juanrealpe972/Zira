@@ -2,28 +2,30 @@ from django.db import models
 from django.conf import settings
 
 class Subscription(models.Model):
+
     STATUS_CHOICES = [
-        ('active', 'Active'),
-        ('canceled', 'Canceled'),
-        ('trial', 'Trial'),
+        ('activa', 'Activa'),
+        ('cancelada', 'Cancelada'),
     ]
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="subscriptions"
-    )  # User that owns the subscription
+    )
 
-    plan_name = models.CharField(max_length=100)  # Name of the subscription plan
+    plan_name = models.CharField(max_length=100)
+
     status = models.CharField(
-        max_length=20,
+        max_length=10,
         choices=STATUS_CHOICES,
-        default='trial'
-    )  # Subscription status
-    start_date = models.DateTimeField()  # When the subscription starts
-    end_date = models.DateTimeField()    # When the subscription ends
+        default='activa'
+    )
 
-    created_at = models.DateTimeField(auto_now_add=True)  # Creation timestamp
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.plan_name} - {self.user}"
+        return f"{self.plan_name} - {self.status}"
