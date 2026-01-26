@@ -3,7 +3,7 @@ https://bentogrids.com/
 https://minimals.cc/dashboard/booking
 https://www.figma.com/design/cAPz4pYPtQEXivqe11EcDE/-Preview--Minimal-Web.v6.0.0?node-id=0-1&p=f&t=rmTChJQTm6YxZNyZ-0
 https://dbdiagram.io/home
-
+Elige TypeScript React (typescriptreact.json), que es para archivos .tsx.
 
 bank_accounts
 bank_cards
@@ -61,3 +61,17 @@ python manage.py createsuperuser
 Juan_admin
 Juanrealpe972@gmail.com
 Juan123*
+
+
+
+PGADMIN
+
+\l - listas bases de datos
+\c zira - ingresar a una db
+\dt - listar tablas
+\d nombre_tabla - ver columnas de una tablas
+SELECT * FROM nombre_tabla; - Ver datos de una tabla
+
+
+
+

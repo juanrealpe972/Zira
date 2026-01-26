@@ -25,7 +25,7 @@ Table usuarios {
 Table redes_sociales {
   id int [pk, increment]
   id_usuario int [ref: > usuarios.id]
-  plataforma enum('facebook', 'instagram', 'x', 'meta') -------- Actualizar
+  plataforma enum('facebook', 'instagram', 'x', 'meta') -------- Actualizar - Ya
   url varchar
   username varchar
   creado_en timestamp
@@ -35,7 +35,7 @@ Table suscripciones {
   id int [pk, increment]
   id_usuario int [ref: > usuarios.id]
   nombre_plan varchar
-  estado enum('activa', 'cancelada'') -------- Actualizar
+  estado enum('activa', 'cancelada'') -------- Actualizar - Ya
   inicio timestamp
   fin timestamp
 }
@@ -45,8 +45,8 @@ Table tareas {
   id_usuario int [ref: > usuarios.id]
   titulo varchar
   descripcion text
-  estado  enum('pendiente', 'en_progreso', 'completada') [default: 'pendiente'] -------- Actualizar
-  prioridad enum('baja', 'media', 'alta') [default: 'media'] -------- Actualizar
+  estado  enum('pendiente', 'en_progreso', 'completada') [default: 'pendiente'] -------- Actualizar - Ya
+  prioridad enum('baja', 'media', 'alta') [default: 'media'] -------- Actualizar - Ya
   fecha_limite date
   creado_en timestamp
 }
@@ -65,7 +65,7 @@ Table pedidos {
   id int [pk, increment]
   id_usuario int [ref: > usuarios.id]
   total decimal
-  estado enum('pendiente', 'pagado', 'enviado') [default: 'pendiente'] ------- Actualizar
+  estado enum('pendiente', 'pagado', 'enviado') [default: 'pendiente'] ------- Actualizar - Ya
   creado_en timestamp
 }
 
@@ -82,7 +82,7 @@ Table publicaciones {
   id_autor int [ref: > usuarios.id]
   titulo varchar
   contenido text
-  etiqueta enum('hogar', 'comida', 'electrodomestico') ------- Actualizar
+  etiqueta enum('hogar', 'comida', 'electrodomestico') ------- Actualizar - Ya
   publicado boolean
   creado_en timestamp
 }
@@ -119,7 +119,7 @@ Table prestamos {
 Table ingresos {
   id int [pk, increment]
   id_usuario int [ref: > usuarios.id]
-  categoria enum('salario', 'venta', 'inversion') ------- Actualizar
+  categoria enum('salario', 'venta', 'inversion') ------- Actualizar - Ya
   monto decimal
   descripcion text
   fecha date
@@ -129,7 +129,7 @@ Table ingresos {
 Table egresos {
   id int [pk, increment]
   id_usuario int [ref: > usuarios.id]
-  categoria enum('comida', 'transporte', 'hogar', 'salud', 'educacion') ------- Actualizar
+  categoria enum('comida', 'transporte', 'hogar', 'salud', 'educacion') ------- Actualizar - Ya
   monto decimal     // suma total de productos (opcional si usas subtotales)
   descripcion text
   fecha date
@@ -148,7 +148,7 @@ Table productos_consumidos {
   id int [pk, increment]
   nombre varchar           // Ej: "TV Samsung", "Coca-Cola", etc.
   descripcion text
-  categoria enum('comida', 'transporte', 'hogar', 'salud', 'educacion') ------- Actualizar
+  categoria enum('comida', 'transporte', 'hogar', 'salud', 'educacion') ------- Actualizar - Ya
   precio_unitario decimal  // Si compras más de uno
   creado_en timestamp
 }
@@ -168,7 +168,7 @@ Table bancos {
   id int [pk, increment]
   id_usuario int [ref: > usuarios.id]
   nombre_banco varchar // Nequi, Bancolombia, etc.
-  tipo_cuenta enum('ahorro', 'corriente')  ------- Actualizar
+  tipo_cuenta enum('ahorro', 'corriente')  ------- Actualizar - Ya
   numero_cuenta varchar
   saldo decimal
   creado_en timestamp
@@ -177,7 +177,7 @@ Table bancos {
 Table tarjetas {
   id int [pk, increment]
   id_banco int [ref: > bancos.id]
-  tipo_tarjeta enum('credito', 'debito')  ------- Actualizar
+  tipo_tarjeta enum('credito', 'debito')  ------- Actualizar - Ya
   numero_tarjeta varchar
   nombre_titular varchar
   fecha_expiracion date
