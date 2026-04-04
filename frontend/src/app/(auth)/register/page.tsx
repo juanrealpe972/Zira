@@ -15,7 +15,7 @@ function RegisterPage() {
           <Text size="2" mt="4">
             Already have an account?{" "}
             <Link asChild>
-              <NavLink href="/auth/login">
+              <NavLink href="/login">
                 Sign in
               </NavLink>
             </Link>
