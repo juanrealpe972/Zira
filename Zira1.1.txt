@@ -41,6 +41,10 @@ venv\Scripts\activate
 python manage.py runserver
 python manage.py makemigrations
 python manage.py migrate
+python manage.py test - python manage.py test
+python manage.py test users - python manage.py test users
+python manage.py test users.tests
+python manage.py test users.tests.UserAPITest.test_get_users
 
 django-admin startproject tasks .
 django-admin startapp products_consumed
@@ -49,29 +53,24 @@ uvicorn
 
 Pgadmin = postgres - Juan123*
 
-
 Se necesita ->
 Django
 djangorestframework
 django-cors-headers
 
-
 SuperUser ->
+http://127.0.0.1:8000/
 python manage.py createsuperuser
 Juan_admin
 Juanrealpe972@gmail.com
+JuanRealpe
 Juan123*
 
-
-
 PGADMIN
-
 \l - listas bases de datos
 \c zira - ingresar a una db
 \dt - listar tablas
 \d nombre_tabla - ver columnas de una tablas
+\! cls
+
 SELECT * FROM nombre_tabla; - Ver datos de una tabla
-
-
-
-
