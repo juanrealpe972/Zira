@@ -168,8 +168,10 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = "users.User"
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),  # duración del token de acceso
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),     # duración del refresh
-    "ROTATE_REFRESH_TOKENS": False,                 # si quieres que al refrescar se cree otro refresh
-    "BLACKLIST_AFTER_ROTATION": True,               # para invalidar refresh antiguos si rotas
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),  # duración del token de acceso
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),     # duración del refresh
+    "ROTATE_REFRESH_TOKENS": True,                   # si quieres que al refrescar se cree otro refresh
+    "BLACKLIST_AFTER_ROTATION": True,                # para invalidar refresh antiguos si rotas
+    "ALGORITHM": "HS256",                            # 🔐 Algoritmo
+    "AUTH_HEADER_TYPES": ("Bearer",)                 # Prefijo en headers
 }

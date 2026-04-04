@@ -1,44 +1,115 @@
-# ==== Python ====
+# ==============================
+# 🐍 Python
+# ==============================
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
 
-# ==== Entorno Virtual ====
+# ==============================
+# 🧪 Testing / Coverage
+# ==============================
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+pytest_cache/
+
+# ==============================
+# 📦 Entornos virtuales
+# ==============================
 venv/
 env/
 ENV/
 .venv/
+.env/
 
-# ==== Archivos de Django ====
-*.log
-*.pot
-*.pyc
-*.pyo
-*.db
-*.sqlite3
-db.sqlite3
-
-# ==== Archivos de configuración sensibles ====
-/*.env
+# ==============================
+# 🔐 Variables de entorno
+# ==============================
+.env
+.env.*
 *.env
-.env.local
-.env.production
-.env.development
 secrets.json
 
-# ==== Archivos generados por Django ====
+# ==============================
+# 🗄️ Base de datos
+# ==============================
+db.sqlite3
+*.sqlite3
+
+# ==============================
+# 📁 Archivos de Django
+# ==============================
+*.log
+*.pot
+
+# Archivos compilados
+*.pyc
+*.pyo
+
+# Media (uploads de usuarios)
 media/
+
+# Static (solo ignorar si usas collectstatic)
 staticfiles/
-static/
 
-# ==== Mac OS ====
-.DS_Store
+# ⚠️ OJO:
+# static/ solo ignóralo si es generado, si tú lo usas para CSS/JS → NO lo ignores
+# static/
 
-# ==== VSCode ====
+# ==============================
+# 🧠 Migraciones (opcional)
+# ==============================
+# ⚠️ Solo si quieres regenerarlas siempre (no recomendado en equipo)
+# */migrations/*
+# !*/migrations/__init__.py
+
+# ==============================
+# 🖥️ IDEs / Editores
+# ==============================
 .vscode/
+.idea/
+*.swp
+*.swo
 
-# ==== Node (si usas frontend dentro del proyecto) ====
+# ==============================
+# 🍎 Mac / Windows
+# ==============================
+.DS_Store
+Thumbs.db
+
+# ==============================
+# 🧵 Logs del sistema
+# ==============================
+*.log
+
+# ==============================
+# ⚙️ Build / dist
+# ==============================
+build/
+dist/
+*.egg-info/
+
+# ==============================
+# 🧩 Node (si tienes frontend)
+# ==============================
 node_modules/
-npm-debug.log
-yarn-error.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
 
+# ==============================
+# 🔥 Django collectstatic (producción)
+# ==============================
+staticfiles/
+
+# ==============================
+# 🧾 Archivos temporales
+# ==============================
+*.tmp
+*.bak
+*.old
