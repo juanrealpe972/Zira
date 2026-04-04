@@ -28,10 +28,10 @@ export default function LoginPage() {
       >
         <Container size="1" style={{ width: '100%', maxWidth: 480, padding: '0 24px' }}>
 
-          <AppHeading size="6" mb="1">Sign in to your account</AppHeading>
+          <AppHeading size="6" mb="1">Iniciar sesión</AppHeading>
           <Flex gap="1" mb="5">
-            <AppText>Don't have an account?</AppText>
-            <AppLink href="/register">Get started</AppLink>
+            <AppText>¿No tienes una cuenta?</AppText>
+            <AppLink href="/register">Crea una</AppLink>
           </Flex>
 
           <SigninForm />

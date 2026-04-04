@@ -1,30 +1,44 @@
-import { Card, Container, Flex, Heading, Link, Text } from "@radix-ui/themes"
-import SignupForm from "@/components/auth/SignupForm"
-import NavLink from "next/link"
+import { Flex, Container } from '@radix-ui/themes'
+import { Metadata } from 'next'
+import AuthSidebar from '@/components/auth/AuthSidebar'
+import SignupForm from '@/components/auth/SignupForm'
+import { AppHeading } from '@/components/ui/AppHeading'
+import { AppText } from '@/components/ui/AppText'
+import { AppLink } from '@/components/ui/AppLink'
 
-function RegisterPage() {
+export const metadata: Metadata = {
+  title: 'Registro',
+  description: 'Crea tu cuenta',
+}
+
+export default function RegisterPage() {
   return (
-    <Container size="1" className="px-3 md:px-0">
-      <Flex className="min-h-screen w-full items-center justify-center">
-        
-        <Card className="w-full max-w-md p-6 md:p-8">
-          <Heading mb="4">Sign up to Zira</Heading>
+    <Flex style={{ minHeight: '100vh' }}>
+
+      {/* Panel izquierdo — mismo que login */}
+      <AuthSidebar />
+
+      {/* Panel derecho */}
+      <Flex
+        direction="column"
+        align="center"
+        justify="center"
+        className='pt-36'
+        style={{ flex: 1 }}
+      >
+        <Container size="1" style={{ width: '100%', maxWidth: 480, padding: '0 24px' }}>
+
+          <AppHeading size="6" mb="1">Crea tu cuenta</AppHeading>
+          <Flex gap="1" mb="2">
+            <AppText>¿Ya tienes cuenta?</AppText>
+            <AppLink href="/login">Inicia sesión</AppLink>
+          </Flex>
 
           <SignupForm />
 
-          <Text size="2" mt="4">
-            Already have an account?{" "}
-            <Link asChild>
-              <NavLink href="/login">
-                Sign in
-              </NavLink>
-            </Link>
-          </Text>
-        </Card>
-
+        </Container>
       </Flex>
-    </Container>
+
+    </Flex>
   )
 }
-
-export default RegisterPage
