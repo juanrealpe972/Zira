@@ -71,5 +71,6 @@ PGADMIN
 \c zira - ingresar a una db
 \dt - listar tablas
 \d nombre_tabla - ver columnas de una tablas
+\! cls
 
 SELECT * FROM nombre_tabla; - Ver datos de una tabla
