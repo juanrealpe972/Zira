@@ -1,0 +1,101 @@
+Configuración de usuario
+git config --global user.name "Tu Nombre" → Nombre del autor
+git config --global user.email "tu@email.com" → Email del autor
+git config --list → Ver configuración actual
+git config --global core.editor "code --wait" → Editor VS Code
+
+Iniciar / clonar proyecto
+git init → Inicializar repositorio
+git clone <url> → Clonar repositorio
+git clone <url> mi-carpeta → Clonar en carpeta específica
+
+Estado y cambios
+git status → Ver estado
+git diff → Ver cambios sin stage
+git diff --staged → Ver cambios en stage
+git log --oneline → Historial compacto
+git log --graph --oneline --all → Historial visual
+
+Guardar cambios (commit)
+git add . → Agregar todo
+git add <archivo> → Agregar archivo
+git commit -m "mensaje" → Crear commit
+git commit -am "mensaje" → Add + commit
+git commit --amend → Editar último commit
+
+Ramas
+git branch → Listar ramas
+git branch -a → Listar ramas locales y remotas
+git switch -c <rama> → Crear y cambiar (recomendado)
+git switch <rama> → Cambiar de rama
+git branch -d <rama> → Eliminar rama
+git branch -D <rama> → Eliminar forzado
+
+Integración
+git merge <rama> → Fusionar rama
+git rebase <rama> → Reorganizar historial (avanzado)
+
+Bajar cambios
+git fetch → Descargar sin fusionar
+git pull → Descargar y fusionar
+git pull --rebase → Pull con rebase
+
+Subir cambios
+git push → Subir rama actual
+git push origin <rama> → Subir rama específica
+git push -u origin <rama> → Subir y vincular
+git push --force-with-lease → Push forzado seguro
+
+Remotos
+git remote -v → Ver remotos
+git remote add origin <url> → Agregar remoto
+git remote set-url origin <url> → Cambiar URL
+git remote remove <nombre> → Eliminar remoto
+
+Deshacer cambios
+git restore <archivo> → Descartar cambios
+git restore --staged <archivo> → Quitar del stage
+git revert <hash> → Revertir commit
+git reset --soft HEAD~1 → Deshacer commit (mantiene cambios)
+git reset --hard HEAD~1 → Deshacer commit y cambios
+
+Stash
+git stash → Guardar cambios temporalmente
+git stash pop → Recuperar cambios
+git stash list → Ver stashes
+git stash drop → Eliminar stash
+
+Flujo recomendado
+git switch develop → Ir a develop
+git pull → Actualizar
+git switch -c feature/nueva-funcionalidad → Crear feature
+git add . → Agregar cambios
+git commit -m "feat: nueva funcionalidad" → Commit
+git push -u origin feature/nueva-funcionalidad → Subir rama
+git switch develop → Volver a develop
+git merge feature/nueva-funcionalidad → Integrar
+git branch -d feature/nueva-funcionalidad → Borrar rama
+
+Producción
+git switch main → Ir a main
+git merge develop → Merge final
+git push origin main → Subir a producción
+
+Tags
+git tag → Listar tags
+git tag v1.0.0 → Crear tag
+git tag -a v1.0.0 -m "Release" → Tag con mensaje
+git push origin --tags → Subir tags
+
+Buenas prácticas
+Usar ramas feature/*
+Commits pequeños y claros
+No trabajar en main
+Usar develop como base
+Evitar --force
+Cuidado con reset --hard
+
+feature/auth-validation
+feature/auth-api
+feature/dashboard-ui
+feature/protected-routes
