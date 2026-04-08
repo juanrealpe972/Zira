@@ -2,12 +2,7 @@
 
 import { useState } from 'react'
 import { Flex, Text, Box, Badge, ScrollArea } from '@radix-ui/themes'
-import {
-  HamburgerMenuIcon,
-  ChevronRightIcon,
-  PersonIcon,
-  ExternalLinkIcon,
-} from '@radix-ui/react-icons'
+import { HamburgerMenuIcon, ChevronRightIcon, PersonIcon, ExternalLinkIcon } from '@radix-ui/react-icons'
 import NavLink from 'next/link'
 import { usePathname } from 'next/navigation'
 import { navigation } from '@/data/navigation'
@@ -38,7 +33,6 @@ export default function Sidebar() {
         top: 0,
       }}
     >
-      {/* Logo — siempre visible */}
       <Flex
         align="center"
         justify={expanded ? 'between' : 'center'}
@@ -57,13 +51,11 @@ export default function Sidebar() {
         </Box>
       </Flex>
 
-      {/* Nav items */}
       <ScrollArea style={{ flex: 1 }}>
         <Flex direction="column" py="3" gap="1">
           {navigation.map(({ group, items }) => (
             <Box key={group} mb="2">
 
-              {/* Group label — solo expandido */}
               {expanded && (
                 <Text
                   size="1"
@@ -75,7 +67,6 @@ export default function Sidebar() {
                 </Text>
               )}
 
-              {/* Items */}
               {items.map((item) => {
                 const isActive = pathname === item.href
                 const hasChildren = item.children !== undefined
@@ -98,15 +89,14 @@ export default function Sidebar() {
                       color: item.disabled
                         ? 'var(--gray-7)'
                         : isActive
-                        ? 'var(--accent-9)'
-                        : 'var(--gray-11)',
+                          ? 'var(--accent-9)'
+                          : 'var(--gray-11)',
                       opacity: item.disabled ? 0.5 : 1,
                       transition: 'background 0.15s ease',
                       minHeight: expanded ? 'auto' : 52,
                     }}
                     onClick={() => hasChildren && toggleGroup(item.label)}
                   >
-                    {/* Ícono + label colapsado */}
                     <Flex
                       direction={expanded ? 'row' : 'column'}
                       align="center"
@@ -118,7 +108,6 @@ export default function Sidebar() {
                           <Icon />
                         </Box>
                       )}
-                      {/* Label siempre visible — tamaño según estado */}
                       <Text
                         size={expanded ? '2' : '1'}
                         weight={isActive ? 'medium' : 'regular'}
@@ -135,7 +124,6 @@ export default function Sidebar() {
                       </Text>
                     </Flex>
 
-                    {/* Badges y chevron — solo expandido */}
                     {expanded && (
                       <Flex align="center" gap="1">
                         {item.badge && (
@@ -180,7 +168,6 @@ export default function Sidebar() {
         </Flex>
       </ScrollArea>
 
-      {/* Footer del sidebar */}
       <Flex
         align="center"
         justify={expanded ? 'start' : 'center'}

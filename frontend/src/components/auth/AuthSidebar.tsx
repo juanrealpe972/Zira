@@ -15,7 +15,6 @@ export default function AuthSidebar() {
         borderRight: '1px solid var(--gray-4)',
       }}
     >
-      {/* Texto superior */}
       <Box mt="9">
         <Heading size="7" mb="2">Hi, Welcome back</Heading>
         <Text size="3" color="gray">
@@ -23,7 +22,6 @@ export default function AuthSidebar() {
         </Text>
       </Box>
 
-      {/* Imagen central */}
       <Box>
         <Image
           src={loginIllustration}
@@ -33,7 +31,6 @@ export default function AuthSidebar() {
         />
       </Box>
 
-      {/* Espacio inferior */}
       <Box />
     </Flex>
   )

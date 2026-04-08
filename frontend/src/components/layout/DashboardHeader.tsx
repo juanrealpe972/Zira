@@ -2,11 +2,7 @@
 
 import { useState } from 'react'
 import { Flex, Text, Avatar, IconButton, DropdownMenu, Box } from '@radix-ui/themes'
-import {
-  BellIcon, GearIcon, PersonIcon,
-  MagnifyingGlassIcon, GlobeIcon,
-  ChevronDownIcon,
-} from '@radix-ui/react-icons'
+import { BellIcon, GearIcon, PersonIcon, GlobeIcon, ChevronDownIcon } from '@radix-ui/react-icons'
 import NotificationsPanel from './panels/NotificationsPanel'
 import SettingsPanel from './panels/SettingsPanel'
 import ProfilePanel from './panels/ProfilePanel'
@@ -46,7 +42,6 @@ export default function DashboardHeader() {
           flexShrink: 0,
         }}
       >
-        {/* Izquierda — selector de equipo */}
         <DropdownMenu.Root>
           <DropdownMenu.Trigger>
             <Flex
@@ -76,10 +71,8 @@ export default function DashboardHeader() {
           </DropdownMenu.Content>
         </DropdownMenu.Root>
 
-        {/* Derecha — acciones */}
         <Flex align="center" gap="2">
 
-          {/* Idiomas */}
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>
               <IconButton variant="ghost" size="2">
@@ -103,17 +96,14 @@ export default function DashboardHeader() {
             </DropdownMenu.Content>
           </DropdownMenu.Root>
 
-          {/* Notificaciones */}
           <IconButton variant="ghost" size="2" onClick={() => setNotifOpen(true)}>
             <BellIcon width={18} height={18} />
           </IconButton>
 
-          {/* Configuración */}
           <IconButton variant="ghost" size="2" onClick={() => setSettingsOpen(true)}>
             <GearIcon width={18} height={18} />
           </IconButton>
 
-          {/* Perfil */}
           <Box onClick={() => setProfileOpen(true)} style={{ cursor: 'pointer' }}>
             <Avatar
               size="2"
@@ -126,7 +116,6 @@ export default function DashboardHeader() {
         </Flex>
       </Flex>
 
-      {/* Paneles laterales */}
       <NotificationsPanel open={notifOpen} onClose={() => setNotifOpen(false)} />
       <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       <ProfilePanel open={profileOpen} onClose={() => setProfileOpen(false)} />

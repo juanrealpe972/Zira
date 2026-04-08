@@ -1,5 +1,5 @@
-import { Box, Flex, Heading, Text, Card, Grid, Avatar, Badge } from '@radix-ui/themes'
-import { PersonIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons'
+import { Box, Flex, Heading, Text, Card, Avatar, Badge } from '@radix-ui/themes'
+import { PersonIcon } from '@radix-ui/react-icons'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -16,7 +16,6 @@ const users = [
 export default function UsersPage() {
   return (
     <Box p="6">
-      {/* Header de la página */}
       <Flex justify="between" align="center" mb="6">
         <Box>
           <Heading size="6" mb="1">Usuarios</Heading>
@@ -24,9 +23,7 @@ export default function UsersPage() {
         </Box>
       </Flex>
 
-      {/* Tabla simple */}
       <Card size="2">
-        {/* Header tabla */}
         <Flex
           px="4"
           py="3"
@@ -43,7 +40,6 @@ export default function UsersPage() {
           </Text>
         </Flex>
 
-        {/* Filas */}
         {users.map((user) => (
           <Flex
             key={user.id}
@@ -56,7 +52,6 @@ export default function UsersPage() {
               transition: 'background 0.15s',
             }}
           >
-            {/* Avatar + nombre */}
             <Flex align="center" gap="3" style={{ width: '35%' }}>
               <Avatar
                 size="2"
@@ -70,10 +65,8 @@ export default function UsersPage() {
               </Box>
             </Flex>
 
-            {/* Rol */}
             <Text size="2" style={{ width: '25%' }}>{user.role}</Text>
 
-            {/* Estado */}
             <Box style={{ width: '20%' }}>
               <Badge
                 size="1"

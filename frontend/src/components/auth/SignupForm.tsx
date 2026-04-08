@@ -2,14 +2,7 @@
 
 import { useState } from 'react'
 import { Flex, Text, TextField } from '@radix-ui/themes'
-import {
-  EnvelopeClosedIcon,
-  LockClosedIcon,
-  PersonIcon,
-  ExclamationTriangleIcon,
-  EyeOpenIcon,
-  EyeClosedIcon,
-} from '@radix-ui/react-icons'
+import { EnvelopeClosedIcon, LockClosedIcon, PersonIcon, ExclamationTriangleIcon, EyeOpenIcon, EyeClosedIcon } from '@radix-ui/react-icons'
 import { AppButton } from '@/components/ui/AppButton'
 import { AppTextField } from '@/components/ui/AppTextField'
 import { AppToast } from '@/components/ui/AppToast'
@@ -35,7 +28,6 @@ export default function SignupForm() {
     const password = formData.get('password') as string
     const confirmPassword = formData.get('confirmPassword') as string
 
-    // Validación de contraseñas
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden')
       return
@@ -68,7 +60,6 @@ export default function SignupForm() {
       <form onSubmit={handleSubmit}>
         <Flex direction="column" gap="3" mt="4">
 
-          {/* Nombre */}
           <AppTextField
             id="name"
             name="name"
@@ -79,7 +70,6 @@ export default function SignupForm() {
             required
           />
 
-          {/* Email */}
           <AppTextField
             id="email"
             name="email"
@@ -90,7 +80,6 @@ export default function SignupForm() {
             required
           />
 
-          {/* Password */}
           <label htmlFor="password" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
             <RadixText size="2" weight="medium">Contraseña</RadixText>
             <TextField.Root
@@ -115,7 +104,6 @@ export default function SignupForm() {
             </TextField.Root>
           </label>
 
-          {/* Confirmar password */}
           <label htmlFor="confirmPassword" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
             <RadixText size="2" weight="medium">Confirmar contraseña</RadixText>
             <TextField.Root
@@ -140,7 +128,6 @@ export default function SignupForm() {
             </TextField.Root>
           </label>
 
-          {/* Error */}
           {error && (
             <Flex
               align="center"

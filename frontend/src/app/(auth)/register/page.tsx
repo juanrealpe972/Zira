@@ -15,10 +15,8 @@ export default function RegisterPage() {
   return (
     <Flex style={{ minHeight: '100vh' }}>
 
-      {/* Panel izquierdo — mismo que login */}
       <AuthSidebar />
 
-      {/* Panel derecho */}
       <Flex
         direction="column"
         align="center"

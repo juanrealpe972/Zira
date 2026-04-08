@@ -12,14 +12,12 @@ export default function AuthHeader() {
       py="3"
       style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 }}
     >
-      {/* Logo */}
       <NavLink href="/" style={{ textDecoration: 'none' }}>
         <Text size="5" weight="bold" style={{ color: 'var(--accent-9)' }}>
           Zira
         </Text>
       </NavLink>
 
-      {/* Derecha */}
       <Flex align="center" gap="3">
         <AppLink href="/help">Need help?</AppLink>
         <IconButton variant="ghost" radius="full">

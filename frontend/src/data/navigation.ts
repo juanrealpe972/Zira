@@ -1,14 +1,4 @@
-import {
-  DashboardIcon,
-  PersonIcon,
-  GearIcon,
-  BarChartIcon,
-  FileTextIcon,
-  EnvelopeClosedIcon,
-  ChatBubbleIcon,
-  CalendarIcon,
-  LockClosedIcon,
-} from '@radix-ui/react-icons'
+import { DashboardIcon, PersonIcon, GearIcon, BarChartIcon, FileTextIcon, EnvelopeClosedIcon, ChatBubbleIcon, CalendarIcon, LockClosedIcon } from '@radix-ui/react-icons'
 
 export type NavItem = {
   label: string
