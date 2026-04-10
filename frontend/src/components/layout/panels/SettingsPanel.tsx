@@ -198,7 +198,7 @@ export default function SettingsPanel({ open, onClose }: Props) {
             </Flex>
           </Box>
 
-          <Box>
+ {/*          <Box>
             <Text size="1" weight="bold" color="gray" style={{ textTransform: 'uppercase', letterSpacing: 1 }}>
               Fuente
             </Text>
@@ -223,7 +223,7 @@ export default function SettingsPanel({ open, onClose }: Props) {
                 </Box>
               ))}
             </Flex>
-          </Box>
+          </Box> */}
 
           <Box>
             <Flex justify="between" align="center" mb="2">
