@@ -15,10 +15,8 @@ export default function LoginPage() {
   return (
     <Flex style={{ minHeight: '100vh' }}>
 
-      {/* Panel izquierdo */}
       <AuthSidebar />
 
-      {/* Panel derecho */}
       <Flex
         direction="column"
         align="center"

@@ -2,13 +2,7 @@
 
 import { useState } from 'react'
 import { Flex, Text } from '@radix-ui/themes'
-import { 
-  EnvelopeClosedIcon, 
-  LockClosedIcon, 
-  ExclamationTriangleIcon,
-  EyeOpenIcon,
-  EyeClosedIcon
-} from '@radix-ui/react-icons'
+import { EnvelopeClosedIcon, LockClosedIcon, ExclamationTriangleIcon, EyeOpenIcon, EyeClosedIcon } from '@radix-ui/react-icons'
 import { AppButton } from '@/components/ui/AppButton'
 import { AppToast } from '@/components/ui/AppToast'
 import { login } from '@/services/auth.service'
@@ -53,7 +47,6 @@ export default function SigninForm() {
       <form onSubmit={handleSubmit}>
         <Flex direction="column" gap="3" mt="4">
 
-          {/* Email */}
           <AppTextField
             id="email"
             name="email"
@@ -64,7 +57,6 @@ export default function SigninForm() {
             required
           />
 
-          {/* Password */}
           <label htmlFor="password" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
             <RadixText size="2" weight="medium">Contraseña</RadixText>
             <TextField.Root
@@ -76,12 +68,10 @@ export default function SigninForm() {
               radius="medium"
               required
             >
-              {/* Ícono izquierdo */}
               <TextField.Slot>
                 <LockClosedIcon />
               </TextField.Slot>
 
-              {/* Botón derecho para mostrar/ocultar contraseña */}
               <TextField.Slot>
                 <button
                   type="button"
@@ -102,7 +92,6 @@ export default function SigninForm() {
             </TextField.Root>
           </label>
 
-          {/* Error */}
           {error && (
             <Flex
               align="center"

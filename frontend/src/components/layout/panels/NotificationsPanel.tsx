@@ -17,7 +17,6 @@ const notifications = [
 export default function NotificationsPanel({ open, onClose }: Props) {
   return (
     <>
-      {/* Backdrop */}
       {open && (
         <Box
           onClick={onClose}
@@ -30,7 +29,6 @@ export default function NotificationsPanel({ open, onClose }: Props) {
         />
       )}
 
-      {/* Panel */}
       <Box
         style={{
           position: 'fixed',
@@ -47,7 +45,6 @@ export default function NotificationsPanel({ open, onClose }: Props) {
           flexDirection: 'column',
         }}
       >
-        {/* Header */}
         <Flex align="center" justify="between" p="4" style={{ borderBottom: '1px solid var(--gray-4)' }}>
           <Flex align="center" gap="2">
             <BellIcon />
@@ -58,7 +55,6 @@ export default function NotificationsPanel({ open, onClose }: Props) {
           </Box>
         </Flex>
 
-        {/* Lista */}
         <Flex direction="column" style={{ flex: 1, overflowY: 'auto' }}>
           {notifications.map(({ id, title, description, time }) => (
             <Flex

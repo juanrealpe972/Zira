@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+.radix-themes[data-appearance='light'] {
+  background: linear-gradient(135deg, #f0f4ff 0%, #faf5ff 50%, #f0fdf4 100%) !important;
+  min-height: 100vh;
+}
+
+.radix-themes[data-appearance='dark'] {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%) !important;
+  min-height: 100vh;
+}

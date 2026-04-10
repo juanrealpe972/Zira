@@ -43,14 +43,12 @@ export default function ProfilePanel({ open, onClose }: Props) {
           <Box onClick={onClose} style={{ cursor: 'pointer' }}><Cross1Icon /></Box>
         </Flex>
 
-        {/* Info usuario */}
         <Flex direction="column" align="center" gap="2" p="6" style={{ borderBottom: '1px solid var(--gray-4)' }}>
           <Avatar size="5" fallback={<PersonIcon />} radius="full" />
           <Text size="3" weight="bold">Juan Realpe</Text>
           <Text size="2" color="gray">demo@zira.cc</Text>
         </Flex>
 
-        {/* Links */}
         <Flex direction="column" p="3" gap="1" style={{ flex: 1 }}>
           {[
             { label: 'Mi perfil', href: '/dashboard/profile' },
@@ -64,7 +62,6 @@ export default function ProfilePanel({ open, onClose }: Props) {
           ))}
         </Flex>
 
-        {/* Logout */}
         <Box p="4" style={{ borderTop: '1px solid var(--gray-4)' }}>
           <Button variant="soft" color="red" style={{ width: '100%' }} onClick={handleLogout}>
             <ExitIcon /> Cerrar sesión

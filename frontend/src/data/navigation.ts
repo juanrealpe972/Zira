@@ -1,14 +1,4 @@
-import {
-  DashboardIcon,
-  PersonIcon,
-  GearIcon,
-  BarChartIcon,
-  FileTextIcon,
-  EnvelopeClosedIcon,
-  ChatBubbleIcon,
-  CalendarIcon,
-  LockClosedIcon,
-} from '@radix-ui/react-icons'
+import { DashboardIcon, PersonIcon, GearIcon, BarChartIcon, FileTextIcon, EnvelopeClosedIcon, ChatBubbleIcon, CalendarIcon, LockClosedIcon } from '@radix-ui/react-icons'
 
 export type NavItem = {
   label: string
@@ -31,7 +21,6 @@ export const navigation: NavGroup[] = [
     group: 'Descripción general',
     items: [
       { label: 'Aplicación', href: '/dashboard', icon: DashboardIcon },
-      { label: 'Comercio electrónico', href: '/dashboard/ecommerce', icon: BarChartIcon },
       { label: 'Analítica', href: '/dashboard/analytics', icon: BarChartIcon },
       { label: 'Banca', href: '/dashboard/banking', icon: BarChartIcon },
       { label: 'Reserva', href: '/dashboard/booking', icon: CalendarIcon },
@@ -49,7 +38,6 @@ export const navigation: NavGroup[] = [
       { label: 'Blog', href: '/dashboard/blog', icon: FileTextIcon, children: [] },
       { label: 'Trabajo', href: '/dashboard/jobs', icon: FileTextIcon, children: [] },
       { label: 'Tour', href: '/dashboard/tours', icon: FileTextIcon, children: [] },
-      { label: 'Administrador de archivos', href: '/dashboard/file-manager', icon: FileTextIcon },
       { label: 'Correo', href: '/dashboard/mail', icon: EnvelopeClosedIcon, badge: '+32' },
       { label: 'Chat', href: '/dashboard/chat', icon: ChatBubbleIcon },
       { label: 'Calendario', href: '/dashboard/calendar', icon: CalendarIcon },
