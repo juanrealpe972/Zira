@@ -1,9 +1,10 @@
 'use client'
 
 import { Flex, Text, Box, Heading, Avatar, Button } from '@radix-ui/themes'
-import { Cross1Icon, PersonIcon, ExitIcon } from '@radix-ui/react-icons'
+import { Cross1Icon, PersonIcon, ExitIcon, GearIcon } from '@radix-ui/react-icons'
 import { useRouter } from 'next/navigation'
 import NavLink from 'next/link'
+import { logout } from '@/services/auth.service'
 
 type Props = {
   open: boolean
@@ -13,9 +14,11 @@ type Props = {
 export default function ProfilePanel({ open, onClose }: Props) {
   const router = useRouter()
 
-  function handleLogout() {
+  async function handleLogout() {
+    await logout()
     onClose()
-    router.push('/auth/login')
+    router.push('/')
+    router.refresh()
   }
 
   return (
@@ -35,7 +38,8 @@ export default function ProfilePanel({ open, onClose }: Props) {
           zIndex: 50,
           transform: open ? 'translateX(0)' : 'translateX(100%)',
           transition: 'transform 0.3s ease',
-          display: 'flex', flexDirection: 'column',
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
         <Flex align="center" justify="between" p="4" style={{ borderBottom: '1px solid var(--gray-4)' }}>
@@ -51,19 +55,31 @@ export default function ProfilePanel({ open, onClose }: Props) {
 
         <Flex direction="column" p="3" gap="1" style={{ flex: 1 }}>
           {[
-            { label: 'Mi perfil', href: '/dashboard/profile' },
-            { label: 'Configuración', href: '/dashboard/settings' },
-          ].map(({ label, href }) => (
+            { label: 'Mi perfil', href: '/dashboard/profile', icon: PersonIcon },
+            { label: 'Configuración', href: '/dashboard/settings', icon: GearIcon },
+          ].map(({ label, href, icon: Icon }) => (
             <NavLink key={href} href={href} style={{ textDecoration: 'none' }} onClick={onClose}>
-              <Box px="3" py="2" style={{ borderRadius: 8, cursor: 'pointer' }}>
+              <Flex
+                align="center"
+                gap="2"
+                px="3"
+                py="2"
+                style={{ borderRadius: 8, cursor: 'pointer' }}
+              >
+                <Icon />
                 <Text size="2">{label}</Text>
-              </Box>
+              </Flex>
             </NavLink>
           ))}
         </Flex>
 
         <Box p="4" style={{ borderTop: '1px solid var(--gray-4)' }}>
-          <Button variant="soft" color="red" style={{ width: '100%' }} onClick={handleLogout}>
+          <Button
+            variant="soft"
+            color="red"
+            style={{ width: '100%', cursor: 'pointer' }}
+            onClick={handleLogout}
+          >
             <ExitIcon /> Cerrar sesión
           </Button>
         </Box>
