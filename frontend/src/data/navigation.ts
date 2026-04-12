@@ -8,6 +8,14 @@ import {
   ChatBubbleIcon,
   CalendarIcon,
   LockClosedIcon,
+  CardStackIcon,
+  ReaderIcon,
+  ArchiveIcon,
+  BellIcon,
+  BookmarkIcon,
+  Share2Icon,
+  CheckboxIcon,
+  MixerHorizontalIcon,
 } from '@radix-ui/react-icons'
 
 export type NavItem = {
@@ -26,110 +34,152 @@ export type NavGroup = {
   items: NavItem[]
 }
 
+const crud = (base: string) => [
+  { label: 'Lista', href: `/dashboard/${base}/list` },
+  { label: 'Detalles', href: `/dashboard/${base}/details` },
+  { label: 'Crear', href: `/dashboard/${base}/create` },
+  { label: 'Editar', href: `/dashboard/${base}/edit` },
+]
+
 export const navigation: NavGroup[] = [
   {
-    group: 'Descripción general',
+    group: 'General',
     items: [
       { label: 'Aplicación', href: '/dashboard', icon: DashboardIcon },
-      { label: 'Comercio electrónico', href: '/dashboard/ecommerce', icon: BarChartIcon },
       { label: 'Analítica', href: '/dashboard/analytics', icon: BarChartIcon },
-      { label: 'Banca', href: '/dashboard/banking', icon: BarChartIcon },
       { label: 'Reserva', href: '/dashboard/booking', icon: CalendarIcon },
-      { label: 'Archivo', href: '/dashboard/file', icon: FileTextIcon },
-      { label: 'Curso', href: '/dashboard/course', icon: FileTextIcon },
+      { label: 'Archivo', href: '/dashboard/file', icon: ArchiveIcon },
+      { label: 'Curso', href: '/dashboard/course', icon: ReaderIcon },
+      { label: 'Calendario', href: '/dashboard/calendar', icon: CalendarIcon },
     ],
   },
   {
-    group: 'Gestión',
+    group: 'Usuarios',
     items: [
       {
-        label: 'Usuario',
+        label: 'Usuarios',
         icon: PersonIcon,
         children: [
-          { label: 'Lista', href: '/dashboard/users/list' },
-          { label: 'Detalles', href: '/dashboard/users/details' },
-          { label: 'Crear', href: '/dashboard/users/create' },
-          { label: 'Editar', href: '/dashboard/users/edit' },
+          ...crud('users'),
           { label: 'Perfil', href: '/dashboard/users/profile' },
           { label: 'Tarjetas', href: '/dashboard/users/cards' },
           { label: 'Cuenta', href: '/dashboard/users/account' },
         ],
       },
-      {
-        label: 'Producto',
-        icon: FileTextIcon,
-        children: [
-          { label: 'Lista', href: '/dashboard/products/list' },
-          { label: 'Detalles', href: '/dashboard/products/details' },
-          { label: 'Crear', href: '/dashboard/products/create' },
-          { label: 'Editar', href: '/dashboard/products/edit' },
-        ],
-      },
-      {
-        label: 'Orden',
-        icon: FileTextIcon,
-        children: [
-          { label: 'Lista', href: '/dashboard/orders/list' },
-          { label: 'Detalles', href: '/dashboard/orders/details' },
-          { label: 'Crear', href: '/dashboard/orders/create' },
-          { label: 'Editar', href: '/dashboard/orders/edit' },
-        ],
-      },
-      {
-        label: 'Factura',
-        icon: FileTextIcon,
-        children: [
-          { label: 'Lista', href: '/dashboard/invoices/list' },
-          { label: 'Detalles', href: '/dashboard/invoices/details' },
-          { label: 'Crear', href: '/dashboard/invoices/create' },
-          { label: 'Editar', href: '/dashboard/invoices/edit' },
-        ],
-      },
-      {
-        label: 'Blog',
-        icon: FileTextIcon,
-        children: [
-          { label: 'Lista', href: '/dashboard/blog/list' },
-          { label: 'Detalles', href: '/dashboard/blog/details' },
-          { label: 'Crear', href: '/dashboard/blog/create' },
-          { label: 'Editar', href: '/dashboard/blog/edit' },
-        ],
-      },
-      {
-        label: 'Trabajo',
-        icon: FileTextIcon,
-        children: [
-          { label: 'Lista', href: '/dashboard/jobs/list' },
-          { label: 'Detalles', href: '/dashboard/jobs/details' },
-          { label: 'Crear', href: '/dashboard/jobs/create' },
-          { label: 'Editar', href: '/dashboard/jobs/edit' },
-        ],
-      },
-      {
-        label: 'Tour',
-        icon: FileTextIcon,
-        children: [
-          { label: 'Lista', href: '/dashboard/tours/list' },
-          { label: 'Detalles', href: '/dashboard/tours/details' },
-          { label: 'Crear', href: '/dashboard/tours/create' },
-          { label: 'Editar', href: '/dashboard/tours/edit' },
-        ],
-      },
-      { label: 'Administrador de archivos', href: '/dashboard/file-manager', icon: FileTextIcon },
-      { label: 'Correo', href: '/dashboard/mail', icon: EnvelopeClosedIcon, badge: '+32' },
-      { label: 'Chat', href: '/dashboard/chat', icon: ChatBubbleIcon },
-      { label: 'Calendario', href: '/dashboard/calendar', icon: CalendarIcon },
-      { label: 'Kanban', href: '/dashboard/kanban', icon: DashboardIcon },
-      { label: 'Permiso', href: '/dashboard/permissions', icon: LockClosedIcon },
     ],
   },
   {
-    group: 'Misc',
+    group: 'Finanzas',
     items: [
-      { label: 'Permiso', href: '/dashboard/misc/permissions', icon: LockClosedIcon, tag: 'NEW' },
-      { label: 'Nivel', href: '/dashboard/misc/level', icon: GearIcon, disabled: true },
-      { label: 'Parámetros', href: '/dashboard/misc/params', icon: GearIcon },
-      { label: 'Enlace externo', href: 'https://google.com', icon: GearIcon, external: true },
+      {
+        label: 'Cuentas bancarias',
+        icon: CardStackIcon,
+        children: crud('bank-accounts'),
+      },
+      {
+        label: 'Tarjetas bancarias',
+        icon: CardStackIcon,
+        children: crud('bank-cards'),
+      },
+      {
+        label: 'Préstamos',
+        icon: MixerHorizontalIcon,
+        children: crud('loans'),
+      },
+      {
+        label: 'Ahorros',
+        icon: BookmarkIcon,
+        children: crud('savings'),
+      },
+      {
+        label: 'Ingresos',
+        icon: BarChartIcon,
+        children: crud('incomes'),
+      },
+      {
+        label: 'Gastos',
+        icon: BarChartIcon,
+        children: crud('expenses'),
+      },
+      {
+        label: 'Productos por gasto',
+        icon: FileTextIcon,
+        children: crud('expense-products'),
+      },
+    ],
+  },
+  {
+    group: 'Comercio',
+    items: [
+      {
+        label: 'Productos',
+        icon: FileTextIcon,
+        children: crud('products'),
+      },
+      {
+        label: 'Productos consumidos',
+        icon: FileTextIcon,
+        children: crud('products-consumed'),
+      },
+      {
+        label: 'Órdenes',
+        icon: ReaderIcon,
+        children: crud('orders'),
+      },
+      {
+        label: 'Items de orden',
+        icon: ReaderIcon,
+        children: crud('order-items'),
+      },
+    ],
+  },
+  {
+    group: 'Contenido',
+    items: [
+      {
+        label: 'Publicaciones',
+        icon: ReaderIcon,
+        children: crud('publications'),
+      },
+      {
+        label: 'Comentarios',
+        icon: ChatBubbleIcon,
+        children: crud('comments'),
+      },
+      {
+        label: 'Redes sociales',
+        icon: Share2Icon,
+        children: crud('social-networks'),
+      },
+      {
+        label: 'Suscripciones',
+        icon: BookmarkIcon,
+        children: crud('subscriptions'),
+      },
+    ],
+  },
+  {
+    group: 'Productividad',
+    items: [
+      {
+        label: 'Tareas',
+        icon: CheckboxIcon,
+        children: crud('tasks'),
+      },
+      {
+        label: 'Notificaciones',
+        icon: BellIcon,
+        children: crud('notifications'),
+      },
+      { label: 'Chat', href: '/dashboard/chat', icon: ChatBubbleIcon },
+      { label: 'Correo', href: '/dashboard/mail', icon: EnvelopeClosedIcon },
+    ],
+  },
+  {
+    group: 'Sistema',
+    items: [
+      { label: 'Permisos', href: '/dashboard/permissions', icon: LockClosedIcon },
+      { label: 'Configuración', href: '/dashboard/settings', icon: GearIcon },
     ],
   },
 ]

@@ -41,7 +41,7 @@ export default function Sidebar() {
     <Flex
       direction="column"
       style={{
-        width: expanded ? 230 : 72,
+        width: expanded ? 230 : 78,
         height: '100vh',
         borderRight: '1px solid var(--gray-4)',
         background: 'var(--color-background)',

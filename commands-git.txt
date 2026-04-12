@@ -99,3 +99,15 @@ feature/auth-validation
 feature/auth-api
 feature/dashboard-ui
 feature/protected-routes
+
+main
+└── develop
+    ├── feature/module-users
+    ├── feature/module-finance        ← bank_accounts, bank_cards, loans, savings
+    ├── feature/module-expenses       ← expenses, expense_product, incomes
+    ├── feature/module-orders         ← orders, order_items
+    ├── feature/module-products       ← products, products_consumed
+    ├── feature/module-social         ← publications, social_networks, 
+subscriptions, comments
+    └── feature/module-tasks-notif    ← tasks, notifications
+

@@ -1,3 +1,4 @@
+// src/middleware.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { TOKEN_KEY } from '@/lib/cookies'
 
@@ -19,13 +20,23 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
+  if (token) {
+    const isKnownRoute =
+      pathname.startsWith('/dashboard') ||
+      pathname.startsWith('/auth') ||
+      pathname === '/' ||
+      pathname === '/unauthorized'
+
+    if (!isKnownRoute) {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
+  }
+
   return NextResponse.next()
 }
 
 export const config = {
   matcher: [
-    '/dashboard/:path*',
-    '/auth/login',
-    '/auth/register',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.png|.*\\.jpg|.*\\.svg).*)',
   ],
 }
