@@ -1,6 +1,8 @@
 import { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from '@/types/auth.types'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
+const TOKEN_KEY = 'zira_access'
+const REFRESH_KEY = 'zira_refresh'
 
 export async function login(credentials: LoginRequest): Promise<LoginResponse> {
   const response = await fetch(`${API_URL}/api/v1/login/`, {
@@ -16,7 +18,17 @@ export async function login(credentials: LoginRequest): Promise<LoginResponse> {
     throw new Error(error?.detail ?? 'Error al iniciar sesión')
   }
 
-  return response.json()
+  const data: LoginResponse = await response.json()
+
+  document.cookie = `${TOKEN_KEY}=${data.access}; path=/; max-age=900; SameSite=Strict`
+  document.cookie = `${REFRESH_KEY}=${data.refresh}; path=/; max-age=604800; SameSite=Strict`
+
+  return data
+}
+
+export async function logout() {
+  document.cookie = `${TOKEN_KEY}=; path=/; max-age=0`
+  document.cookie = `${REFRESH_KEY}=; path=/; max-age=0`
 }
 
 export async function register(data: RegisterRequest): Promise<RegisterResponse> {

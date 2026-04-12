@@ -10,6 +10,9 @@ import { useRouter } from 'next/navigation'
 import { TextField, Text as RadixText } from '@radix-ui/themes'
 import { AppTextField } from '../ui/AppTextField'
 
+const DEFAULT_EMAIL = 'camilo2@gmail.com'
+const DEFAULT_PASSWORD = '123456'
+
 export default function SigninForm() {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
@@ -54,6 +57,7 @@ export default function SigninForm() {
             label="Email"
             placeholder="Ingresa tu email"
             icon={<EnvelopeClosedIcon />}
+            defaultValue={DEFAULT_EMAIL}
             required
           />
 
@@ -66,12 +70,12 @@ export default function SigninForm() {
               placeholder="Ingresa tu contraseña"
               size="2"
               radius="medium"
+              defaultValue={DEFAULT_PASSWORD}
               required
             >
               <TextField.Slot>
                 <LockClosedIcon />
               </TextField.Slot>
-
               <TextField.Slot>
                 <button
                   type="button"

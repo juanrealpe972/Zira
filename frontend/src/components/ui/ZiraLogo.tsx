@@ -1,14 +1,12 @@
 'use client'
 
-import Link from 'next/link'
-
 type Props = {
   size?: number
 }
 
 export function ZiraLogo({ size = 28 }: Props) {
   return (
-    <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
+    (
       <svg
         width={size}
         height={size}
@@ -44,6 +42,6 @@ export function ZiraLogo({ size = 28 }: Props) {
           opacity="0.5"
         />
       </svg>
-    </Link>
+    )
   )
 }
