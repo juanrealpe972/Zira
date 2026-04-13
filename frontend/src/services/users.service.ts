@@ -1,0 +1,52 @@
+const API_URL = process.env.NEXT_PUBLIC_API_URL
+
+function getToken(): string | null {
+  if (typeof document === 'undefined') return null
+  const match = document.cookie.match(/zira_access=([^;]+)/)
+  return match ? match[1] : null
+}
+
+export type User = {
+  id: number
+  national_id: string | null
+  name: string
+  email: string
+  phone_prefix: string | null
+  phone: string | null
+  address: string | null
+  company: string | null
+  role: string
+  country: string | null
+  city: string | null
+  photo: string | null
+  verified: boolean
+  created_at: string
+  is_active: boolean
+  is_staff: boolean
+}
+
+export async function getUsers(): Promise<User[]> {
+  const token = getToken()
+  const response = await fetch(`${API_URL}/api/v1/users`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  })
+  if (!response.ok) throw new Error('Error al obtener usuarios')
+  return response.json()
+}
+
+export async function updateUserStatus(id: number, is_active: boolean): Promise<User> {
+  const token = getToken()
+  const response = await fetch(`${API_URL}/api/v1/users/${id}/`, {
+    method: 'PATCH',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ is_active }),
+  })
+  if (!response.ok) throw new Error('Error al actualizar estado')
+  return response.json()
+}
