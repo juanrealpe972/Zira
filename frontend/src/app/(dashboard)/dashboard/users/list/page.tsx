@@ -13,6 +13,9 @@ import {
 } from '@radix-ui/react-icons'
 import { getUsers, updateUserStatus, User } from '@/services/users.service'
 import { useRouter } from 'next/navigation'
+import { CreateUserModal } from '@/components/users/CreateUserModal'
+import { EditUserModal } from '@/components/users/EditUserModal'
+
 
 // Columnas disponibles para mostrar/ocultar
 type ColumnKey = 'name' | 'email' | 'phone' | 'role' | 'company' |
@@ -59,6 +62,9 @@ export default function UsersListPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [selected, setSelected] = useState<number[]>([])
   const [visibleColumns, setVisibleColumns] = useState<ColumnKey[]>(DEFAULT_COLUMNS)
+  const [createOpen, setCreateOpen] = useState(false)
+  const [hoveredRow, setHoveredRow] = useState<number | null>(null)
+  const [editUserId, setEditUserId] = useState<number | null>(null)
 
   useEffect(() => {
     getUsers()
@@ -66,6 +72,14 @@ export default function UsersListPage() {
       .catch(() => setUsers([]))
       .finally(() => setLoading(false))
   }, [])
+
+  function handleUserCreated(user: User) {
+    setUsers(prev => [user, ...prev])  // ← agrega al inicio de la lista
+  }
+
+  function handleUserUpdated(updated: User) {
+    setUsers(prev => prev.map(u => u.id === updated.id ? updated : u))
+  }
 
   const roles = useMemo(() => {
     return [...new Set(users.map(u => u.role).filter(Boolean))] as string[]
@@ -81,8 +95,8 @@ export default function UsersListPage() {
     return users.filter(u => {
       const matchTab =
         activeTab === 'all' ? true :
-        activeTab === 'active' ? u.is_active :
-        !u.is_active
+          activeTab === 'active' ? u.is_active :
+            !u.is_active
 
       const matchRole = roleFilter === 'all' || u.role === roleFilter
 
@@ -133,12 +147,7 @@ export default function UsersListPage() {
     switch (col) {
       case 'name':
         return (
-          <Flex
-            align="center"
-            gap="2"
-            style={{ cursor: 'pointer' }}
-            onClick={() => router.push(`/dashboard/users/profile/${user.id}`)}
-          >
+          <Flex align="center" gap="2">
             <Avatar
               size="2"
               src={user.photo ?? undefined}
@@ -150,14 +159,21 @@ export default function UsersListPage() {
               <Text
                 size="2"
                 weight="medium"
+                onClick={() => router.push(`/dashboard/users/profile/${user.id}`)}
                 style={{
                   display: 'block',
-                  color: 'var(--accent-9)',
-                  textDecoration: 'underline',
                   cursor: 'pointer',
+                  color: 'var(--gray-12)',
+                  textDecoration: hoveredRow === user.id ? 'underline' : 'none',
+                  textDecorationColor: 'var(--accent-9)',
+                  transition: 'text-decoration 0.15s',
                 }}
               >
                 {user.name}
+              </Text>
+              {/* Email debajo del nombre */}
+              <Text size="1" color="gray" style={{ display: 'block' }}>
+                {user.email}
               </Text>
             </Box>
           </Flex>
@@ -225,10 +241,7 @@ export default function UsersListPage() {
             <Text size="1">Lista</Text>
           </Flex>
         </Box>
-        <Button
-          size="2"
-          onClick={() => router.push('/dashboard/users/create')}
-        >
+        <Button size="2" onClick={() => setCreateOpen(true)}>
           <PersonIcon /> Agregar usuario
         </Button>
       </Flex>
@@ -393,11 +406,15 @@ export default function UsersListPage() {
                   {paginated.map((user, i) => (
                     <tr
                       key={user.id}
+                      onMouseEnter={() => setHoveredRow(user.id)}
+                      onMouseLeave={() => setHoveredRow(null)}
                       style={{
                         borderTop: '1px solid var(--gray-3)',
                         background: selected.includes(user.id)
                           ? 'var(--accent-2)'
-                          : i % 2 === 0 ? 'transparent' : 'var(--gray-1)',
+                          : hoveredRow === user.id
+                            ? 'var(--gray-2)'        // ← fondo sutil en hover
+                            : i % 2 === 0 ? 'transparent' : 'var(--gray-1)',
                         transition: 'background 0.15s',
                       }}
                     >
@@ -423,9 +440,7 @@ export default function UsersListPage() {
                             </IconButton>
                           </DropdownMenu.Trigger>
                           <DropdownMenu.Content align="end" size="1">
-                            <DropdownMenu.Item
-                              onClick={() => router.push(`/dashboard/users/edit/${user.id}`)}
-                            >
+                            <DropdownMenu.Item onClick={() => setEditUserId(user.id)}>
                               <Pencil1Icon /> Editar
                             </DropdownMenu.Item>
                             <DropdownMenu.Item
@@ -495,6 +510,17 @@ export default function UsersListPage() {
           </>
         )}
       </Card>
+      <CreateUserModal
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        onCreated={handleUserCreated}
+      />
+      <EditUserModal
+        userId={editUserId}
+        open={editUserId !== null}
+        onClose={() => setEditUserId(null)}
+        onUpdated={handleUserUpdated}
+      />
     </Box>
   )
 }
