@@ -164,8 +164,7 @@ export default function UsersListPage() {
                   display: 'block',
                   cursor: 'pointer',
                   color: 'var(--gray-12)',
-                  textDecoration: hoveredRow === user.id ? 'underline' : 'none',
-                  textDecorationColor: 'var(--accent-9)',
+                  textDecoration: hoveredRow === user.id ? 'underline solid var(--accent-9)' : 'none',
                   transition: 'text-decoration 0.15s',
                 }}
               >
