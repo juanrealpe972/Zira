@@ -17,7 +17,6 @@ import { CreateUserModal } from '@/components/users/CreateUserModal'
 import { EditUserModal } from '@/components/users/EditUserModal'
 
 
-// Columnas disponibles para mostrar/ocultar
 type ColumnKey = 'name' | 'email' | 'phone' | 'role' | 'company' |
   'country' | 'city' | 'verified' | 'is_staff' | 'created_at' | 'status'
 
@@ -231,13 +230,13 @@ export default function UsersListPage() {
       {/* Header */}
       <Flex justify="between" align="center" mb="2">
         <Box>
-          <Heading size="6">Usuarios</Heading>
+          <Heading size="6">Cuentas</Heading>
           <Flex align="center" gap="1" mt="1">
             <Text size="1" color="gray">Dashboard</Text>
             <Text size="1" color="gray">•</Text>
-            <Text size="1" color="gray">Usuario</Text>
+            <Text size="1" color="gray">Usuarios</Text>
             <Text size="1" color="gray">•</Text>
-            <Text size="1">Lista</Text>
+            <Text size="1">Cuentas</Text>
           </Flex>
         </Box>
         <Button size="2" onClick={() => setCreateOpen(true)}>

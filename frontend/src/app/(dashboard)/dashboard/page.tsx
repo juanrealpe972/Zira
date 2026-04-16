@@ -45,7 +45,6 @@ const invoices = [
 
 const total = pieData.reduce((acc, d) => acc + d.value, 0)
 
-// Tooltip personalizado
 function CustomTooltip({ active, payload }: any) {
   if (!active || !payload?.length) return null
   const { name, value, color } = payload[0].payload
