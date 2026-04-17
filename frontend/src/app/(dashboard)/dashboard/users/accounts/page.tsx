@@ -73,7 +73,7 @@ export default function UsersListPage() {
   }, [])
 
   function handleUserCreated(user: User) {
-    setUsers(prev => [user, ...prev])  // ← agrega al inicio de la lista
+    setUsers(prev => [user, ...prev])
   }
 
   function handleUserUpdated(updated: User) {
@@ -359,7 +359,6 @@ export default function UsersListPage() {
           </DropdownMenu.Root>
         </Flex>
 
-        {/* Tabla */}
         {loading ? (
           <Flex align="center" justify="center" py="8">
             <Text color="gray">Cargando usuarios...</Text>

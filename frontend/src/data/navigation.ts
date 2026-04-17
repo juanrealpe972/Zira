@@ -40,7 +40,7 @@ export const navigation: NavGroup[] = [
         icon: Icons.user,
         children: [
           ...crud('users'),
-          { label: 'Perfil', href: '/dashboard/users/profile' },
+          { label: 'Perfil', href: '/dashboard/users/profile/me' },
           { label: 'Usuarios', href: '/dashboard/users/users' },
         ],
       },
