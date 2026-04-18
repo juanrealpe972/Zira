@@ -1,38 +1,125 @@
-import { Card } from '@radix-ui/themes'
+'use client'
+
+import { useState } from 'react'
+import { Box, Flex, Card, Avatar, Text, Button, IconButton, Separator } from '@radix-ui/themes'
+import { ImageIcon, Cross2Icon, PaperPlaneIcon } from '@radix-ui/react-icons'
+import { Icons } from '@/components/ui/icons/icons'
+
+type Props = {
+  userName: string
+  userPhoto?: string | null
+  newPost: string
+  setNewPost: (v: string) => void
+  handleCreatePost: () => void
+  setImagePreview: (v: string | null) => void
+  imagePreview?: string | null
+}
 
 export function CreatePostCard({
+  userName,
+  userPhoto,
   newPost,
   setNewPost,
   handleCreatePost,
-  setImagePreview
-}: any) {
-  return (
-    <div className="px-6">
-      <Card className="p-4 border rounded-xl shadow-sm">
-        <textarea
-          className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="¿Qué estás pensando?"
-          value={newPost}
-          onChange={(e) => setNewPost(e.target.value)}
-        />
+  setImagePreview,
+  imagePreview,
+}: Props) {
+  const [focused, setFocused] = useState(false)
 
-        <div className="flex justify-between mt-3">
-          <input
-            type="file"
-            onChange={(e) => {
-              const file = e.target.files?.[0]
-              if (file) setImagePreview(URL.createObjectURL(file))
-            }}
+  return (
+    <Box px="6">
+      <Card
+        size="2"
+        style={{
+          border: focused ? '1px solid var(--accent-7)' : '1px solid var(--gray-4)',
+          transition: 'border-color 0.2s',
+        }}
+      >
+        <Flex gap="3" align="start">
+          <Avatar
+            size="3"
+            src={userPhoto ?? undefined}
+            fallback={userName?.[0]?.toUpperCase() ?? 'U'}
+            radius="full"
+            style={{ flexShrink: 0 }}
           />
 
-          <button
+          <Box style={{ flex: 1 }}>
+            <textarea
+              value={newPost}
+              onChange={e => setNewPost(e.target.value)}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              placeholder={`¿Qué estás pensando, ${userName?.split(' ')[0]}?`}
+              rows={3}
+              style={{
+                width: '100%',
+                background: 'transparent',
+                border: 'none',
+                outline: 'none',
+                resize: 'none',
+                fontSize: 14,
+                color: 'var(--gray-12)',
+                fontFamily: 'inherit',
+                lineHeight: 1.6,
+              }}
+            />
+
+            {/* Preview imagen */}
+            {imagePreview && (
+              <Box style={{ position: 'relative', display: 'inline-block', marginTop: 8 }}>
+                <img
+                  src={imagePreview}
+                  alt="preview"
+                  style={{ maxHeight: 200, borderRadius: 8, maxWidth: '100%' }}
+                />
+                <IconButton
+                  size="1"
+                  variant="solid"
+                  color="red"
+                  onClick={() => setImagePreview(null)}
+                  style={{ position: 'absolute', top: 4, right: 4 }}
+                >
+                  <Cross2Icon />
+                </IconButton>
+              </Box>
+            )}
+          </Box>
+        </Flex>
+
+        <Separator size="4" mt="3" mb="3" />
+
+        {/* Acciones */}
+        <Flex justify="between" align="center">
+          <Flex gap="2">
+            {/* Adjuntar imagen */}
+            <label style={{ cursor: 'pointer' }}>
+              <input
+                type="file"
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={e => {
+                  const file = e.target.files?.[0]
+                  if (file) setImagePreview(URL.createObjectURL(file))
+                }}
+              />
+              <IconButton variant="soft" size="2" asChild>
+                <span>
+                  <ImageIcon />
+                </span>
+              </IconButton>
+            </label>
+          </Flex>
+
+          <Button
+            size="2"
+            disabled={!newPost.trim()}
             onClick={handleCreatePost}
-            className="bg-blue-600 hover:bg-blue-700 transition text-white px-4 py-1 rounded-md"
           >
-            Publicar
-          </button>
-        </div>
+            <PaperPlaneIcon /> Publicar
+          </Button>
+        </Flex>
       </Card>
-    </div>
+    </Box>
   )
 }
