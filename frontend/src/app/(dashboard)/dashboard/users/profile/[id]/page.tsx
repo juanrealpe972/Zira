@@ -1,28 +1,20 @@
 'use client'
 
-import { ProfileHeader } from '@/components/users/profile/ProfileHeader'
-import { ProfileInfo } from '@/components/users/profile/ProfileInfo'
-import { CreatePostCard } from '@/components/users/profile/CreatePostCard'
-import { PostList } from '@/components/users/profile/PostList'
-import { Box, Flex, Spinner, Text } from '@radix-ui/themes'
 import { useEffect, useState } from 'react'
-import { User, getUserById } from '@/services/users.service'
-import { Post } from '@/types/social'
 import { use } from 'react'
+import { Box, Flex, Spinner, Text } from '@radix-ui/themes'
+import { User, getUserById } from '@/services/users.service'
+import { ProfileHeader } from '@/components/users/profile/ProfileHeader'
+import { ProfileTab } from '@/components/users/profile/tabs/ProfileTab'
+import { FollowersTab } from '@/components/users/profile/tabs/FollowersTab'
+import { FriendsTab } from '@/components/users/profile/tabs/FriendsTab'
+import { GalleryTab } from '@/components/users/profile/tabs/GalleryTab'
+import {
+  mockPosts, mockFollowers, mockFriends,
+  mockGallery, mockAbout, MockPost,
+} from '@/data/profile.mock'
 
-const mockPosts: Post[] = [
-  {
-    id: 1,
-    userId: 1,
-    text: 'Primera publicación de ejemplo 🚀',
-    image: 'https://picsum.photos/600/300',
-    createdAt: '2026-04-10',
-    likes: 12,
-    comments: [
-      { id: 1, user: 'Ana', text: 'Muy buen post 🔥' },
-    ],
-  },
-]
+type Tab = 'profile' | 'followers' | 'friends' | 'gallery'
 
 function getTokenUserId(): number | null {
   if (typeof document === 'undefined') return null
@@ -31,39 +23,36 @@ function getTokenUserId(): number | null {
   try {
     const payload = JSON.parse(atob(match[1].split('.')[1]))
     return payload.user_id
-  } catch {
-    return null
-  }
+  } catch { return null }
 }
 
 export default function UserProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const [user, setUser] = useState<User | null>(null)
-  const [posts, setPosts] = useState<Post[]>(mockPosts)
-  const [resolvedId, setResolvedId] = useState<number | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState<Tab>('profile')
+  const [posts, setPosts] = useState<MockPost[]>(mockPosts)
   const [newPost, setNewPost] = useState('')
   const [imagePreview, setImagePreview] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const idFinal = id === 'me' ? getTokenUserId() : Number(id)
     if (!idFinal) return
-
-    setResolvedId(idFinal)
-    getUserById(idFinal)
-      .then(setUser)
-      .finally(() => setLoading(false))
+    getUserById(idFinal).then(setUser).finally(() => setLoading(false))
   }, [id])
 
   function handleCreatePost() {
-    if (!newPost || !resolvedId) return
-    const post: Post = {
+    if (!newPost.trim()) return
+    const post: MockPost = {
       id: Date.now(),
-      userId: resolvedId,
+      userId: Number(id),
+      userName: user?.name ?? 'Usuario',
+      userPhoto: user?.photo ?? null,
       text: newPost,
       image: imagePreview,
       createdAt: new Date().toISOString(),
       likes: 0,
+      likedBy: [],
       comments: [],
     }
     setPosts(prev => [post, ...prev])
@@ -74,8 +63,7 @@ export default function UserProfilePage({ params }: { params: Promise<{ id: stri
   if (loading) {
     return (
       <Flex align="center" justify="center" style={{ minHeight: '60vh' }} gap="2">
-        <Spinner />
-        <Text color="gray">Cargando perfil...</Text>
+        <Spinner /><Text color="gray">Cargando perfil...</Text>
       </Flex>
     )
   }
@@ -89,24 +77,40 @@ export default function UserProfilePage({ params }: { params: Promise<{ id: stri
   }
 
   return (
-    <Box style={{ maxWidth: 768, margin: '0 auto', paddingBottom: 40 }}>
+    <Box p="5" style={{ maxWidth: 960, margin: '0 auto' }}>
 
-      {/* ← user va aquí ahora */}
-      <ProfileHeader user={user} />
+      {/* Breadcrumb */}
+      <Flex align="center" gap="1" mb="4">
+        <Text size="1" color="gray">Dashboard</Text>
+        <Text size="1" color="gray">•</Text>
+        <Text size="1" color="gray">Usuario</Text>
+        <Text size="1" color="gray">•</Text>
+        <Text size="1">{user.name}</Text>
+      </Flex>
 
-      <ProfileInfo user={user} />
-
-      <CreatePostCard
-        userName={user.name}
-        userPhoto={user.photo}
-        newPost={newPost}
-        setNewPost={setNewPost}
-        handleCreatePost={handleCreatePost}
-        setImagePreview={setImagePreview}
-        imagePreview={imagePreview}
+      {/* Header con tabs */}
+      <ProfileHeader
+        user={user}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
       />
 
-      <PostList posts={posts} />
+      {/* Contenido según tab */}
+      {activeTab === 'profile' && (
+        <ProfileTab
+          user={user}
+          about={mockAbout}
+          posts={posts}
+          newPost={newPost}
+          setNewPost={setNewPost}
+          imagePreview={imagePreview}
+          setImagePreview={setImagePreview}
+          onCreatePost={handleCreatePost}
+        />
+      )}
+      {activeTab === 'followers' && <FollowersTab followers={mockFollowers} />}
+      {activeTab === 'friends' && <FriendsTab friends={mockFriends} />}
+      {activeTab === 'gallery' && <GalleryTab gallery={mockGallery} />}
 
     </Box>
   )
