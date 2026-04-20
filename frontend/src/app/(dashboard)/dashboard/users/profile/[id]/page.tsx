@@ -34,6 +34,13 @@ export default function UserProfilePage({ params }: { params: Promise<{ id: stri
   const [posts, setPosts] = useState<MockPost[]>(mockPosts)
   const [newPost, setNewPost] = useState('')
   const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [viewerId, setViewerId] = useState<number | null>(null)
+
+  useEffect(() => {
+    const id = getTokenUserId()
+    setViewerId(id)
+  }, [])
+
 
   useEffect(() => {
     const idFinal = id === 'me' ? getTokenUserId() : Number(id)
@@ -99,7 +106,7 @@ export default function UserProfilePage({ params }: { params: Promise<{ id: stri
       {activeTab === 'profile' && (
         <ProfileTab
           user={user}
-          about={mockAbout}
+          viewerId={viewerId}
           posts={posts}
           newPost={newPost}
           setNewPost={setNewPost}

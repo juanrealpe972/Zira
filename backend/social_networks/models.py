@@ -6,14 +6,18 @@ class SocialNetwork(models.Model):
     PLATFORM_CHOICES = [
         ('facebook', 'Facebook'),
         ('instagram', 'Instagram'),
-        ('x', 'X'),
-        ('meta', 'Meta'),
+        ('twitter', 'Twitter'),
+        ('linkedin', 'LinkedIn'),
+        ('youtube', 'YouTube'),
+        ('tiktok', 'TikTok'),
+        ('github', 'GitHub'),
+        ('otro', 'Otro'),
     ]
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="social_networks"
+        related_name="social_networks"  
     )
 
     platform = models.CharField(
