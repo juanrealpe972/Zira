@@ -1,14 +1,20 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import { Flex, Text, Box, Badge, ScrollArea } from '@radix-ui/themes'
-import { HamburgerMenuIcon, ChevronRightIcon, PersonIcon, ExternalLinkIcon } from '@radix-ui/react-icons'
+import { useState, useRef, useEffect } from 'react'
+import { Flex, Text, Box, Badge, ScrollArea, Avatar } from '@radix-ui/themes'
+import { Icons } from '@/components/ui/icons/icons'
 import NavLink from 'next/link'
 import { usePathname } from 'next/navigation'
 import { navigation } from '@/data/navigation'
 import { ZiraLogo } from '../ui/ZiraLogo'
+import AppIcon from '../ui/AppIcon'
+import { User } from '@/services/users.service'
 
-export default function Sidebar() {
+type Props = {
+  user: User | null
+}
+
+export default function Sidebar({ user }: Props) {
   const [expanded, setExpanded] = useState(true)
   const [openGroups, setOpenGroups] = useState<string[]>([])
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
@@ -69,7 +75,7 @@ export default function Sidebar() {
             onClick={() => setExpanded(!expanded)}
             style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', color: 'var(--gray-11)' }}
           >
-            <HamburgerMenuIcon width={16} height={16} />
+            <AppIcon name="menu" size={20} className="text-gray-500 hover:text-gray-600" />
           </Box>
         )}
         {!expanded && (
@@ -77,7 +83,7 @@ export default function Sidebar() {
             onClick={() => setExpanded(!expanded)}
             style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', color: 'var(--gray-11)', marginTop: 8 }}
           >
-            <HamburgerMenuIcon width={16} height={16} />
+            <Icons.menu width={16} height={16} />
           </Box>
         )}
       </Flex>
@@ -191,14 +197,14 @@ export default function Sidebar() {
                             {item.tag}
                           </Badge>
                         )}
-                        {item.external && <ExternalLinkIcon width={12} />}
+                        {item.external && <Icons.external width={12} />}
                         {hasChildren && (
-                          <ChevronRightIcon
-                            style={{
-                              transition: 'transform 0.2s',
-                              transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)',
-                              color: isHovered ? 'var(--gray-12)' : 'var(--gray-9)',
-                            }}
+                          <AppIcon
+                            name="right"
+                            size={20}
+                            className={`transition-transform duration-200
+                              ${isOpen ? 'rotate-90' : 'rotate-0'}
+                              ${isHovered ? 'text-gray-12' : 'text-gray-9'}`}
                           />
                         )}
                       </Flex>
@@ -212,7 +218,7 @@ export default function Sidebar() {
                         top: '50%',
                         transform: 'translateY(-50%)',
                       }}>
-                        <ChevronRightIcon width={10} style={{ color: 'var(--gray-8)' }} />
+                        <Icons.right width={10} className="text-(--gray-8)" />
                       </Box>
                     )}
                   </Flex>
@@ -314,12 +320,23 @@ export default function Sidebar() {
         style={{ flexShrink: 0, borderTop: '1px solid var(--gray-4)' }}
       >
         <Box style={{ flexShrink: 0 }}>
-          <PersonIcon width={20} height={20} />
+          <Avatar
+            size="1"
+            src={user?.photo ?? undefined}
+            fallback={user?.name?.[0]?.toUpperCase() ?? 'U'}
+            radius="full"
+            style={{ background: 'var(--accent-3)' }}
+          />
+
         </Box>
         {expanded && (
           <Box style={{ overflow: 'hidden' }}>
-            <Text size="2" weight="medium" style={{ whiteSpace: 'nowrap' }}>Juan Realpe</Text>
-            <Text size="1" color="gray" style={{ whiteSpace: 'nowrap', display: 'block' }}>demo@zira.cc</Text>
+            <Text size="2" weight="medium" style={{ whiteSpace: 'nowrap' }}>
+              {user?.name || 'Name User'}
+            </Text>
+            <Text size="1" color="gray" style={{ whiteSpace: 'nowrap', display: 'block' }}>
+              {user?.email || 'demo@zira.cc'}
+            </Text>
           </Box>
         )}
       </Flex>

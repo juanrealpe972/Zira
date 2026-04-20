@@ -27,14 +27,13 @@ export function ProfileTab({ user, about, posts, newPost, setNewPost, imagePrevi
         <Card size="2">
           <Heading size="3" mb="3">Acerca de</Heading>
           <Text size="2" color="gray" style={{ lineHeight: 1.6, display: 'block', marginBottom: 12 }}>
-            {about.bio}
+            {user.description}
           </Text>
           <Flex direction="column" gap="2">
             {[
-              { icon: Icons.archive, text: `Vive en ${about.location}` },
-              { icon: Icons.mail, text: about.email },
-              { icon: Icons.task, text: `${about.job} en ${about.company}` },
-              { icon: Icons.content, text: `Estudió en ${about.studied}` },
+              { icon: Icons.archive, text: `Vive en ${user.city} - ${user.country}` },
+              { icon: Icons.mail, text: user.email },
+              { icon: Icons.task, text: `Trabaja en ${user.company}` },
             ].map(({ icon: Icon, text }, i) => (
               <Flex key={i} align="center" gap="2">
                 <Icon width={14} height={14} style={{ color: 'var(--gray-9)', flexShrink: 0 }} />

@@ -41,7 +41,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     company = models.CharField(max_length=255, null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
-    photo = models.TextField(null=True, blank=True)
+    photo = models.ImageField(upload_to='users/', null=True, blank=True)
+    description = models.CharField(max_length=255, null=True, blank=True)
 
     # 🔴 Control
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='free')

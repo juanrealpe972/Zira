@@ -16,6 +16,9 @@ import {
   Share2Icon,
   CheckboxIcon,
   MixerHorizontalIcon,
+  HamburgerMenuIcon,
+  ChevronRightIcon,
+  ExternalLinkIcon,
 } from '@radix-ui/react-icons'
 
 export const Icons = {
@@ -36,4 +39,7 @@ export const Icons = {
   share: Share2Icon,
   task: CheckboxIcon,
   filter: MixerHorizontalIcon,
+  menu: HamburgerMenuIcon,
+  right: ChevronRightIcon,
+  external: ExternalLinkIcon,
 }
