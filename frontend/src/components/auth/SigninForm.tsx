@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation'
 import { TextField, Text as RadixText } from '@radix-ui/themes'
 import { AppTextField } from '../ui/AppTextField'
 
-const DEFAULT_EMAIL = 'camilo2@gmail.com'
+const DEFAULT_EMAIL = 'juanrealpe972@gmail.com'
 const DEFAULT_PASSWORD = '123456'
 
 export default function SigninForm() {

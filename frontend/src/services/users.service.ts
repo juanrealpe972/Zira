@@ -23,6 +23,7 @@ export type User = {
   created_at: string
   is_active: boolean
   is_staff: boolean
+  description: string | null
 }
 
 export type CreateUserRequest = {
