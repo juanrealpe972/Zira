@@ -27,7 +27,7 @@ type Props = {
   open: boolean
   onClose: () => void
   userId: number
-  existing?: SocialNetwork | null  // si existe, es edición
+  existing?: SocialNetwork | null
   onSaved: (social: SocialNetwork) => void
 }
 
@@ -66,10 +66,33 @@ export function SocialNetworkModal({ open, onClose, userId, existing, onSaved }:
 
   function validate(): boolean {
     const newErrors: FormErrors = {}
-    if (!form.platform) newErrors.platform = 'Selecciona una plataforma'
-    if (!form.url.trim()) newErrors.url = 'La URL es obligatoria'
-    else if (!/^https?:\/\//.test(form.url)) newErrors.url = 'La URL debe empezar con http:// o https://'
-    if (!form.username.trim()) newErrors.username = 'El nombre de usuario es obligatorio'
+
+    if (!form.platform) {
+      newErrors.platform = 'Selecciona una plataforma'
+    }
+
+    if (!form.url.trim()) {
+      newErrors.url = 'La URL es obligatoria'
+    } else {
+      try {
+        const url = new URL(form.url)
+        if (!url.hostname.includes('.') || url.hostname.length < 4) {
+          newErrors.url = 'Ingresa una URL válida. Ej: https://facebook.com/usuario'
+        }
+        if (!['http:', 'https:'].includes(url.protocol)) {
+          newErrors.url = 'La URL debe usar http:// o https://'
+        }
+      } catch {
+        newErrors.url = 'La URL no es válida. Ej: https://facebook.com/usuario'
+      }
+    }
+
+    if (!form.username.trim()) {
+      newErrors.username = 'El nombre de usuario es obligatorio'
+    } else if (form.username.length < 2) {
+      newErrors.username = 'El nombre debe tener al menos 2 caracteres'
+    }
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -82,24 +105,30 @@ export function SocialNetworkModal({ open, onClose, userId, existing, onSaved }:
       const payload: SocialNetworkRequest = {
         user: userId,
         platform: form.platform,
-        url: form.url,
-        username: form.username,
+        url: form.url.trim(),
+        username: form.username.trim(),
       }
       const result = isEdit
         ? await updateSocialNetwork(existing!.id, payload)
         : await createSocialNetwork(payload)
 
       onSaved(result)
-      setToastMessage(isEdit ? 'Red social actualizada' : 'Red social agregada')
+      setToastMessage(isEdit ? '¡Red social actualizada!' : '¡Red social agregada!')
       setToastType('success')
       setToastOpen(true)
       setTimeout(() => handleClose(), 1500)
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Error inesperado'
-      setApiError(msg)
-      setToastMessage(msg)
+
+      const friendlyMsg =
+        msg.includes('400') ? 'Datos inválidos, verifica la URL y el usuario' :
+          msg.includes('401') ? 'No tienes permiso para realizar esta acción' :
+            msg.includes('409') ? 'Esta red social ya está registrada' :
+              msg 
+
+      setApiError(friendlyMsg)
+      setToastMessage(friendlyMsg)
       setToastType('error')
-      console.error('Error al guardar red social:', err)
       setToastOpen(true)
     } finally {
       setLoading(false)
@@ -126,8 +155,8 @@ export function SocialNetworkModal({ open, onClose, userId, existing, onSaved }:
       toastMessage={toastMessage}
       toastType={toastType}
       onToastChange={setToastOpen}
-      onNext={() => {}}
-      onBack={() => {}}
+      onNext={() => { }}
+      onBack={() => { }}
       onSubmit={handleSubmit}
       submitLabel={isEdit ? 'Actualizar' : 'Agregar'}
     >
