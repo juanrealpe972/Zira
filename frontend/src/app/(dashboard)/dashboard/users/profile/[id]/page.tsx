@@ -11,7 +11,7 @@ import { FriendsTab } from '@/components/users/profile/tabs/FriendsTab'
 import { GalleryTab } from '@/components/users/profile/tabs/GalleryTab'
 import {
   mockPosts, mockFollowers, mockFriends,
-  mockGallery, mockAbout, MockPost,
+  mockGallery, MockPost,
 } from '@/data/profile.mock'
 
 type Tab = 'profile' | 'followers' | 'friends' | 'gallery'

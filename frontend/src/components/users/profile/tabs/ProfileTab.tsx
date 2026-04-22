@@ -99,7 +99,6 @@ export function ProfileTab({
           </Flex>
         </Card>
 
-        {/* Social */}
         <Card size="2">
           <Flex justify="between" align="center" mb="3">
             <Heading size="3">Social</Heading>
@@ -115,25 +114,64 @@ export function ProfileTab({
           </Flex>
 
           {socials.length === 0 ? (
-            <Text size="2" color="gray">Sin redes sociales</Text>
+            <Flex direction="column" align="center" gap="1" py="3">
+              <Icons.share width={20} style={{ color: 'var(--gray-6)' }} />
+              <Text size="1" color="gray">Sin redes sociales</Text>
+            </Flex>
           ) : (
-            <Flex direction="column" gap="2">
+            <Flex direction="column" gap="3">
               {socials.map(social => (
                 <Flex key={social.id} align="center" justify="between" gap="2">
-                  <Flex align="center" gap="2" style={{ flex: 1, minWidth: 0 }}>
-                    <PlatformIcon platform={social.platform} />
+
+                  <Flex align="center" gap="3" style={{ flex: 1, minWidth: 0 }}>
+
+                    {/* Ícono con fondo */}
+                    <Flex
+                      align="center"
+                      justify="center"
+                      style={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: '50%',
+                        background: 'var(--accent-3)',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <PlatformIcon platform={social.platform} size={16} />
+                    </Flex>
+
+                    {/* Info */}
                     <Box style={{ minWidth: 0 }}>
-                      <Text size="1" color="gray" style={{ display: 'block' }}>{social.platform}</Text>
-                      <a href={social.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                      <Text
+                        size="1"
+                        weight="bold"
+                        style={{
+                          display: 'block',
+                          textTransform: 'capitalize',
+                          color: 'var(--gray-12)',
+                        }}
+                      >
+                        {social.platform}
+                      </Text>
+                      <a
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ textDecoration: 'none' }}
+                        onMouseEnter={e => (e.currentTarget.style.textDecoration = 'underline')}
+                        onMouseLeave={e => (e.currentTarget.style.textDecoration = 'none')}
+                      >
                         <Text
-                          size="2"
+                          size="1"
                           style={{
-                            color: 'var(--accent-9)',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
                             display: 'block',
+                            transition: 'opacity 0.15s',
                           }}
+                          onMouseEnter={e => ((e.currentTarget as HTMLElement).style.opacity = '0.75')}
+                          onMouseLeave={e => ((e.currentTarget as HTMLElement).style.opacity = '1')}
                         >
                           {social.username}
                         </Text>
@@ -141,6 +179,7 @@ export function ProfileTab({
                     </Box>
                   </Flex>
 
+                  {/* Acciones */}
                   {canEdit && (
                     <Flex gap="1" style={{ flexShrink: 0 }}>
                       <IconButton
@@ -165,10 +204,11 @@ export function ProfileTab({
             </Flex>
           )}
         </Card>
-      </Flex>
+      </Flex >
 
       {/* Columna derecha — posts */}
-      <Flex direction="column" gap="4" style={{ flex: 1, minWidth: 0 }}>
+      < Flex direction="column" gap="4" style={{ flex: 1, minWidth: 0 }
+      }>
         <CreatePostCard
           userName={user.name}
           userPhoto={user.photo}
@@ -178,19 +218,21 @@ export function ProfileTab({
           setImagePreview={setImagePreview}
           imagePreview={imagePreview}
         />
-        {posts.map(post => (
-          <PostCard key={post.id} post={post} />
-        ))}
-      </Flex>
+        {
+          posts.map(post => (
+            <PostCard key={post.id} post={post} />
+          ))
+        }
+      </Flex >
 
       {/* Modal red social */}
-      <SocialNetworkModal
+      < SocialNetworkModal
         open={socialModalOpen}
         onClose={() => { setSocialModalOpen(false); setEditingSocial(null) }}
         userId={user.id}
         existing={editingSocial}
         onSaved={handleSaved}
       />
-    </Flex>
+    </Flex >
   )
 }
