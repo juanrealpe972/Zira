@@ -20,6 +20,7 @@ import {
   LinkedInLogoIcon,
   TwitterLogoIcon,
   InstagramLogoIcon,
+  MagicWandIcon,
   VideoIcon,
   MinusIcon,
   GlobeIcon,
@@ -42,6 +43,7 @@ export const Icons = {
   bookmark: BookmarkIcon,
   share: Share2Icon,
   task: CheckboxIcon,
+  menu: MagicWandIcon,
   filter: MixerHorizontalIcon,
 
   // Redes sociales

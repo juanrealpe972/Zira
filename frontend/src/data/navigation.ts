@@ -49,7 +49,7 @@ export const navigation: NavGroup[] = [
   {
     group: 'Finanzas',
     items: [
-      { label: 'Cuentas bancarias', href: '/dashboard/finances/bank-account', icon: Icons.finance },
+      { label: 'Cuentas bancarias', href: '/dashboard/bank-accounts/me', icon: Icons.finance },
       { label: 'Tarjetas bancarias', href: '/dashboard/finances/bank-cards', icon: Icons.finance },
       { label: 'Préstamos', href: '/dashboard/finances/loans', icon: Icons.filter },
       { label: 'Ahorros', href: '/dashboard/finances/savings', icon: Icons.bookmark },
