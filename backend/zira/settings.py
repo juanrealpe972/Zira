@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 from datetime import timedelta
 
@@ -176,3 +177,6 @@ SIMPLE_JWT = {
     "ALGORITHM": "HS256",                            # 🔐 Algoritmo
     "AUTH_HEADER_TYPES": ("Bearer",)                 # Prefijo en headers
 }
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

@@ -1,13 +1,24 @@
-import { Box, Flex, Text, Card, Heading, Separator, Avatar } from '@radix-ui/themes'
+'use client'
+
+import { useEffect, useState } from 'react'
+import { Box, Flex, Text, Card, Heading, IconButton, Button } from '@radix-ui/themes'
+import { PlusIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons'
 import { Icons } from '@/components/ui/icons/icons'
-import { MockAbout, MockPost, mockSocial } from '@/data/profile.mock'
+import { MockPost } from '@/data/profile.mock'
 import { PostCard } from '../PostCard'
 import { CreatePostCard } from '../CreatePostCard'
 import { User } from '@/services/users.service'
+import { SocialNetworkModal } from '../SocialNetworkModal'
+import {
+  getSocialNetworks,
+  deleteSocialNetwork,
+  SocialNetwork,
+} from '@/services/social-networks.service'
+import PlatformIcon from '../../../ui/PlatformIcon'
 
 type Props = {
   user: User
-  about: MockAbout
+  viewerId: number | null        // ID del usuario que está viendo el perfil
   posts: MockPost[]
   newPost: string
   setNewPost: (v: string) => void
@@ -16,7 +27,42 @@ type Props = {
   onCreatePost: () => void
 }
 
-export function ProfileTab({ user, about, posts, newPost, setNewPost, imagePreview, setImagePreview, onCreatePost }: Props) {
+export function ProfileTab({
+  user, viewerId, posts, newPost,
+  setNewPost, imagePreview, setImagePreview, onCreatePost,
+}: Props) {
+  const [socials, setSocials] = useState<SocialNetwork[]>([])
+  const [socialModalOpen, setSocialModalOpen] = useState(false)
+  const [editingSocial, setEditingSocial] = useState<SocialNetwork | null>(null)
+
+  // Puede editar si es el dueño del perfil o admin
+  const canEdit = viewerId === user.id || user.role === 'admin'
+
+  useEffect(() => {
+    getSocialNetworks(user.id)
+      .then(setSocials)
+      .catch(() => setSocials([]))
+  }, [user.id])
+
+  function handleSaved(social: SocialNetwork) {
+    setSocials(prev => {
+      const exists = prev.find(s => s.id === social.id)
+      return exists
+        ? prev.map(s => s.id === social.id ? social : s)
+        : [...prev, social]
+    })
+    setEditingSocial(null)
+  }
+
+  async function handleDelete(id: number) {
+    try {
+      await deleteSocialNetwork(id)
+      setSocials(prev => prev.filter(s => s.id !== id))
+    } catch {
+      console.error('Error al eliminar red social')
+    }
+  }
+
   return (
     <Flex gap="4" align="start">
 
@@ -26,42 +72,143 @@ export function ProfileTab({ user, about, posts, newPost, setNewPost, imagePrevi
         {/* About */}
         <Card size="2">
           <Heading size="3" mb="3">Acerca de</Heading>
-          <Text size="2" color="gray" style={{ lineHeight: 1.6, display: 'block', marginBottom: 12 }}>
-            {about.bio}
-          </Text>
+          {user.address && (
+            <Text size="2" color="gray" style={{ lineHeight: 1.6, display: 'block', marginBottom: 12 }}>
+              {user.address}
+            </Text>
+          )}
           <Flex direction="column" gap="2">
-            {[
-              { icon: Icons.archive, text: `Vive en ${about.location}` },
-              { icon: Icons.mail, text: about.email },
-              { icon: Icons.task, text: `${about.job} en ${about.company}` },
-              { icon: Icons.content, text: `Estudió en ${about.studied}` },
-            ].map(({ icon: Icon, text }, i) => (
-              <Flex key={i} align="center" gap="2">
-                <Icon width={14} height={14} style={{ color: 'var(--gray-9)', flexShrink: 0 }} />
-                <Text size="2" color="gray">{text}</Text>
+            {user.city || user.country ? (
+              <Flex align="center" gap="2">
+                <Icons.archive width={14} style={{ color: 'var(--gray-9)', flexShrink: 0 }} />
+                <Text size="2" color="gray">
+                  {[user.city, user.country].filter(Boolean).join(', ')}
+                </Text>
               </Flex>
-            ))}
+            ) : null}
+            <Flex align="center" gap="2">
+              <Icons.mail width={14} style={{ color: 'var(--gray-9)', flexShrink: 0 }} />
+              <Text size="2" color="gray">{user.email}</Text>
+            </Flex>
+            {user.company && (
+              <Flex align="center" gap="2">
+                <Icons.task width={14} style={{ color: 'var(--gray-9)', flexShrink: 0 }} />
+                <Text size="2" color="gray">Trabaja en {user.company}</Text>
+              </Flex>
+            )}
           </Flex>
         </Card>
 
-        {/* Social */}
         <Card size="2">
-          <Heading size="3" mb="3">Social</Heading>
-          <Flex direction="column" gap="2">
-            {Object.entries(mockSocial).map(([platform, url]) => (
-              <Flex key={platform} align="center" gap="2">
-                <Icons.share width={14} height={14} style={{ color: 'var(--accent-9)', flexShrink: 0 }} />
-                <a href={url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-                  <Text size="2" style={{ color: 'var(--accent-9)' }}>{url}</Text>
-                </a>
-              </Flex>
-            ))}
+          <Flex justify="between" align="center" mb="3">
+            <Heading size="3">Social</Heading>
+            {canEdit && (
+              <IconButton
+                variant="ghost"
+                size="1"
+                onClick={() => { setEditingSocial(null); setSocialModalOpen(true) }}
+              >
+                <PlusIcon />
+              </IconButton>
+            )}
           </Flex>
+
+          {socials.length === 0 ? (
+            <Flex direction="column" align="center" gap="1" py="3">
+              <Icons.share width={20} style={{ color: 'var(--gray-6)' }} />
+              <Text size="1" color="gray">Sin redes sociales</Text>
+            </Flex>
+          ) : (
+            <Flex direction="column" gap="3">
+              {socials.map(social => (
+                <Flex key={social.id} align="center" justify="between" gap="2">
+
+                  <Flex align="center" gap="3" style={{ flex: 1, minWidth: 0 }}>
+
+                    {/* Ícono con fondo */}
+                    <Flex
+                      align="center"
+                      justify="center"
+                      style={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: '50%',
+                        background: 'var(--accent-3)',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <PlatformIcon platform={social.platform} size={16} />
+                    </Flex>
+
+                    {/* Info */}
+                    <Box style={{ minWidth: 0 }}>
+                      <Text
+                        size="1"
+                        weight="bold"
+                        style={{
+                          display: 'block',
+                          textTransform: 'capitalize',
+                          color: 'var(--gray-12)',
+                        }}
+                      >
+                        {social.platform}
+                      </Text>
+                      <a
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ textDecoration: 'none' }}
+                        onMouseEnter={e => (e.currentTarget.style.textDecoration = 'underline')}
+                        onMouseLeave={e => (e.currentTarget.style.textDecoration = 'none')}
+                      >
+                        <Text
+                          size="1"
+                          style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            display: 'block',
+                            transition: 'opacity 0.15s',
+                          }}
+                          onMouseEnter={e => ((e.currentTarget as HTMLElement).style.opacity = '0.75')}
+                          onMouseLeave={e => ((e.currentTarget as HTMLElement).style.opacity = '1')}
+                        >
+                          {social.username}
+                        </Text>
+                      </a>
+                    </Box>
+                  </Flex>
+
+                  {/* Acciones */}
+                  {canEdit && (
+                    <Flex gap="1" style={{ flexShrink: 0 }}>
+                      <IconButton
+                        variant="ghost"
+                        size="1"
+                        onClick={() => { setEditingSocial(social); setSocialModalOpen(true) }}
+                      >
+                        <Pencil1Icon />
+                      </IconButton>
+                      <IconButton
+                        variant="ghost"
+                        size="1"
+                        color="red"
+                        onClick={() => handleDelete(social.id)}
+                      >
+                        <TrashIcon />
+                      </IconButton>
+                    </Flex>
+                  )}
+                </Flex>
+              ))}
+            </Flex>
+          )}
         </Card>
-      </Flex>
+      </Flex >
 
       {/* Columna derecha — posts */}
-      <Flex direction="column" gap="4" style={{ flex: 1, minWidth: 0 }}>
+      < Flex direction="column" gap="4" style={{ flex: 1, minWidth: 0 }
+      }>
         <CreatePostCard
           userName={user.name}
           userPhoto={user.photo}
@@ -71,10 +218,21 @@ export function ProfileTab({ user, about, posts, newPost, setNewPost, imagePrevi
           setImagePreview={setImagePreview}
           imagePreview={imagePreview}
         />
-        {posts.map(post => (
-          <PostCard key={post.id} post={post} />
-        ))}
-      </Flex>
-    </Flex>
+        {
+          posts.map(post => (
+            <PostCard key={post.id} post={post} />
+          ))
+        }
+      </Flex >
+
+      {/* Modal red social */}
+      < SocialNetworkModal
+        open={socialModalOpen}
+        onClose={() => { setSocialModalOpen(false); setEditingSocial(null) }}
+        userId={user.id}
+        existing={editingSocial}
+        onSaved={handleSaved}
+      />
+    </Flex >
   )
 }

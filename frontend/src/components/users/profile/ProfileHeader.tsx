@@ -1,9 +1,11 @@
 'use client'
 
-import { Box, Flex, Avatar, Text, Heading, Button, IconButton } from '@radix-ui/themes'
+import { Box, Flex, Avatar, Text, Heading, IconButton } from '@radix-ui/themes'
 import { Pencil1Icon, Share2Icon } from '@radix-ui/react-icons'
 import { Icons } from '@/components/ui/icons/icons'
 import { User } from '@/services/users.service'
+import { EditUserModal } from '@/components/users/EditUserModal'
+import { useState } from 'react'
 
 type Tab = 'profile' | 'followers' | 'friends' | 'gallery'
 
@@ -21,6 +23,13 @@ const TABS: { key: Tab; label: string; icon: React.ComponentType<{ width?: numbe
 ]
 
 export function ProfileHeader({ user, activeTab, onTabChange }: Props) {
+  const [users, setUsers] = useState<User[]>([])
+  const [editUserId, setEditUserId] = useState<number | null>(null)
+
+  function handleUserUpdated(updated: User) {
+    setUsers(prev => prev.map(u => u.id === updated.id ? updated : u))
+  }
+
   return (
     <Box
       mb="4"
@@ -48,7 +57,7 @@ export function ProfileHeader({ user, activeTab, onTabChange }: Props) {
           <IconButton variant="soft" size="2" style={{ background: 'rgba(255,255,255,0.2)', color: 'white', cursor: 'pointer' }}>
             <Share2Icon />
           </IconButton>
-          <IconButton variant="soft" size="2" style={{ background: 'rgba(255,255,255,0.2)', color: 'white', cursor: 'pointer' }}>
+          <IconButton variant="soft" size="2" style={{ background: 'rgba(255,255,255,0.2)', color: 'white', cursor: 'pointer' }} onClick={() => setEditUserId(user.id)}>
             <Pencil1Icon />
           </IconButton>
         </Flex>
@@ -124,6 +133,11 @@ export function ProfileHeader({ user, activeTab, onTabChange }: Props) {
           </Box>
         ))}
       </Flex>
+      <EditUserModal
+        userId={editUserId}
+        open={editUserId !== null}
+        onClose={() => setEditUserId(null)}
+      />
     </Box>
   )
 }

@@ -16,6 +16,13 @@ import {
   Share2Icon,
   CheckboxIcon,
   MixerHorizontalIcon,
+  GitHubLogoIcon,
+  LinkedInLogoIcon,
+  TwitterLogoIcon,
+  InstagramLogoIcon,
+  VideoIcon,
+  MinusIcon,
+  GlobeIcon,
 } from '@radix-ui/react-icons'
 
 export const Icons = {
@@ -36,4 +43,34 @@ export const Icons = {
   share: Share2Icon,
   task: CheckboxIcon,
   filter: MixerHorizontalIcon,
+
+  // Redes sociales
+  github: GitHubLogoIcon,
+  linkedin: LinkedInLogoIcon,
+  twitter: TwitterLogoIcon,
+  instagram: InstagramLogoIcon,
+  youtube: VideoIcon,
+  tiktok: MinusIcon,
+  facebook: GlobeIcon,
+  otro: GlobeIcon,
+}
+
+// Helper para obtener el ícono por plataforma
+export function getSocialIcon(platform: string) {
+  const key = platform.toLowerCase() as keyof typeof Icons
+  return Icons[key] ?? Icons.share
+}
+
+// Color por plataforma
+export function getSocialColor(platform: string): string {
+  const colors: Record<string, string> = {
+    facebook: '#1877F2',
+    instagram: '#E1306C',
+    linkedin: '#0A66C2',
+    twitter: '#1DA1F2',
+    youtube: '#FF0000',
+    tiktok: '#010101',
+    github: '#333333',
+  }
+  return colors[platform.toLowerCase()] ?? 'var(--accent-9)'
 }

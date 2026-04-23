@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Flex, Text, Avatar, IconButton, DropdownMenu, Box } from '@radix-ui/themes'
 import { BellIcon, GearIcon, PersonIcon, GlobeIcon, ChevronDownIcon } from '@radix-ui/react-icons'
 import NotificationsPanel from './panels/NotificationsPanel'
 import SettingsPanel from './panels/SettingsPanel'
 import ProfilePanel from './panels/ProfilePanel'
+import { User, getUserById } from '@/services/users.service'
 
 const teams = [
   { name: 'Equipo 1', plan: 'Gratis' },
@@ -25,6 +26,24 @@ export default function DashboardHeader() {
   const [profileOpen, setProfileOpen] = useState(false)
   const [currentTeam, setCurrentTeam] = useState(teams[0])
   const [currentLang, setCurrentLang] = useState(languages[0])
+  const [currentUser, setCurrentUser] = useState<User | null>(null)
+
+  useEffect(() => {
+    function getTokenUserId(): number | null {
+      if (typeof document === 'undefined') return null
+      const match = document.cookie.match(/zira_access=([^;]+)/)
+      if (!match) return null
+      try {
+        const payload = JSON.parse(atob(match[1].split('.')[1]))
+        return payload.user_id
+      } catch { return null }
+    }
+
+    const userId = getTokenUserId()
+    if (userId) {
+      getUserById(userId).then(setCurrentUser).catch(() => null)
+    }
+  }, [])
 
   return (
     <>
@@ -106,10 +125,11 @@ export default function DashboardHeader() {
 
           <Box onClick={() => setProfileOpen(true)} style={{ cursor: 'pointer' }}>
             <Avatar
-              size="2"
-              fallback={<PersonIcon />}
+              size="1"
+              src={currentUser?.photo ?? undefined}
+              fallback={currentUser?.name?.[0]?.toUpperCase() ?? 'U'}
               radius="full"
-              style={{ background: 'var(--accent-9)' }}
+              style={{ background: 'var(--accent-3)' }}
             />
           </Box>
 
@@ -118,7 +138,7 @@ export default function DashboardHeader() {
 
       <NotificationsPanel open={notifOpen} onClose={() => setNotifOpen(false)} />
       <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
-      <ProfilePanel open={profileOpen} onClose={() => setProfileOpen(false)} />
+      <ProfilePanel open={profileOpen} onClose={() => setProfileOpen(false)} user={currentUser} />
     </>
   )
 }
