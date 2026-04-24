@@ -9,7 +9,7 @@ class PublicationSerializer(serializers.ModelSerializer):
             'author',
             'title',
             'content',
-            'tags',
+            'tag',
             'is_published',
             'created_at'
         ]
