@@ -197,10 +197,10 @@ export default function Sidebar({ user }: Props) {
                             {item.tag}
                           </Badge>
                         )}
-                        {item.external && <Icons.external width={12} />}
+                        {item.external && <Icons.menu width={12} />}
                         {hasChildren && (
                           <AppIcon
-                            name="right"
+                            name="menu"
                             size={20}
                             className={`transition-transform duration-200
                               ${isOpen ? 'rotate-90' : 'rotate-0'}
@@ -218,7 +218,7 @@ export default function Sidebar({ user }: Props) {
                         top: '50%',
                         transform: 'translateY(-50%)',
                       }}>
-                        <Icons.right width={10} className="text-(--gray-8)" />
+                        <Icons.menu width={10} className="text-(--gray-8)" />
                       </Box>
                     )}
                   </Flex>
