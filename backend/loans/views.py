@@ -10,10 +10,10 @@ class LoanView(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     def get_queryset(self):
-        """Retorna solo los préstamos donde el usuario es deudor o acreedor"""
+        """Retorna solo los préstamos donde el usuario es deudor o acreedor con optimización"""
         return Loan.objects.filter(
             models.Q(user=self.request.user) | models.Q(person=self.request.user)
-        )
+        ).select_related('user', 'person')
 
     def perform_create(self, serializer):
         """Asocia el préstamo al usuario actual como deudor"""

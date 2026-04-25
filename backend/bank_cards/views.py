@@ -9,8 +9,8 @@ class CardViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     def get_queryset(self):
-        """Retorna solo las tarjetas del usuario actual"""
-        return Bank_cards.objects.filter(user=self.request.user)
+        """Retorna solo las tarjetas del usuario actual con optimización de queries"""
+        return Bank_cards.objects.filter(user=self.request.user).select_related('user', 'bank_account')
 
     def perform_create(self, serializer):
         """Asocia la tarjeta al usuario actual"""

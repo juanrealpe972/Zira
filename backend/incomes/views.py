@@ -9,8 +9,8 @@ class IncomeView(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     def get_queryset(self):
-        """Retorna solo los ingresos del usuario actual"""
-        return Income.objects.filter(user=self.request.user)
+        """Retorna solo los ingresos del usuario actual con optimización"""
+        return Income.objects.filter(user=self.request.user).select_related('user')
 
     def perform_create(self, serializer):
         """Asocia el ingreso al usuario actual"""

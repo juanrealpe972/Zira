@@ -27,16 +27,18 @@ class Task(models.Model):
     status = models.CharField(
         max_length=15,
         choices=STATUS_CHOICES,
-        default='pendiente'
+        default='pendiente',
+        db_index=True
     )
 
     priority = models.CharField(
         max_length=10,
         choices=PRIORITY_CHOICES,
-        default='media'
+        default='media',
+        db_index=True
     )
 
-    due_date = models.DateField(null=True, blank=True)
+    due_date = models.DateField(null=True, blank=True, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

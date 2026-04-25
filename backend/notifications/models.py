@@ -8,9 +8,9 @@ class Notification(models.Model):
         related_name='notifications'
     )
 
-    type = models.CharField(max_length=50)
+    type = models.CharField(max_length=50, db_index=True)
     content = models.TextField()
-    is_read = models.BooleanField(default=False)
+    is_read = models.BooleanField(default=False, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

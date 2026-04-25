@@ -1,4 +1,12 @@
 from django.contrib import admin
 from .models import Expense
 
-admin.site.register(Expense)
+
+@admin.register(Expense)
+class ExpenseAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'category', 'amount', 'date', 'created_at')
+    search_fields = ('user__email', 'user__username', 'description')
+    list_filter = ('category', 'date')
+    readonly_fields = ('created_at',)
+    ordering = ('-date',)
+    date_hierarchy = 'date'

@@ -9,8 +9,8 @@ class OrderView(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     def get_queryset(self):
-        """Retorna solo las órdenes del usuario actual"""
-        return Order.objects.filter(user=self.request.user)
+        """Retorna solo las órdenes del usuario actual con optimización de queries"""
+        return Order.objects.filter(user=self.request.user).select_related('user')
 
     def perform_create(self, serializer):
         """Asocia la orden al usuario actual"""
