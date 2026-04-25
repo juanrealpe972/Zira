@@ -14,8 +14,8 @@ class Loan(models.Model):
     )
 
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    loan_date = models.DateField()
-    is_paid = models.BooleanField(default=False)
+    loan_date = models.DateField(db_index=True)
+    is_paid = models.BooleanField(default=False, db_index=True)
     paid_amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,

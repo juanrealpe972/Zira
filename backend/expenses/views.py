@@ -9,8 +9,8 @@ class ExpenseView(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     def get_queryset(self):
-        """Retorna solo los gastos del usuario actual"""
-        return Expense.objects.filter(user=self.request.user)
+        """Retorna solo los gastos del usuario actual con optimización"""
+        return Expense.objects.filter(user=self.request.user).select_related('user')
 
     def perform_create(self, serializer):
         """Asocia el gasto al usuario actual"""

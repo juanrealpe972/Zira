@@ -12,7 +12,8 @@ class Product(models.Model):
     description = models.TextField(blank=True)  # Product description
     price = models.DecimalField(max_digits=10, decimal_places=2)  # Product price
     stock = models.IntegerField()  # Quantity in stock
-    created_at = models.DateTimeField(auto_now_add=True)  # Created timestamp
+    is_available = models.BooleanField(default=True, db_index=True)  # Disponibilidad
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)  # Created timestamp
 
     def __str__(self):
         return self.name
