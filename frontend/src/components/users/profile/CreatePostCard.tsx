@@ -1,9 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Box, Flex, Card, Avatar, Text, Button, IconButton, Separator } from '@radix-ui/themes'
+import { Box, Flex, Card, Avatar, Button, IconButton, Separator } from '@radix-ui/themes'
 import { ImageIcon, Cross2Icon, PaperPlaneIcon } from '@radix-ui/react-icons'
-import { Icons } from '@/components/ui/icons/icons'
 
 type Props = {
   userName: string

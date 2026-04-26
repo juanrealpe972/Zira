@@ -11,7 +11,7 @@ import {
   PersonIcon, DownloadIcon, UploadIcon, ChevronLeftIcon, ChevronRightIcon, DotsVerticalIcon,
   MixerHorizontalIcon,
 } from '@radix-ui/react-icons'
-import { getUsers, updateUserStatus, User } from '@/services/users.service'
+import { getUsers, PaginatedResponse, updateUserStatus, User } from '@/services/users.service'
 import { useRouter } from 'next/navigation'
 import { CreateUserModal } from '@/components/users/CreateUserModal'
 import { EditUserModal } from '@/components/users/EditUserModal'
@@ -69,9 +69,10 @@ export default function UsersListPage() {
 
   useEffect(() => {
     getUsers()
-      .then(data => {
-        console.log(data.length + ' usuarios cargados')
-        setUsers(data)
+      .then((data: User[] | PaginatedResponse<User>) => {
+        const parsed = Array.isArray(data) ? data : data.results
+        // console.log(`Usuarios cargados: ${parsed.length}`)
+        setUsers(parsed)
       })
       .catch(() => setUsers([]))
       .finally(() => setLoading(false))
