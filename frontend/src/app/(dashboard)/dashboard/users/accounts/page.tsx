@@ -18,7 +18,7 @@ import { EditUserModal } from '@/components/users/EditUserModal'
 
 
 type ColumnKey = 'name' | 'email' | 'phone' | 'role' | 'company' |
-  'country' | 'city' | 'verified' | 'is_staff' | 'created_at' | 'status'
+  'country' | 'city' | 'verified' | 'is_staff' | 'created_at' | 'status' | 'description' | 'national_id'
 
 const ALL_COLUMNS: { key: ColumnKey; label: string }[] = [
   { key: 'name', label: 'Nombre' },
@@ -32,6 +32,8 @@ const ALL_COLUMNS: { key: ColumnKey; label: string }[] = [
   { key: 'is_staff', label: 'Staff' },
   { key: 'created_at', label: 'Fecha creación' },
   { key: 'status', label: 'Estado' },
+  { key: 'description', label: 'Descripción' },
+  { key: 'national_id', label: 'ID nacional' },
 ]
 
 const DEFAULT_COLUMNS: ColumnKey[] = ['name', 'email', 'phone', 'role', 'status']
@@ -67,7 +69,10 @@ export default function UsersListPage() {
 
   useEffect(() => {
     getUsers()
-      .then(data => setUsers(Array.isArray(data) ? data : []))
+      .then(data => {
+        console.log(data.length + ' usuarios cargados')
+        setUsers(data)
+      })
       .catch(() => setUsers([]))
       .finally(() => setLoading(false))
   }, [])
