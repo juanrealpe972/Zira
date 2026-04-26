@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Box, Flex, Text, Card, Heading, IconButton, Button } from '@radix-ui/themes'
+import { Box, Flex, Text, Card, Heading, IconButton } from '@radix-ui/themes'
 import { PlusIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons'
 import { Icons } from '@/components/ui/icons/icons'
 import { MockPost } from '@/data/profile.mock'
@@ -27,11 +27,16 @@ type Props = {
   onCreatePost: () => void
 }
 
+type PaginatedResponse<T> = {
+  count: number
+  results: T[]
+}
+
 export function ProfileTab({
   user, viewerId, posts, newPost,
   setNewPost, imagePreview, setImagePreview, onCreatePost,
 }: Props) {
-  const [socials, setSocials] = useState<SocialNetwork[]>([])
+  const [socials, setSocials] = useState<SocialNetwork[]>([]);
   const [socialModalOpen, setSocialModalOpen] = useState(false)
   const [editingSocial, setEditingSocial] = useState<SocialNetwork | null>(null)
 
@@ -40,9 +45,13 @@ export function ProfileTab({
 
   useEffect(() => {
     getSocialNetworks(user.id)
-      .then(setSocials)
-      .catch(() => setSocials([]))
-  }, [user.id])
+      .then((data: SocialNetwork[] | PaginatedResponse<SocialNetwork>) => {
+        const parsed = Array.isArray(data) ? data : data.results
+        // console.log(`Redes sociales cargadas: ${parsed.length} para el usuario ${user.id}`)
+        setSocials(parsed)
+      })
+      .catch(() => setSocials([]));
+  }, [user.id]);
 
   function handleSaved(social: SocialNetwork) {
     setSocials(prev => {
@@ -113,14 +122,14 @@ export function ProfileTab({
             )}
           </Flex>
 
-          {socials.length === 0 ? (
+          {!Array.isArray(socials) || socials.length === 0 ? (
             <Flex direction="column" align="center" gap="1" py="3">
               <Icons.share width={20} style={{ color: 'var(--gray-6)' }} />
               <Text size="1" color="gray">Sin redes sociales</Text>
             </Flex>
           ) : (
             <Flex direction="column" gap="3">
-              {socials.map(social => (
+              {Array.isArray(socials) && socials.map(social => (
                 <Flex key={social.id} align="center" justify="between" gap="2">
 
                   <Flex align="center" gap="3" style={{ flex: 1, minWidth: 0 }}>

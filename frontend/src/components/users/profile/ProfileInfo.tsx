@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Box, Flex, Text, Heading, Badge, Separator, Card, Avatar, Dialog, Button, IconButton } from '@radix-ui/themes'
+import { Box, Flex, Text, Heading, Badge, Separator, Avatar, Dialog, Button, IconButton } from '@radix-ui/themes'
 import { Icons } from '@/components/ui/icons/icons'
 import { User } from '@/services/users.service'
 import { Cross2Icon, PersonIcon } from '@radix-ui/react-icons'

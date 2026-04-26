@@ -13,11 +13,9 @@ import {
   getToken, 
   clearTokens, 
   isTokenExpiring,
-  setTokens,
-  getClientToken,
-  getClientRefreshToken 
+  setTokens
 } from '@/lib/api-client'
-import { User, getUserById } from '@/services/users.service'
+import { getUserById } from '@/services/users.service'
 
 // ============================================
 // TIPOS
