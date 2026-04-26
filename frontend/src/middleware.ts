@@ -1,15 +1,12 @@
 // src/middleware.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { TOKEN_KEY } from '@/lib/cookies'
-
-const PROTECTED = ['/dashboard']
-const AUTH_ROUTES = ['/auth/login', '/auth/register']
+import { TOKEN_KEY, PROTECTED_ROUTES, AUTH_ROUTES } from '@/lib/constants'
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get(TOKEN_KEY)?.value
   const { pathname } = request.nextUrl
 
-  const isProtected = PROTECTED.some(route => pathname.startsWith(route))
+  const isProtected = PROTECTED_ROUTES.some(route => pathname.startsWith(route))
   const isAuthRoute = AUTH_ROUTES.some(route => pathname.startsWith(route))
 
   if (isProtected && !token) {

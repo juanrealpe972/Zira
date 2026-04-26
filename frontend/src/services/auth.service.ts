@@ -1,51 +1,68 @@
-import { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from '@/types/auth.types'
+import { apiPost, setTokens, clearTokens, ApiError } from '@/lib/api-client'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL
-const TOKEN_KEY = 'zira_access'
-const REFRESH_KEY = 'zira_refresh'
+export interface LoginRequest {
+  email: string
+  password: string
+}
+
+export interface LoginResponse {
+  access: string
+  refresh: string
+}
+
+export interface RegisterRequest {
+  email: string
+  password: string
+  name: string
+  phone_prefix?: string
+  phone?: string
+  address?: string
+  company?: string
+  role?: string
+  country?: string
+  city?: string
+  national_id?: string
+}
+
+export interface RegisterResponse {
+  id: number
+  email: string
+  name: string
+}
 
 export async function login(credentials: LoginRequest): Promise<LoginResponse> {
-  const response = await fetch(`${API_URL}/api/v1/login/`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(credentials),
-  })
-
-  if (!response.ok) {
-    const error = await response.json()
-    if (response.status === 401) throw new Error('El email o la contraseña son incorrectos')
-    if (response.status === 400) throw new Error('Por favor verifica los datos ingresados')
-    throw new Error(error?.detail ?? 'Error al iniciar sesión')
+  try {
+    const data = await apiPost<LoginResponse>('/api/v1/login/', credentials, false)
+    setTokens(data.access, data.refresh)
+    return data
+  } catch (error) {
+    if (error instanceof ApiError) {
+      if (error.status === 401) {
+        throw new Error('El email o la contraseña son incorrectos')
+      }
+      if (error.status === 400) {
+        throw new Error('Por favor verifica los datos ingresados')
+      }
+      throw new Error(error.message)
+    }
+    throw new Error('Error al iniciar sesión')
   }
-
-  const data: LoginResponse = await response.json()
-
-  document.cookie = `${TOKEN_KEY}=${data.access}; path=/; max-age=900; SameSite=Strict`
-  document.cookie = `${REFRESH_KEY}=${data.refresh}; path=/; max-age=604800; SameSite=Strict`
-
-  return data
 }
 
 export async function logout() {
-  document.cookie = `${TOKEN_KEY}=; path=/; max-age=0`
-  document.cookie = `${REFRESH_KEY}=; path=/; max-age=0`
+  clearTokens()
 }
 
 export async function register(data: RegisterRequest): Promise<RegisterResponse> {
-  const response = await fetch(`${API_URL}/api/v1/register/`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  })
-
-  if (!response.ok) {
-    const error = await response.json()
-    if (response.status === 400) {
-      if (error?.email) throw new Error('Este email ya está registrado')
-      throw new Error('Por favor verifica los datos ingresados')
+  try {
+    return await apiPost<RegisterResponse>('/api/v1/register/', data, false)
+  } catch (error) {
+    if (error instanceof ApiError) {
+      if (error.status === 400) {
+        throw new Error('Este email ya está registrado')
+      }
+      throw new Error(error.message)
     }
-    throw new Error(error?.detail ?? 'Error al crear la cuenta')
+    throw new Error('Error al crear la cuenta')
   }
-
-  return response.json()
 }
