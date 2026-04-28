@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'coreapi',
     'django_filters',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -192,3 +193,43 @@ SIMPLE_JWT = {
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# drf-spectacular settings for OpenAPI/Swagger documentation
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Zira API',
+    'DESCRIPTION': 'Backend API for Zira - Financial Management Platform',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': True,
+        'displayRequestDuration': True,
+        'filter': True,
+        'showExtensions': True,
+        'showCommonExtensions': True,
+    },
+    'COMPONENT_SPLIT_REQUEST': True,
+    'AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'PREPROCESSING_HOOKS': [
+        'drf_spectacular.hooks.preprocess_exclude_path_format',
+    ],
+    'TAGS': [
+        {'name': 'Authentication', 'description': 'User login, registration and token management'},
+        {'name': 'Users', 'description': 'User profile and account management'},
+        {'name': 'Bank Accounts', 'description': 'Manage bank accounts'},
+        {'name': 'Bank Cards', 'description': 'Manage credit/debit cards'},
+        {'name': 'Savings', 'description': 'Savings accounts and goals'},
+        {'name': 'Loans', 'description': 'Loan management'},
+        {'name': 'Incomes', 'description': 'Income tracking'},
+        {'name': 'Expenses', 'description': 'Expense tracking'},
+        {'name': 'Products', 'description': 'Product catalog'},
+        {'name': 'Orders', 'description': 'Order management'},
+        {'name': 'Publications', 'description': 'Publicaciones y contenido'},
+        {'name': 'Comments', 'description': 'Comentarios'},
+        {'name': 'Notifications', 'description': 'User notifications'},
+        {'name': 'Tasks', 'description': 'Task management'},
+        {'name': 'Social Networks', 'description': 'Social network integration'},
+        {'name': 'Subscriptions', 'description': 'Subscription management'},
+    ],
+}

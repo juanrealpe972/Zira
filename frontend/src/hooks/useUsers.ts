@@ -7,8 +7,7 @@ import {
   createUser, 
   updateUser, 
   updateUserStatus,
-  CreateUserRequest,
-  PaginatedResponse 
+  CreateUserRequest
 } from '@/services/users.service'
 
 interface UseUsersReturn {
