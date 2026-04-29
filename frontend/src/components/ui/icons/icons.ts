@@ -24,6 +24,7 @@ import {
   VideoIcon,
   MinusIcon,
   GlobeIcon,
+  IdCardIcon,
 } from '@radix-ui/react-icons'
 
 export const Icons = {
@@ -55,6 +56,10 @@ export const Icons = {
   tiktok: MinusIcon,
   facebook: GlobeIcon,
   otro: GlobeIcon,
+
+  // Finance
+  creditCard: CardStackIcon,
+  money: IdCardIcon,
 }
 
 // Helper para obtener el ícono por plataforma

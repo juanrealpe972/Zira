@@ -3,7 +3,7 @@ https://bentogrids.com/
 https://minimals.cc/dashboard/booking
 https://www.figma.com/design/cAPz4pYPtQEXivqe11EcDE/-Preview--Minimal-Web.v6.0.0?node-id=0-1&p=f&t=rmTChJQTm6YxZNyZ-0
 https://dbdiagram.io/home
-Elige TypeScript React (typescriptreact.json), que es para archivos .tsx.
+http://localhost:8000/api/docs/swagger/
 
 bank_accounts
 bank_cards
