@@ -10,12 +10,12 @@ interface UseAsyncState<T> {
   error: string | null
 }
 
-interface UseAsyncOptions {
+interface UseAsyncOptions<T> {
   onSuccess?: (data: T) => void
   onError?: (error: string) => void
 }
 
-type AsyncFunction<T> = (...args: unknown[]) => Promise<T>
+type AsyncFunction<T, Args extends unknown[] = []> = (...args: Args) => Promise<T>
 
 // ============================================
 // HOOK PRINCIPAL
@@ -32,14 +32,15 @@ export function useAsync<T>(initialData: T | null = null) {
     error: null,
   })
 
-  const execute = useCallback(async (
-    asyncFn: AsyncFunction<T>,
-    options?: UseAsyncOptions
+  const execute = useCallback(async <Args extends unknown[]>(
+    asyncFn: AsyncFunction<T, Args>,
+    options?: UseAsyncOptions<T>,
+    ...args: Args
   ) => {
     setState(prev => ({ ...prev, loading: true, error: null }))
-    
+
     try {
-      const result = await asyncFn()
+      const result = await asyncFn(...args)
       setState({ data: result, loading: false, error: null })
       options?.onSuccess?.(result)
       return result
@@ -95,7 +96,7 @@ export function useMutation<T, TData = unknown>(
 
   const mutate = useCallback(async (data: TData) => {
     setState({ data: null, loading: true, error: null })
-    
+
     try {
       const result = await mutationFn(data)
       setState({ data: result, loading: false, error: null })
@@ -143,18 +144,18 @@ export function useQuery<T>(
     } else {
       setState(prev => ({ ...prev, loading: true }))
     }
-    
+
     try {
       const result = await queryFn()
       setState({ data: result, loading: false, error: null, refetching: false })
       return result
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error desconocido'
-      setState(prev => ({ 
-        ...prev, 
-        loading: false, 
+      setState(prev => ({
+        ...prev,
+        loading: false,
         error: errorMessage,
-        refetching: false 
+        refetching: false
       }))
       return null
     }
@@ -220,7 +221,7 @@ export function useForm<T extends Record<string, unknown>>({
 
   const validateForm = useCallback(() => {
     if (!validate) return true
-    
+
     const errors = validate(state.values)
     setState(prev => ({ ...prev, errors }))
     return Object.keys(errors).length === 0
@@ -228,24 +229,24 @@ export function useForm<T extends Record<string, unknown>>({
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     // Marcar todos los campos como tocados
     const allTouched = Object.keys(state.values).reduce(
       (acc, key) => ({ ...acc, [key]: true }),
       {} as Partial<Record<keyof T, boolean>>
     )
     setState(prev => ({ ...prev, touched: allTouched }))
-    
+
     const isValid = validateForm()
     if (!isValid || !onSubmit) return
-    
+
     try {
       await onSubmit(state.values)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al enviar'
-      setState(prev => ({ 
-        ...prev, 
-        errors: { ...prev.errors, form: errorMessage } 
+      setState(prev => ({
+        ...prev,
+        errors: { ...prev.errors, form: errorMessage }
       }))
     }
   }, [state.values, validateForm, onSubmit])
