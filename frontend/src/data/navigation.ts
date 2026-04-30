@@ -53,9 +53,9 @@ export const navigation: NavGroup[] = [
       { label: 'Tarjetas bancarias', href: '/dashboard/bank-cards/me', icon: Icons.creditCard },
       { label: 'Préstamos', href: '/dashboard/loans/me', icon: Icons.money },
       { label: 'Ahorros', href: '/dashboard/savings/me', icon: Icons.money },
-      { label: 'Ingresos', href: '/dashboard/finances/incomes', icon: Icons.analytics },
-      { label: 'Gastos', href: '/dashboard/finances/bills', icon: Icons.analytics },
-      { label: 'Productos por gasto', href: '/dashboard/finances/expense-products', icon: Icons.file },
+      { label: 'Ingresos', href: '/dashboard/finances/incomes/me', icon: Icons.analytics },
+      { label: 'Gastos', href: '/dashboard/finances/expenses/me', icon: Icons.analytics },
+      { label: 'Productos por gasto', href: '/dashboard/finances/expense-products/me', icon: Icons.file },
     ],
   },
   {
