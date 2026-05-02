@@ -5,9 +5,9 @@ import { Box, Flex, Heading, Text, Button, Grid, Spinner, Card } from '@radix-ui
 import { PlusIcon } from '@radix-ui/react-icons'
 import { Icons } from '@/components/ui/icons/icons'
 import {
-  getIncomes, deleteIncome,
-  Income,
-} from '@/services/incomes.service'
+  getIncomes, deleteIncome
+} from '@/services'
+import { Income } from '@/types'
 import { IncomeCard } from '@/components/incomes/IncomeCard'
 import { IncomeModal } from '@/components/incomes/IncomeModal'
 import { AppToast } from '@/components/ui/AppToast'

@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import { Flex, Text, Avatar, IconButton, DropdownMenu, Box } from '@radix-ui/themes'
-import { BellIcon, GearIcon, PersonIcon, GlobeIcon, ChevronDownIcon } from '@radix-ui/react-icons'
+import { BellIcon, GearIcon, GlobeIcon, ChevronDownIcon } from '@radix-ui/react-icons'
 import NotificationsPanel from './panels/NotificationsPanel'
 import SettingsPanel from './panels/SettingsPanel'
 import ProfilePanel from './panels/ProfilePanel'
-import { User, getUserById } from '@/services/users.service'
+import { getUserById } from '@/services'
+import { User } from '@/types'
 
 const teams = [
   { name: 'Equipo 1', plan: 'Gratis' },

@@ -1,39 +1,28 @@
 import { apiGet, apiPost, apiPatch, apiDelete, ApiError } from '@/lib/api-client'
-
-export type ExpenseProduct = {
-  id: number
-  user: number
-  expense: number
-  product: number
-  quantity: number
-  unit_price: number
-  subtotal: number
-}
-
-export type ExpenseProductRequest = {
-  user: number
-  expense: number
-  product: number
-  quantity: number
-  unit_price: number
-  subtotal: number
-}
-
-export interface PaginatedResponse<T> {
-  count: number
-  next: string | null
-  previous: string | null
-  results: T[]
-}
+import { ExpenseProduct, ExpenseProductRequest, PaginatedResponse } from '@/types'
 
 const EXPENSE_PRODUCTS_ENDPOINT = '/api/v1/expense_products'
 
 export async function getExpenseProducts(userId: number): Promise<PaginatedResponse<ExpenseProduct>> {
-  return apiGet<PaginatedResponse<ExpenseProduct>>(`${EXPENSE_PRODUCTS_ENDPOINT}/?user=${userId}`)
+  try {
+    return await apiGet<PaginatedResponse<ExpenseProduct>>(`${EXPENSE_PRODUCTS_ENDPOINT}/?user=${userId}`)
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 400) {
+      throw new Error('Error al obtener productos de gasto')
+    }
+    throw error
+  }
 }
 
 export async function getExpenseProductById(id: number): Promise<ExpenseProduct> {
-  return apiGet<ExpenseProduct>(`${EXPENSE_PRODUCTS_ENDPOINT}/${id}/`)
+  try {
+    return await apiGet<ExpenseProduct>(`${EXPENSE_PRODUCTS_ENDPOINT}/${id}/`)
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 400) {
+      throw new Error('Error al obtener el producto de gasto')
+    }
+    throw error
+  }
 }
 
 export async function createExpenseProduct(data: ExpenseProductRequest): Promise<ExpenseProduct> {
@@ -59,5 +48,12 @@ export async function updateExpenseProduct(id: number, data: Partial<ExpenseProd
 }
 
 export async function deleteExpenseProduct(id: number): Promise<void> {
-  await apiDelete(`${EXPENSE_PRODUCTS_ENDPOINT}/${id}/`)
+  try {
+    return await apiDelete(`${EXPENSE_PRODUCTS_ENDPOINT}/${id}/`)
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 400) {
+      throw new Error('Error al eliminar el producto de gasto')
+    }
+    throw error
+  }
 }

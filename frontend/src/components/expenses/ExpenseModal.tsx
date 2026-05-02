@@ -1,12 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Flex, TextField, Select, TextArea, Box, Checkbox, Text } from '@radix-ui/themes'
+import { Flex, TextField, Select, TextArea } from '@radix-ui/themes'
 import { Icons } from '@/components/ui/icons/icons'
 import { FormField } from '@/components/ui/FormField'
 import { StepModal } from '@/components/ui/StepModal'
+import { Expense, ExpenseRequest } from '@/types/expense.types'
 import {
-  Expense, ExpenseRequest,
   createExpense, updateExpense,
 } from '@/services/expenses.service'
 
@@ -14,10 +14,28 @@ const CATEGORIES = [
   { value: 'alimentacion', label: 'Alimentación' },
   { value: 'transporte', label: 'Transporte' },
   { value: 'vivienda', label: 'Vivienda' },
+  { value: 'servicios', label: 'Servicios públicos' },
   { value: 'salud', label: 'Salud' },
   { value: 'educacion', label: 'Educación' },
   { value: 'entretenimiento', label: 'Entretenimiento' },
-  { value: 'otro', label: 'Otro' },
+  { value: 'compras', label: 'Compras' },
+  { value: 'ropa', label: 'Ropa' },
+  { value: 'tecnologia', label: 'Tecnología' },
+  { value: 'viajes', label: 'Viajes' },
+  { value: 'mascotas', label: 'Mascotas' },
+  { value: 'suscripciones', label: 'Suscripciones' },
+  { value: 'deudas', label: 'Pago de deudas' },
+  { value: 'ahorro', label: 'Ahorro' },
+  { value: 'inversion', label: 'Inversión' },
+  { value: 'impuestos', label: 'Impuestos' },
+  { value: 'seguros', label: 'Seguros' },
+  { value: 'regalos', label: 'Regalos' },
+  { value: 'otros', label: 'Otros' },
+]
+
+const TYPES = [
+  { value: 'test', label: 'Gasto de prueba' },
+  { value: 'production', label: 'Gasto real' },
 ]
 
 type Props = {
@@ -34,11 +52,10 @@ const EMPTY = {
   category: '',
   date: '',
   description: '',
-  is_test: false,
-  is_real: false,
+  type: '',
 }
 
-type FormErrors = Partial<Record<keyof Omit<typeof EMPTY, 'is_test' | 'is_real'>, string>>
+type FormErrors = Partial<Record<keyof typeof EMPTY, string>>
 
 export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props) {
   const isEdit = !!existing
@@ -58,8 +75,7 @@ export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props
         category: existing.category ?? '',
         date: existing.date ?? '',
         description: existing.description ?? '',
-        is_test: existing.is_test ?? false,
-        is_real: existing.is_real ?? false,
+        type: existing.type ?? '',
       })
     } else if (open) {
       setForm(EMPTY)
@@ -81,6 +97,7 @@ export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props
     else if (isNaN(Number(form.amount)) || Number(form.amount) <= 0) newErrors.amount = 'Monto inválido'
     if (!form.category) newErrors.category = 'Selecciona una categoría'
     if (!form.date) newErrors.date = 'La fecha es obligatoria'
+    if (!form.type) newErrors.type = 'Selecciona un tipo'
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -97,8 +114,7 @@ export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props
         category: form.category,
         date: form.date,
         description: form.description,
-        is_test: form.is_test,
-        is_real: form.is_real,
+        type: form.type,
       }
       const result = isEdit
         ? await updateExpense(existing!.id, payload)
@@ -110,6 +126,7 @@ export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props
       setTimeout(handleClose, 1500)
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Error inesperado'
+      console.log('API Error:', msg)
       setApiError(msg)
       setToastMessage(msg)
       setToastType('error')
@@ -184,6 +201,17 @@ export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props
           </Select.Root>
         </FormField>
 
+        <FormField label="Tipo" error={errors.type} required>
+          <Select.Root value={form.type} onValueChange={v => update('type', v)}>
+            <Select.Trigger placeholder="Selecciona tipo" style={{ width: '100%' }} />
+            <Select.Content>
+              {TYPES.map(t => (
+                <Select.Item key={t.value} value={t.value}>{t.label}</Select.Item>
+              ))}
+            </Select.Content>
+          </Select.Root>
+        </FormField>
+
         <FormField label="Fecha" error={errors.date} required>
           <TextField.Root
             value={form.date}
@@ -200,26 +228,6 @@ export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props
             placeholder="Descripción del gasto..."
             rows={2}
           />
-        </FormField>
-
-        <FormField label="Prueba">
-          <Flex align="center" gap="2">
-            <Checkbox
-              checked={form.is_test}
-              onCheckedChange={value => update('is_test', Boolean(value))}
-            />
-            <Text size="2">Marcar como gasto de prueba</Text>
-          </Flex>
-        </FormField>
-
-        <FormField label="Real">
-          <Flex align="center" gap="2">
-            <Checkbox
-              checked={form.is_real}
-              onCheckedChange={value => update('is_real', Boolean(value))}
-            />
-            <Text size="2">Marcar como gasto real</Text>
-          </Flex>
         </FormField>
 
       </Flex>

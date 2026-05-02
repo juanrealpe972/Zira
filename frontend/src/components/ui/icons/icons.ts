@@ -25,6 +25,10 @@ import {
   MinusIcon,
   GlobeIcon,
   IdCardIcon,
+  PlusIcon,
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon
 } from '@radix-ui/react-icons'
 
 export const Icons = {
@@ -46,6 +50,10 @@ export const Icons = {
   task: CheckboxIcon,
   menu: MagicWandIcon,
   filter: MixerHorizontalIcon,
+  plusIcon: PlusIcon,
+  chevronDown: ChevronDownIcon,
+  chevronLeft: ChevronLeftIcon,
+  chevronRight: ChevronRightIcon,
 
   // Redes sociales
   github: GitHubLogoIcon,

@@ -2,12 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { Box, Flex, Heading, Text, Button, Grid, Spinner, Card } from '@radix-ui/themes'
-import { PlusIcon } from '@radix-ui/react-icons'
 import { Icons } from '@/components/ui/icons/icons'
-import {
-  getExpenseProducts, deleteExpenseProduct,
-  ExpenseProduct,
-} from '@/services/expense-products.service'
+import { getExpenseProducts, deleteExpenseProduct } from '@/services'
+import { ExpenseProduct } from '@/types'
 import { ExpenseProductCard } from '@/components/expense-products/ExpenseProductCard'
 import { ExpenseProductModal } from '@/components/expense-products/ExpenseProductModal'
 import { AppToast } from '@/components/ui/AppToast'
@@ -104,7 +101,7 @@ export default function ExpenseProductsPage() {
           </Flex>
         </Box>
         <Button size="2" onClick={handleOpenNew}>
-          <PlusIcon /> Nuevo producto
+          <Icons.plusIcon /> Nuevo producto
         </Button>
       </Flex>
 
@@ -155,7 +152,7 @@ export default function ExpenseProductsPage() {
               </Text>
             </Box>
             <Button size="2" onClick={handleOpenNew} mt="2">
-              <PlusIcon /> Agregar producto
+              <Icons.plusIcon /> Agregar producto
             </Button>
           </Flex>
         </Card>

@@ -1,14 +1,13 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { Flex, Text, Box, Badge, ScrollArea, Avatar } from '@radix-ui/themes'
-import { Icons } from '@/components/ui/icons/icons'
 import NavLink from 'next/link'
+import { Icons } from '@/components/ui/icons/icons'
 import { usePathname } from 'next/navigation'
 import { navigation } from '@/data/navigation'
-import { ZiraLogo } from '../ui/ZiraLogo'
-import AppIcon from '../ui/AppIcon'
-import { User } from '@/services/users.service'
+import { ZiraLogo } from '@/components/ui/ZiraLogo'
+import { User } from '@/types'
 
 type Props = {
   user: User | null
@@ -75,15 +74,15 @@ export default function Sidebar({ user }: Props) {
             onClick={() => setExpanded(!expanded)}
             style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', color: 'var(--gray-11)' }}
           >
-            <AppIcon name="menu" size={20} className="text-gray-500 hover:text-gray-600" />
+            <Icons.chevronLeft />
           </Box>
         )}
         {!expanded && (
           <Box
             onClick={() => setExpanded(!expanded)}
-            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', color: 'var(--gray-11)', marginTop: 8 }}
+            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', color: 'var(--gray-11)' }}
           >
-            <Icons.menu width={16} height={16} />
+            <Icons.chevronRight />
           </Box>
         )}
       </Flex>
@@ -197,15 +196,10 @@ export default function Sidebar({ user }: Props) {
                             {item.tag}
                           </Badge>
                         )}
-                        {item.external && <Icons.menu width={12} />}
+                        {item.external && <Icons.chevronDown />}
+
                         {hasChildren && (
-                          <AppIcon
-                            name="menu"
-                            size={20}
-                            className={`transition-transform duration-200
-                              ${isOpen ? 'rotate-90' : 'rotate-0'}
-                              ${isHovered ? 'text-gray-12' : 'text-gray-9'}`}
-                          />
+                          isOpen ? <Icons.chevronDown /> : <Icons.chevronRight />
                         )}
                       </Flex>
                     )}
@@ -218,7 +212,10 @@ export default function Sidebar({ user }: Props) {
                         top: '50%',
                         transform: 'translateY(-50%)',
                       }}>
-                        <Icons.menu width={10} className="text-(--gray-8)" />
+                        {isOpen
+                          ? <Icons.chevronDown width={10} />
+                          : <Icons.chevronRight width={10} />
+                        }
                       </Box>
                     )}
                   </Flex>

@@ -42,7 +42,7 @@ class ExpenseView(viewsets.ModelViewSet):
     serializer_class = ExpenseSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['category', 'date', 'is_test', 'is_real']
+    filterset_fields = ['title', 'category', 'date', 'type']
     search_fields = ['description']
     ordering_fields = ['amount', 'date', 'created_at']
     ordering = ['-created_at']

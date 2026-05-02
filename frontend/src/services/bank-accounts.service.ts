@@ -1,73 +1,48 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL
+import { BankAccount, BankAccountRequest } from '@/types'
+import { apiGet, apiPost, apiPatch, apiDelete, ApiError } from '@/lib/api-client'
 
-function getToken(): string | null {
-  if (typeof document === 'undefined') return null
-  const match = document.cookie.match(/zira_access=([^;]+)/)
-  return match ? match[1] : null
-}
-
-export type BankAccount = {
-  id: number
-  user: number
-  bank_name: string
-  account_type: 'ahorro' | 'corriente'
-  account_number: string
-  balance: number
-}
-
-export type BankAccountRequest = {
-  user: number
-  bank_name: string
-  account_type: 'ahorro' | 'corriente'
-  account_number: string
-  balance: number
-}
-
-function authHeaders() {
-  return {
-    'Authorization': `Bearer ${getToken()}`,
-    'Content-Type': 'application/json',
-  }
-}
+const BANK_ACCOUNTS_ENDPOINT = '/api/v1/bank_accounts'
 
 export async function getBankAccounts(userId: number): Promise<BankAccount[]> {
-  const res = await fetch(`${API_URL}/api/v1/bank_accounts/?user=${userId}`, {
-    headers: authHeaders(),
-  })
-  if (!res.ok) throw new Error('Error al obtener cuentas bancarias')
-  return res.json()
+  try {
+    return await apiGet<BankAccount[]>(`${BANK_ACCOUNTS_ENDPOINT}/?user=${userId}`)
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 400) {
+      throw new Error('Error al obtener cuentas bancarias')
+    }
+    throw error
+  }
 }
 
 export async function createBankAccount(data: BankAccountRequest): Promise<BankAccount> {
-  const res = await fetch(`${API_URL}/api/v1/bank_accounts/`, {
-    method: 'POST',
-    headers: authHeaders(),
-    body: JSON.stringify(data),
-  })
-  if (!res.ok) {
-    const error = await res.json()
-    throw new Error(error?.detail ?? 'Error al crear cuenta')
+  try {
+    return await apiPost<BankAccount>(`${BANK_ACCOUNTS_ENDPOINT}/`, data)
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 400) {
+      throw new Error('Error al crear cuenta')
+    }
+    throw error
   }
-  return res.json()
 }
 
 export async function updateBankAccount(id: number, data: BankAccountRequest): Promise<BankAccount> {
-  const res = await fetch(`${API_URL}/api/v1/bank_accounts/${id}/`, {
-    method: 'PUT',
-    headers: authHeaders(),
-    body: JSON.stringify(data),
-  })
-  if (!res.ok) {
-    const error = await res.json()
-    throw new Error(error?.detail ?? 'Error al actualizar cuenta')
+  try {
+    return await apiPatch<BankAccount>(`${BANK_ACCOUNTS_ENDPOINT}/${id}/`, data)
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 400) {
+      throw new Error('Error al actualizar cuenta')
+    }
+    throw error
   }
-  return res.json()
 }
 
 export async function deleteBankAccount(id: number): Promise<void> {
-  const res = await fetch(`${API_URL}/api/v1/bank_accounts/${id}/`, {
-    method: 'DELETE',
-    headers: authHeaders(),
-  })
-  if (!res.ok) throw new Error('Error al eliminar cuenta')
+  try {
+    return await apiDelete(`${BANK_ACCOUNTS_ENDPOINT}/${id}/`)
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 400) {
+      throw new Error('Error al eliminar cuenta')
+    }
+    throw error
+  }
 }
