@@ -1,45 +1,28 @@
 import { apiGet, apiPost, apiPatch, apiDelete, ApiError } from '@/lib/api-client'
-
-export type Saving = {
-  id: number
-  user: number
-  bank_account: number
-  goal_name: string
-  target_amount: number
-  current_amount: number
-  interest_rate: number
-  start_date: string
-  target_date: string | null
-  status: string
-}
-
-export type SavingRequest = {
-  user: number
-  bank_account: number
-  goal_name: string
-  target_amount: number
-  current_amount: number
-  interest_rate: number
-  start_date: string
-  target_date: string | null
-  status: string
-}
-
-export interface PaginatedResponse<T> {
-  count: number
-  next: string | null
-  previous: string | null
-  results: T[]
-}
+import { Saving, SavingRequest, PaginatedResponse } from '@/types'
 
 const SAVINGS_ENDPOINT = '/api/v1/savings'
 
 export async function getSavings(userId: number): Promise<PaginatedResponse<Saving>> {
-  return apiGet<PaginatedResponse<Saving>>(`${SAVINGS_ENDPOINT}/?user=${userId}`)
+  try {
+    return await apiGet<PaginatedResponse<Saving>>(`${SAVINGS_ENDPOINT}/?user=${userId}`)
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 400) {
+      throw new Error('Error al obtener ahorros')
+    }
+    throw error
+  }
 }
 
 export async function getSavingById(id: number): Promise<Saving> {
-  return apiGet<Saving>(`${SAVINGS_ENDPOINT}/${id}/`)
+  try {
+    return await apiGet<Saving>(`${SAVINGS_ENDPOINT}/${id}/`)
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 400) {
+      throw new Error('Error al obtener el ahorro')
+    }
+    throw error
+  }
 }
 
 export async function createSaving(data: SavingRequest): Promise<Saving> {
@@ -65,5 +48,12 @@ export async function updateSaving(id: number, data: Partial<SavingRequest>): Pr
 }
 
 export async function deleteSaving(id: number): Promise<void> {
-  await apiDelete(`${SAVINGS_ENDPOINT}/${id}/`)
+  try {
+    return await apiDelete(`${SAVINGS_ENDPOINT}/${id}/`)
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 400) {
+      throw new Error('Error al eliminar el ahorro')
+    }
+    throw error
+  }
 }

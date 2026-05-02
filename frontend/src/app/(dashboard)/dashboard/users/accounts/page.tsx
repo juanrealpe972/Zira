@@ -11,7 +11,8 @@ import {
   PersonIcon, DownloadIcon, UploadIcon, ChevronLeftIcon, ChevronRightIcon, DotsVerticalIcon,
   MixerHorizontalIcon,
 } from '@radix-ui/react-icons'
-import { getUsers, PaginatedResponse, updateUserStatus, User } from '@/services/users.service'
+import { getUsers, updateUserStatus } from '@/services'
+import { User, PaginatedResponse } from '@/types'
 import { useRouter } from 'next/navigation'
 import { CreateUserModal } from '@/components/users/CreateUserModal'
 import { EditUserModal } from '@/components/users/EditUserModal'

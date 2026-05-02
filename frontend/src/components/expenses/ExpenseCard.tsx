@@ -1,6 +1,6 @@
 import { Box, Flex, Text, Badge, IconButton, Card } from '@radix-ui/themes'
 import { Pencil1Icon, TrashIcon } from '@radix-ui/react-icons'
-import { Expense } from '@/services/expenses.service'
+import { Expense } from '@/types/expense.types'
 import { Icons } from '@/components/ui/icons/icons'
 
 type Props = {
@@ -19,12 +19,25 @@ function formatCurrency(value: number) {
 
 const CATEGORY_COLORS: Record<string, string> = {
   alimentacion: '#F59E0B',
-  transporte: '#3B82F6',
+  transporte: '#3B82F6', 
   vivienda: '#8B5CF6',
+  servicios: '#06B6D4',
   salud: '#EF4444',
   educacion: '#10B981',
   entretenimiento: '#EC4899',
-  otro: '#6B7280',
+  compras: '#F97316',
+  ropa: '#A855F7',
+  tecnologia: '#6366F1',
+  viajes: '#14B8A6',
+  mascotas: '#84CC16',
+  suscripciones: '#0EA5E9',
+  deudas: '#DC2626',
+  ahorro: '#22C55E',
+  inversion: '#059669',
+  impuestos: '#7C2D12',
+  seguros: '#2563EB',
+  regalos: '#DB2777',
+  otros: '#6B7280',
 }
 
 export function ExpenseCard({ expense, onEdit, onDelete }: Props) {
@@ -130,10 +143,10 @@ export function ExpenseCard({ expense, onEdit, onDelete }: Props) {
           </Text>
         </Box>
 
-        {/* Notas */}
-        {expense.notes && (
+        {/* Descripción */}
+        {expense.description && (
           <Text size="1" color="gray" style={{ fontStyle: 'italic' }}>
-            {expense.notes}
+            {expense.description}
           </Text>
         )}
 

@@ -1,25 +1,29 @@
-export type LoginRequest = {
+export interface LoginRequest {
   email: string
   password: string
 }
 
-export type LoginResponse = {
+export interface LoginResponse {
   access: string
   refresh: string
 }
 
-export type RegisterRequest = {
-  name: string
+export interface RegisterRequest {
   email: string
   password: string
-}
-
-export type RegisterResponse = {
-  id: number
   name: string
-  email: string
+  phone_prefix?: string
+  phone?: string
+  address?: string
+  company?: string
+  role?: string
+  country?: string
+  city?: string
+  national_id?: string
 }
 
-export type ApiError = {
-  detail: string
+export interface RegisterResponse {
+  id: number
+  email: string
+  name: string
 }

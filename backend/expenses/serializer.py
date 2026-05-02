@@ -1,7 +1,5 @@
 from rest_framework import serializers
 from .models import Expense
-from decimal import Decimal
-
 
 class ExpenseSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,10 +7,12 @@ class ExpenseSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'user',
+            'title',
             'category',
             'amount',
             'description',
             'date',
+            'type',
             'created_at'
         ]
         read_only_fields = ['id', 'created_at']

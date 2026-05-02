@@ -1,12 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Flex, TextField, Select, TextArea, Box } from '@radix-ui/themes'
+import { Flex, TextField, Select, TextArea } from '@radix-ui/themes'
 import { Icons } from '@/components/ui/icons/icons'
 import { FormField } from '@/components/ui/FormField'
 import { StepModal } from '@/components/ui/StepModal'
+import { Expense, ExpenseRequest } from '@/types/expense.types'
 import {
-  Expense, ExpenseRequest,
   createExpense, updateExpense,
 } from '@/services/expenses.service'
 
@@ -14,10 +14,28 @@ const CATEGORIES = [
   { value: 'alimentacion', label: 'Alimentación' },
   { value: 'transporte', label: 'Transporte' },
   { value: 'vivienda', label: 'Vivienda' },
+  { value: 'servicios', label: 'Servicios públicos' },
   { value: 'salud', label: 'Salud' },
   { value: 'educacion', label: 'Educación' },
   { value: 'entretenimiento', label: 'Entretenimiento' },
-  { value: 'otro', label: 'Otro' },
+  { value: 'compras', label: 'Compras' },
+  { value: 'ropa', label: 'Ropa' },
+  { value: 'tecnologia', label: 'Tecnología' },
+  { value: 'viajes', label: 'Viajes' },
+  { value: 'mascotas', label: 'Mascotas' },
+  { value: 'suscripciones', label: 'Suscripciones' },
+  { value: 'deudas', label: 'Pago de deudas' },
+  { value: 'ahorro', label: 'Ahorro' },
+  { value: 'inversion', label: 'Inversión' },
+  { value: 'impuestos', label: 'Impuestos' },
+  { value: 'seguros', label: 'Seguros' },
+  { value: 'regalos', label: 'Regalos' },
+  { value: 'otros', label: 'Otros' },
+]
+
+const TYPES = [
+  { value: 'test', label: 'Gasto de prueba' },
+  { value: 'production', label: 'Gasto real' },
 ]
 
 type Props = {
@@ -31,10 +49,12 @@ type Props = {
 const EMPTY = {
   title: '',
   amount: '',
-  category: '' as string,
+  category: '',
   date: '',
-  notes: '',
+  description: '',
+  type: '',
 }
+
 type FormErrors = Partial<Record<keyof typeof EMPTY, string>>
 
 export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props) {
@@ -50,11 +70,12 @@ export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props
   useEffect(() => {
     if (open && existing) {
       setForm({
-        title: existing.title,
-        amount: String(existing.amount),
-        category: existing.category,
-        date: existing.date,
-        notes: existing.notes,
+        title: existing.title ?? '',
+        amount: String(existing.amount ?? ''),
+        category: existing.category ?? '',
+        date: existing.date ?? '',
+        description: existing.description ?? '',
+        type: existing.type ?? '',
       })
     } else if (open) {
       setForm(EMPTY)
@@ -63,7 +84,7 @@ export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props
     setApiError(null)
   }, [open, existing])
 
-  function update(key: keyof typeof EMPTY, value: string) {
+  function update(key: keyof typeof EMPTY, value: string | boolean) {
     setForm(prev => ({ ...prev, [key]: value }))
     setErrors(prev => ({ ...prev, [key]: undefined }))
     setApiError(null)
@@ -76,6 +97,7 @@ export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props
     else if (isNaN(Number(form.amount)) || Number(form.amount) <= 0) newErrors.amount = 'Monto inválido'
     if (!form.category) newErrors.category = 'Selecciona una categoría'
     if (!form.date) newErrors.date = 'La fecha es obligatoria'
+    if (!form.type) newErrors.type = 'Selecciona un tipo'
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -91,7 +113,8 @@ export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props
         amount: Number(form.amount),
         category: form.category,
         date: form.date,
-        notes: form.notes,
+        description: form.description,
+        type: form.type,
       }
       const result = isEdit
         ? await updateExpense(existing!.id, payload)
@@ -103,6 +126,7 @@ export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props
       setTimeout(handleClose, 1500)
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Error inesperado'
+      console.log('API Error:', msg)
       setApiError(msg)
       setToastMessage(msg)
       setToastType('error')
@@ -132,8 +156,8 @@ export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props
       toastMessage={toastMessage}
       toastType={toastType}
       onToastChange={setToastOpen}
-      onNext={() => {}}
-      onBack={() => {}}
+      onNext={() => { }}
+      onBack={() => { }}
       onSubmit={handleSubmit}
       submitLabel={isEdit ? 'Actualizar' : 'Crear gasto'}
     >
@@ -177,6 +201,17 @@ export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props
           </Select.Root>
         </FormField>
 
+        <FormField label="Tipo" error={errors.type} required>
+          <Select.Root value={form.type} onValueChange={v => update('type', v)}>
+            <Select.Trigger placeholder="Selecciona tipo" style={{ width: '100%' }} />
+            <Select.Content>
+              {TYPES.map(t => (
+                <Select.Item key={t.value} value={t.value}>{t.label}</Select.Item>
+              ))}
+            </Select.Content>
+          </Select.Root>
+        </FormField>
+
         <FormField label="Fecha" error={errors.date} required>
           <TextField.Root
             value={form.date}
@@ -186,11 +221,11 @@ export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props
           />
         </FormField>
 
-        <FormField label="Notas" error={errors.notes}>
+        <FormField label="Descripción" error={errors.description}>
           <TextArea
-            value={form.notes}
-            onChange={e => update('notes', e.target.value)}
-            placeholder="Notas adicionales..."
+            value={form.description}
+            onChange={e => update('description', e.target.value)}
+            placeholder="Descripción del gasto..."
             rows={2}
           />
         </FormField>

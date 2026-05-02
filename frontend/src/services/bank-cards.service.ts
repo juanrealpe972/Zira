@@ -1,41 +1,28 @@
 import { apiGet, apiPost, apiPatch, apiDelete, ApiError } from '@/lib/api-client'
-
-export type BankCard = {
-  id: number
-  user: number
-  bank_account: number
-  card_type: 'credito' | 'debito'
-  card_number: string
-  cardholder_name: string
-  expiration_date: string
-  cvv: string
-}
-
-export type BankCardRequest = {
-  user: number
-  bank_account: number
-  card_type: 'credito' | 'debito'
-  card_number: string
-  cardholder_name: string
-  expiration_date: string
-  cvv: string
-}
-
-export interface PaginatedResponse<T> {
-  count: number
-  next: string | null
-  previous: string | null
-  results: T[]
-}
+import { BankCard, BankCardRequest, PaginatedResponse } from '@/types'
 
 const BANK_CARDS_ENDPOINT = '/api/v1/bank_cards'
 
 export async function getBankCards(userId: number): Promise<PaginatedResponse<BankCard>> {
-  return apiGet<PaginatedResponse<BankCard>>(`${BANK_CARDS_ENDPOINT}/?user=${userId}`)
+  try {
+    return await apiGet<PaginatedResponse<BankCard>>(`${BANK_CARDS_ENDPOINT}/?user=${userId}`)
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 400) {
+      throw new Error('Error al obtener tarjetas bancarias')
+    }
+    throw error
+  }
 }
 
 export async function getBankCardById(id: number): Promise<BankCard> {
-  return apiGet<BankCard>(`${BANK_CARDS_ENDPOINT}/${id}/`)
+  try {
+    return await apiGet<BankCard>(`${BANK_CARDS_ENDPOINT}/${id}/`)
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 400) {
+      throw new Error('Error al obtener la tarjeta bancaria')
+    }
+    throw error
+  }
 }
 
 export async function createBankCard(data: BankCardRequest): Promise<BankCard> {
@@ -61,5 +48,12 @@ export async function updateBankCard(id: number, data: Partial<BankCardRequest>)
 }
 
 export async function deleteBankCard(id: number): Promise<void> {
-  await apiDelete(`${BANK_CARDS_ENDPOINT}/${id}/`)
+  try {
+    return await apiDelete(`${BANK_CARDS_ENDPOINT}/${id}/`)
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 400) {
+      throw new Error('Error al eliminar la tarjeta')
+    }
+    throw error
+  }
 }

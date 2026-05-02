@@ -1,39 +1,28 @@
 import { apiGet, apiPost, apiPatch, apiDelete, ApiError } from '@/lib/api-client'
-
-export type Expense = {
-  id: number
-  user: number
-  title: string
-  amount: number
-  category: string
-  date: string
-  notes: string
-}
-
-export type ExpenseRequest = {
-  user: number
-  title: string
-  amount: number
-  category: string
-  date: string
-  notes: string
-}
-
-export interface PaginatedResponse<T> {
-  count: number
-  next: string | null
-  previous: string | null
-  results: T[]
-}
+import { Expense, ExpenseRequest, PaginatedResponse } from '@/types'
 
 const EXPENSES_ENDPOINT = '/api/v1/expenses'
 
 export async function getExpenses(userId: number): Promise<PaginatedResponse<Expense>> {
-  return apiGet<PaginatedResponse<Expense>>(`${EXPENSES_ENDPOINT}/?user=${userId}`)
+  try {
+    return await apiGet<PaginatedResponse<Expense>>(`${EXPENSES_ENDPOINT}/?user=${userId}`)
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 400) {
+      throw new Error('Error al obtener gastos')
+    }
+    throw error
+  }
 }
 
 export async function getExpenseById(id: number): Promise<Expense> {
-  return apiGet<Expense>(`${EXPENSES_ENDPOINT}/${id}/`)
+  try {
+    return await apiGet<Expense>(`${EXPENSES_ENDPOINT}/${id}/`)
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 400) {
+      throw new Error('Error al obtener el gasto')
+    }
+    throw error
+  }
 }
 
 export async function createExpense(data: ExpenseRequest): Promise<Expense> {
@@ -59,5 +48,12 @@ export async function updateExpense(id: number, data: Partial<ExpenseRequest>): 
 }
 
 export async function deleteExpense(id: number): Promise<void> {
-  await apiDelete(`${EXPENSES_ENDPOINT}/${id}/`)
+  try {
+    return await apiDelete(`${EXPENSES_ENDPOINT}/${id}/`)
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 400) {
+      throw new Error('Error al eliminar el gasto')
+    }
+    throw error
+  }
 }
