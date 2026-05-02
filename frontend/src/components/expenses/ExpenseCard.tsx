@@ -130,10 +130,10 @@ export function ExpenseCard({ expense, onEdit, onDelete }: Props) {
           </Text>
         </Box>
 
-        {/* Notas */}
-        {expense.notes && (
+        {/* Descripción */}
+        {expense.description && (
           <Text size="1" color="gray" style={{ fontStyle: 'italic' }}>
-            {expense.notes}
+            {expense.description}
           </Text>
         )}
 
