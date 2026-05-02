@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Flex, TextField, Select, TextArea, Box } from '@radix-ui/themes'
+import { Flex, TextField, Select, TextArea, Box, Checkbox, Text } from '@radix-ui/themes'
 import { Icons } from '@/components/ui/icons/icons'
 import { FormField } from '@/components/ui/FormField'
 import { StepModal } from '@/components/ui/StepModal'
@@ -31,11 +31,14 @@ type Props = {
 const EMPTY = {
   title: '',
   amount: '',
-  category: '' as string,
+  category: '',
   date: '',
-  notes: '',
+  description: '',
+  is_test: false,
+  is_real: false,
 }
-type FormErrors = Partial<Record<keyof typeof EMPTY, string>>
+
+type FormErrors = Partial<Record<keyof Omit<typeof EMPTY, 'is_test' | 'is_real'>, string>>
 
 export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props) {
   const isEdit = !!existing
@@ -50,11 +53,13 @@ export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props
   useEffect(() => {
     if (open && existing) {
       setForm({
-        title: existing.title,
-        amount: String(existing.amount),
-        category: existing.category,
-        date: existing.date,
-        notes: existing.notes,
+        title: existing.title ?? '',
+        amount: String(existing.amount ?? ''),
+        category: existing.category ?? '',
+        date: existing.date ?? '',
+        description: existing.description ?? '',
+        is_test: existing.is_test ?? false,
+        is_real: existing.is_real ?? false,
       })
     } else if (open) {
       setForm(EMPTY)
@@ -63,7 +68,7 @@ export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props
     setApiError(null)
   }, [open, existing])
 
-  function update(key: keyof typeof EMPTY, value: string) {
+  function update(key: keyof typeof EMPTY, value: string | boolean) {
     setForm(prev => ({ ...prev, [key]: value }))
     setErrors(prev => ({ ...prev, [key]: undefined }))
     setApiError(null)
@@ -91,7 +96,9 @@ export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props
         amount: Number(form.amount),
         category: form.category,
         date: form.date,
-        notes: form.notes,
+        description: form.description,
+        is_test: form.is_test,
+        is_real: form.is_real,
       }
       const result = isEdit
         ? await updateExpense(existing!.id, payload)
@@ -132,8 +139,8 @@ export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props
       toastMessage={toastMessage}
       toastType={toastType}
       onToastChange={setToastOpen}
-      onNext={() => {}}
-      onBack={() => {}}
+      onNext={() => { }}
+      onBack={() => { }}
       onSubmit={handleSubmit}
       submitLabel={isEdit ? 'Actualizar' : 'Crear gasto'}
     >
@@ -186,13 +193,33 @@ export function ExpenseModal({ open, onClose, userId, existing, onSaved }: Props
           />
         </FormField>
 
-        <FormField label="Notas" error={errors.notes}>
+        <FormField label="Descripción" error={errors.description}>
           <TextArea
-            value={form.notes}
-            onChange={e => update('notes', e.target.value)}
-            placeholder="Notas adicionales..."
+            value={form.description}
+            onChange={e => update('description', e.target.value)}
+            placeholder="Descripción del gasto..."
             rows={2}
           />
+        </FormField>
+
+        <FormField label="Prueba">
+          <Flex align="center" gap="2">
+            <Checkbox
+              checked={form.is_test}
+              onCheckedChange={value => update('is_test', Boolean(value))}
+            />
+            <Text size="2">Marcar como gasto de prueba</Text>
+          </Flex>
+        </FormField>
+
+        <FormField label="Real">
+          <Flex align="center" gap="2">
+            <Checkbox
+              checked={form.is_real}
+              onCheckedChange={value => update('is_real', Boolean(value))}
+            />
+            <Text size="2">Marcar como gasto real</Text>
+          </Flex>
         </FormField>
 
       </Flex>

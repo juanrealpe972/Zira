@@ -7,7 +7,9 @@ export type Expense = {
   amount: number
   category: string
   date: string
-  notes: string
+  description: string
+  is_test: boolean
+  is_real: boolean
 }
 
 export type ExpenseRequest = {
@@ -16,7 +18,9 @@ export type ExpenseRequest = {
   amount: number
   category: string
   date: string
-  notes: string
+  description: string
+  is_test: boolean
+  is_real: boolean
 }
 
 export interface PaginatedResponse<T> {

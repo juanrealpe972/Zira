@@ -8,6 +8,7 @@ class Expense(models.Model):
         ('hogar', 'Hogar'),
         ('salud', 'Salud'),
         ('educacion', 'Educación'),
+        ('alimentacion', 'Alimentación'),
     ]
 
     user = models.ForeignKey(
@@ -25,6 +26,8 @@ class Expense(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField(blank=True, null=True)
     date = models.DateField(db_index=True)
+    is_test = models.BooleanField(default=False)
+    is_real = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
