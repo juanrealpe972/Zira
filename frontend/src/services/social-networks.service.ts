@@ -1,19 +1,5 @@
 import { apiDelete, ApiError, apiGet, apiPost, apiPut } from "@/lib/api-client"
-
-export type SocialNetwork = {
-  id: number
-  user: number
-  platform: string
-  url: string
-  username: string
-}
-
-export type SocialNetworkRequest = {
-  user: number
-  platform: string
-  url: string
-  username: string
-}
+import { SocialNetwork, SocialNetworkRequest } from "@/types"
 
 const SocialNetwork_ENDPOINT = '/api/v1/social_networks'
 
@@ -33,7 +19,6 @@ export async function createSocialNetwork(data: SocialNetworkRequest): Promise<S
     return await apiPost<SocialNetwork>(`${SocialNetwork_ENDPOINT}/`, data)
   } catch (error) {
     if (error instanceof ApiError && error.status === 400) {
-      // console.error('ERROR REAL:', error)
       throw new Error('Error al crear red social')
     }
     throw error

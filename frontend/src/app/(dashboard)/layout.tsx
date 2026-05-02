@@ -4,7 +4,8 @@ import { Flex, Box } from '@radix-ui/themes'
 import DashboardHeader from '@/components/layout/DashboardHeader'
 import Footer from '@/components/layout/Footer'
 import Sidebar from '@/components/layout/Sidebar'
-import { getUserById, User } from '@/services/users.service'
+import { getUserById } from '@/services'
+import { User } from '@/types'
 import { useEffect, useState } from 'react'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

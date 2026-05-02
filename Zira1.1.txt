@@ -12,7 +12,7 @@ expense_product
 expenses
 incomes
 loans
-notifications
+notifications 
 order_items
 orders
 productos
