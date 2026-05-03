@@ -1,6 +1,5 @@
 /**
  * Componentes UI - Exportaciones centralizadas
- * Proporciona una forma limpia de importar componentes
  */
 
 // Componentes básicos

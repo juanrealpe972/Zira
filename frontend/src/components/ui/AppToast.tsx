@@ -2,7 +2,7 @@
 
 import * as Toast from '@radix-ui/react-toast'
 import { Text } from '@radix-ui/themes'
-import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons'
+import { Icons } from '@/components/ui'
 
 type AppToastProps = {
   open: boolean
@@ -32,8 +32,8 @@ export function AppToast({ open, onOpenChange, message, type = 'success' }: AppT
         }}
       >
         {isSuccess
-          ? <CheckCircledIcon width={18} height={18} style={{ color: 'var(--green-9)', flexShrink: 0 }} />
-          : <CrossCircledIcon width={18} height={18} style={{ color: 'var(--red-9)', flexShrink: 0 }} />
+          ? <Icons.check />
+          : <Icons.error />
         }
         <Toast.Description asChild>
           <Text size="2" style={{ color: isSuccess ? 'var(--green-11)' : 'var(--red-11)' }}>

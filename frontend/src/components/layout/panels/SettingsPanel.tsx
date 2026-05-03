@@ -1,7 +1,7 @@
 'use client'
 
 import { Flex, Text, Box, Heading } from '@radix-ui/themes'
-import { Cross1Icon, GearIcon, SunIcon, MoonIcon } from '@radix-ui/react-icons'
+import { Icons } from '@/components/ui'
 import { useTheme } from '@/context/ThemeContext'
 import { useEffect, useState } from 'react'
 
@@ -38,7 +38,7 @@ const radiusOptions = [
   { value: 'full', label: 'Full' },
 ] as const
 
-export default function SettingsPanel({ open, onClose }: Props) {
+export function SettingsPanel({ open, onClose }: Props) {
   const {
     theme,
     setAppearance,
@@ -99,11 +99,11 @@ export default function SettingsPanel({ open, onClose }: Props) {
           style={{ borderBottom: '1px solid var(--gray-4)', flexShrink: 0 }}
         >
           <Flex align="center" gap="2">
-            <GearIcon />
+            <Icons.settings />
             <Heading size="4">Configuración</Heading>
           </Flex>
           <Box onClick={onClose} style={{ cursor: 'pointer' }}>
-            <Cross1Icon />
+            <Icons.crossIcon />
           </Box>
         </Flex>
 
@@ -133,8 +133,8 @@ export default function SettingsPanel({ open, onClose }: Props) {
                   }}
                 >
                   {mode === 'light'
-                    ? <SunIcon width={20} height={20} style={{ color: '#f59e0b' }} />
-                    : <MoonIcon width={20} height={20} style={{ color: '#818cf8' }} />
+                    ? <Icons.sunIcon />
+                    : <Icons.moonIcon />
                   }
                   <Text size="1" style={{ color: mode === 'dark' ? '#fff' : '#1e293b' }}>
                     {mode === 'light' ? 'Claro' : 'Oscuro'}

@@ -1,9 +1,8 @@
 'use client'
 
 import { Box, Flex, Avatar, Text, Heading, IconButton } from '@radix-ui/themes'
-import { Pencil1Icon, Share2Icon } from '@radix-ui/react-icons'
-import { Icons } from '@/components/ui/icons/icons'
-import { User } from '@/services/users.service'
+import { Icons } from '@/components/ui'
+import { User } from '@/types'
 import { EditUserModal } from '@/components/users/EditUserModal'
 import { useState } from 'react'
 
@@ -55,10 +54,10 @@ export function ProfileHeader({ user, activeTab, onTabChange }: Props) {
         {/* Acciones top right */}
         <Flex gap="2" style={{ position: 'absolute', top: 16, right: 16 }}>
           <IconButton variant="soft" size="2" style={{ background: 'rgba(255,255,255,0.2)', color: 'white', cursor: 'pointer' }}>
-            <Share2Icon />
+            <Icons.share />
           </IconButton>
           <IconButton variant="soft" size="2" style={{ background: 'rgba(255,255,255,0.2)', color: 'white', cursor: 'pointer' }} onClick={() => setEditUserId(user.id)}>
-            <Pencil1Icon />
+            <Icons.edit />
           </IconButton>
         </Flex>
 
@@ -137,6 +136,7 @@ export function ProfileHeader({ user, activeTab, onTabChange }: Props) {
         userId={editUserId}
         open={editUserId !== null}
         onClose={() => setEditUserId(null)}
+        onUpdated={handleUserUpdated}
       />
     </Box>
   )

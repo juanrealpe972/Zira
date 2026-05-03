@@ -1,15 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Flex, TextField, Select, Box, Text } from '@radix-ui/themes'
-import { Icons } from '@/components/ui/icons/icons'
-import { FormField } from '@/components/ui/FormField'
-import { StepModal } from '@/components/ui/StepModal'
-import {
-  BankCard, BankCardRequest,
-  createBankCard, updateBankCard,
-} from '@/services/bank-cards.service'
-import { getBankAccounts, BankAccount } from '@/services/bank-accounts.service'
+import { Flex, TextField, Select, Box } from '@radix-ui/themes'
+import { Icons, FormField, StepModal } from '@/components/ui'
+import { createBankCard, updateBankCard, getBankAccounts } from '@/services'
+import { BankCard, BankCardRequest, BankAccount } from '@/types'
 
 const CARD_TYPES = [
   { value: 'credito', label: 'Tarjeta de crédito' },

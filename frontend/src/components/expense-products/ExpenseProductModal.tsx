@@ -2,13 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { Flex, TextField, Box } from '@radix-ui/themes'
-import { Icons } from '@/components/ui/icons/icons'
-import { FormField } from '@/components/ui/FormField'
-import { StepModal } from '@/components/ui/StepModal'
-import {
-  ExpenseProduct, ExpenseProductRequest,
-  createExpenseProduct, updateExpenseProduct,
-} from '@/services/expense-products.service'
+import { Icons, FormField, StepModal } from '@/components/ui'
+import { createExpenseProduct, updateExpenseProduct } from '@/services'
+import { ExpenseProduct, ExpenseProductRequest } from '@/types'
 
 type Props = {
   open: boolean
@@ -25,6 +21,7 @@ const EMPTY = {
   unit_price: '',
   subtotal: '',
 }
+
 type FormErrors = Partial<Record<keyof typeof EMPTY, string>>
 
 export function ExpenseProductModal({ open, onClose, userId, existing, onSaved }: Props) {

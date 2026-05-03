@@ -1,6 +1,5 @@
 import { Box, Flex, Text, Badge, IconButton, Card } from '@radix-ui/themes'
-import { Pencil1Icon, TrashIcon } from '@radix-ui/react-icons'
-import { BankCard } from '@/services/bank-cards.service'
+import { BankCard } from '@/types'
 import { Icons } from '@/components/ui/icons/icons'
 
 type Props = {
@@ -87,7 +86,7 @@ export function CardCard({ card, onEdit, onDelete }: Props) {
               size="1"
               onClick={() => onEdit(card)}
             >
-              <Pencil1Icon />
+              <Icons.edit />
             </IconButton>
             <IconButton
               variant="ghost"
@@ -95,7 +94,7 @@ export function CardCard({ card, onEdit, onDelete }: Props) {
               color="red"
               onClick={() => onDelete(card.id)}
             >
-              <TrashIcon />
+              <Icons.delete />
             </IconButton>
           </Flex>
         </Flex>

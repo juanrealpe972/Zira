@@ -1,5 +1,5 @@
 import { Box, Flex, Text, Container } from '@radix-ui/themes'
-import { RocketIcon } from '@radix-ui/react-icons'
+import { Icons } from '@/components/ui'
 import NavLink from 'next/link'
 
 export default function Footer() {
@@ -9,7 +9,7 @@ export default function Footer() {
         <Flex align="center" justify="between" py="4">
 
           <Flex align="center" gap="2">
-            <RocketIcon />
+            <Icons.rocketIcon />
             <Text size="2" color="gray">© 2026 Zira. Todos los derechos reservados.</Text>
           </Flex>
 

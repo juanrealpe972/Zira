@@ -2,12 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { Box, Flex, Heading, Text, Button, Grid, Spinner, Card } from '@radix-ui/themes'
-import { PlusIcon } from '@radix-ui/react-icons'
 import { Icons } from '@/components/ui/icons/icons'
-import {
-  getLoans, deleteLoan,
-  Loan,
-} from '@/services/loans.service'
+import { getLoans, deleteLoan } from '@/services'
+import { Loan } from '@/types'
 import { LoanCard } from '@/components/loans/LoanCard'
 import { LoanModal } from '@/components/loans/LoanModal'
 import { AppToast } from '@/components/ui/AppToast'
@@ -105,7 +102,7 @@ export default function LoansPage() {
           </Flex>
         </Box>
         <Button size="2" onClick={handleOpenNew}>
-          <PlusIcon /> Nuevo préstamo
+          <Icons.plusIcon /> Nuevo préstamo
         </Button>
       </Flex>
 
@@ -166,7 +163,7 @@ export default function LoansPage() {
               </Text>
             </Box>
             <Button size="2" onClick={handleOpenNew} mt="2">
-              <PlusIcon /> Agregar préstamo
+              <Icons.plusIcon /> Agregar préstamo
             </Button>
           </Flex>
         </Card>

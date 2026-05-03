@@ -1,12 +1,10 @@
 'use client'
 
 import { Flex, IconButton } from '@radix-ui/themes'
-import { GearIcon } from '@radix-ui/react-icons'
-import { AppLink } from '@/components/ui/AppLink'
 import { useState, useCallback } from 'react'
 import NavLink from 'next/link'
-import { ZiraLogo } from '../ui/ZiraLogo'
-import SettingsPanel from '../layout/panels/SettingsPanel'
+import { ZiraLogo, Icons, AppLink } from '@/components/ui'
+import { SettingsPanel } from '@/components/layout/panels'
 
 export default function AuthHeader() {
   const [settingsOpen, setSettingsOpen] = useState(false)
@@ -35,7 +33,7 @@ export default function AuthHeader() {
           onClick={openSettings}
           aria-label="Abrir configuración"
         >
-          <GearIcon width={18} height={18} />
+          <Icons.settings />
         </IconButton>
       </Flex>
       <SettingsPanel open={settingsOpen} onClose={closeSettings} />

@@ -2,10 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { Flex, Text, Avatar, IconButton, DropdownMenu, Box } from '@radix-ui/themes'
-import { BellIcon, GearIcon, GlobeIcon, ChevronDownIcon } from '@radix-ui/react-icons'
-import NotificationsPanel from './panels/NotificationsPanel'
-import SettingsPanel from './panels/SettingsPanel'
-import ProfilePanel from './panels/ProfilePanel'
+import { Icons } from '@/components/ui'
+import { NotificationsPanel, SettingsPanel, ProfilePanel } from '@/components/layout/panels'
 import { getUserById } from '@/services'
 import { User } from '@/types'
 
@@ -76,7 +74,7 @@ export default function DashboardHeader() {
               }}
             >
               <Text size="2" weight="medium">{currentTeam.name}</Text>
-              <ChevronDownIcon />
+              <Icons.chevronDown />
             </Flex>
           </DropdownMenu.Trigger>
           <DropdownMenu.Content>
@@ -96,7 +94,7 @@ export default function DashboardHeader() {
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>
               <IconButton variant="ghost" size="2">
-                <GlobeIcon width={18} height={18} />
+                <Icons.facebook width={18} height={18} />
               </IconButton>
             </DropdownMenu.Trigger>
             <DropdownMenu.Content align="end">
@@ -117,11 +115,11 @@ export default function DashboardHeader() {
           </DropdownMenu.Root>
 
           <IconButton variant="ghost" size="2" onClick={() => setNotifOpen(true)}>
-            <BellIcon width={18} height={18} />
+            <Icons.notification />
           </IconButton>
 
           <IconButton variant="ghost" size="2" onClick={() => setSettingsOpen(true)}>
-            <GearIcon width={18} height={18} />
+            <Icons.settings />
           </IconButton>
 
           <Box onClick={() => setProfileOpen(true)} style={{ cursor: 'pointer' }}>

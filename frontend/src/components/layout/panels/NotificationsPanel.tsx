@@ -1,7 +1,7 @@
 'use client'
 
 import { Flex, Text, Box, Heading, Avatar } from '@radix-ui/themes'
-import { Cross1Icon, BellIcon } from '@radix-ui/react-icons'
+import { Icons } from '@/components/ui'
 
 type Props = {
   open: boolean
@@ -14,7 +14,7 @@ const notifications = [
   { id: 3, title: 'Reporte listo', description: 'El reporte mensual está disponible', time: 'Hace 1 hora' },
 ]
 
-export default function NotificationsPanel({ open, onClose }: Props) {
+export function NotificationsPanel({ open, onClose }: Props) {
   return (
     <>
       {open && (
@@ -47,11 +47,11 @@ export default function NotificationsPanel({ open, onClose }: Props) {
       >
         <Flex align="center" justify="between" p="4" style={{ borderBottom: '1px solid var(--gray-4)' }}>
           <Flex align="center" gap="2">
-            <BellIcon />
+            <Icons.notification />
             <Heading size="4">Notificaciones</Heading>
           </Flex>
           <Box onClick={onClose} style={{ cursor: 'pointer' }}>
-            <Cross1Icon />
+            <Icons.crossIcon />
           </Box>
         </Flex>
 

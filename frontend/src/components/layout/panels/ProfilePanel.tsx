@@ -1,12 +1,10 @@
 'use client'
-
 import { Flex, Text, Box, Heading, Avatar, Button, Badge } from '@radix-ui/themes'
-import { Cross1Icon, ExitIcon } from '@radix-ui/react-icons'
 import { useRouter } from 'next/navigation'
 import NavLink from 'next/link'
-import { logout } from '@/services/auth.service'
-import { User } from '@/services/users.service'
-import { Icons } from '@/components/ui/icons/icons'
+import { logout } from '@/services'
+import { User } from '@/types'
+import { Icons } from '@/components/ui'
 
 type Props = {
   open: boolean
@@ -14,7 +12,7 @@ type Props = {
   user: User | null
 }
 
-export default function ProfilePanel({ open, onClose, user }: Props) {
+export function ProfilePanel({ open, onClose, user }: Props) {
   const router = useRouter()
 
   async function handleLogout() {
@@ -57,7 +55,7 @@ export default function ProfilePanel({ open, onClose, user }: Props) {
         <Flex align="center" justify="between" p="4" style={{ borderBottom: '1px solid var(--gray-4)' }}>
           <Heading size="4">Mi cuenta</Heading>
           <Box onClick={onClose} style={{ cursor: 'pointer' }}>
-            <Cross1Icon />
+            <Icons.crossIcon />
           </Box>
         </Flex>
 
@@ -141,7 +139,7 @@ export default function ProfilePanel({ open, onClose, user }: Props) {
             style={{ width: '100%', cursor: 'pointer' }}
             onClick={handleLogout}
           >
-            <ExitIcon /> Cerrar sesión
+            <Icons.exitIcon /> Cerrar sesión
           </Button>
         </Box>
       </Box>

@@ -28,7 +28,28 @@ import {
   PlusIcon,
   ChevronDownIcon,
   ChevronLeftIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
+  Pencil1Icon,
+  TrashIcon,
+  Cross2Icon,
+  CheckCircledIcon,
+  ExclamationTriangleIcon,
+  Link2Icon,
+  ArrowUpIcon, 
+  ArrowDownIcon,
+  Cross1Icon, 
+  SunIcon,
+  MoonIcon,
+  ExitIcon,
+  RocketIcon,
+  EyeOpenIcon,
+  EyeClosedIcon,
+  MobileIcon,
+  HomeIcon,
+  MagnifyingGlassIcon,
+  CrossCircledIcon,
+  ImageIcon,
+  PaperPlaneIcon
 } from '@radix-ui/react-icons'
 
 export const Icons = {
@@ -54,6 +75,26 @@ export const Icons = {
   chevronDown: ChevronDownIcon,
   chevronLeft: ChevronLeftIcon,
   chevronRight: ChevronRightIcon,
+  edit: Pencil1Icon,
+  delete: TrashIcon,
+  close: Cross2Icon,
+  check: CheckCircledIcon,
+  error: ExclamationTriangleIcon,
+  arrowUp: ArrowUpIcon,
+  arrowDown: ArrowDownIcon,
+  crossIcon: Cross1Icon,
+  sunIcon: SunIcon,
+  moonIcon: MoonIcon,
+  exitIcon: ExitIcon,
+  rocketIcon: RocketIcon,
+  eyeOpenIcon: EyeOpenIcon,
+  eyeClosedIcon: EyeClosedIcon,
+  mobileIcon: MobileIcon,
+  homeIcon: HomeIcon,
+  magnifyingGlassIcon: MagnifyingGlassIcon,
+  crossCircledIcon: CrossCircledIcon,
+  imageIcon: ImageIcon,
+  paperPlaneIcon: PaperPlaneIcon,
 
   // Redes sociales
   github: GitHubLogoIcon,
@@ -63,29 +104,10 @@ export const Icons = {
   youtube: VideoIcon,
   tiktok: MinusIcon,
   facebook: GlobeIcon,
+  link: Link2Icon,
   otro: GlobeIcon,
 
   // Finance
   creditCard: CardStackIcon,
   money: IdCardIcon,
-}
-
-// Helper para obtener el ícono por plataforma
-export function getSocialIcon(platform: string) {
-  const key = platform.toLowerCase() as keyof typeof Icons
-  return Icons[key] ?? Icons.share
-}
-
-// Color por plataforma
-export function getSocialColor(platform: string): string {
-  const colors: Record<string, string> = {
-    facebook: '#1877F2',
-    instagram: '#E1306C',
-    linkedin: '#0A66C2',
-    twitter: '#1DA1F2',
-    youtube: '#FF0000',
-    tiktok: '#010101',
-    github: '#333333',
-  }
-  return colors[platform.toLowerCase()] ?? 'var(--accent-9)'
 }

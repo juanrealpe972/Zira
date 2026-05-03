@@ -2,20 +2,19 @@
 
 import { useState } from 'react'
 import { Box, Flex, Text, Heading, Badge, Separator, Avatar, Dialog, Button, IconButton } from '@radix-ui/themes'
-import { Icons } from '@/components/ui/icons/icons'
-import { User } from '@/services/users.service'
-import { Cross2Icon, PersonIcon } from '@radix-ui/react-icons'
+import { Icons } from '@/components/ui'
+import { User } from '@/types'
 
 // Datos mock — luego conectas a tu API
 const mockFollowers = [
-  { id: 1, name: 'Ana García', role: 'Editor', photo: null },
+  { id: 1, name: 'Ana García', role: 'Free', photo: null },
   { id: 2, name: 'Carlos López', role: 'Admin', photo: null },
-  { id: 3, name: 'María Torres', role: 'User', photo: null },
+  { id: 3, name: 'María Torres', role: 'Premium', photo: null },
 ]
 
 const mockFollowing = [
-  { id: 4, name: 'Pedro Ramírez', role: 'Editor', photo: null },
-  { id: 5, name: 'Laura Gómez', role: 'User', photo: null },
+  { id: 4, name: 'Pedro Ramírez', role: 'Free', photo: null },
+  { id: 5, name: 'Laura Gómez', role: 'Premium', photo: null },
 ]
 
 type ModalType = 'followers' | 'following' | 'posts' | null
@@ -122,7 +121,7 @@ export function ProfileInfo({ user }: { user: User }) {
             </Dialog.Title>
             <Dialog.Close>
               <IconButton variant="ghost" size="1">
-                <Cross2Icon />
+                <Icons.crossIcon />
               </IconButton>
             </Dialog.Close>
           </Flex>
@@ -131,7 +130,7 @@ export function ProfileInfo({ user }: { user: User }) {
           <Box style={{ maxHeight: 400, overflowY: 'auto' }}>
             {activeModal && modalData[activeModal].users.length === 0 ? (
               <Flex direction="column" align="center" justify="center" py="8" gap="2">
-                <PersonIcon width={32} height={32} style={{ color: 'var(--gray-6)' }} />
+                <Icons.user />
                 <Text color="gray" size="2">Sin {modalData[activeModal].title.toLowerCase()} aún</Text>
               </Flex>
             ) : (

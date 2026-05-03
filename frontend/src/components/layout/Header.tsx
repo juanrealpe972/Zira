@@ -2,10 +2,9 @@
 
 import { Box, Flex, Button, Container, IconButton } from '@radix-ui/themes'
 import Link from 'next/link'
-import { ZiraLogo } from '../ui/ZiraLogo'
+import { ZiraLogo, Icons } from '@/components/ui'
 import { useState, useCallback } from 'react'
-import SettingsPanel from './panels/SettingsPanel'
-import { GearIcon } from '@radix-ui/react-icons'
+import { SettingsPanel } from '@/components/layout/panels'
 
 export default function Header() {
   const [settingsOpen, setSettingsOpen] = useState(false)
@@ -39,15 +38,11 @@ export default function Header() {
               onClick={openSettings}
               aria-label="Abrir configuración"
             >
-              <GearIcon width={18} height={18} />
+              <Icons.settings />
             </IconButton>
 
             <Button variant="classic" asChild>
               <Link href="/login">Iniciar sesión</Link>
-            </Button>
-
-            <Button variant="outline" asChild>
-              <Link href="/register">Registrarse</Link>
             </Button>
 
           </Flex>

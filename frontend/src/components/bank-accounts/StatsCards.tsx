@@ -1,6 +1,5 @@
 import { Grid, Card, Flex, Text, Box } from '@radix-ui/themes'
-import { ArrowUpIcon, ArrowDownIcon } from '@radix-ui/react-icons'
-import { BankAccount } from '@/services/bank-accounts.service'
+import { BankAccount } from '@/types'
 import { Icons } from '@/components/ui/icons/icons'
 
 type Props = { accounts: BankAccount[] }
@@ -65,8 +64,8 @@ export function StatsCards({ accounts }: Props) {
                 {trend && (
                   <>
                     {up
-                      ? <ArrowUpIcon style={{ color: 'var(--green-9)' }} />
-                      : <ArrowDownIcon style={{ color: 'var(--red-9)' }} />
+                      ? <Icons.arrowUp />
+                      : <Icons.arrowDown />
                     }
                     <Text size="1" style={{ color: up ? 'var(--green-9)' : 'var(--red-9)' }}>
                       {trend}
