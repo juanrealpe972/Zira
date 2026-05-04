@@ -1,18 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import {
-  Box, Flex, Card, Avatar, Text, IconButton,
-  Separator, TextField, Button, DropdownMenu,
-} from '@radix-ui/themes'
+import { Box, Flex, Card, Avatar, Text, IconButton, Separator, TextField, Button, DropdownMenu } from '@radix-ui/themes'
 import {
   HeartIcon, ChatBubbleIcon, Share2Icon,
   DotsHorizontalIcon, Pencil1Icon, TrashIcon,
   BookmarkIcon, EyeNoneIcon,
 } from '@radix-ui/react-icons'
-import { Post } from '@/types/social'
+import { MockPost } from '@/data/profile.mock'
 
-export function PostCard({ post }: { post: Post }) {
+export function PostCard({ post }: { post: MockPost }) {
   const [liked, setLiked] = useState(false)
   const [likes, setLikes] = useState(post.likes)
   const [showComments, setShowComments] = useState(false)

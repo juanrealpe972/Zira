@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { Flex, TextField, Select, Button, Box } from '@radix-ui/themes'
-import { MagnifyingGlassIcon, Cross2Icon } from '@radix-ui/react-icons'
+import { Flex, TextField, Select, Button } from '@radix-ui/themes'
+import { Icons } from '@/components/ui'
 import { debounce } from '@/lib/utils'
 
 interface Props {
@@ -63,7 +63,7 @@ export function SearchFilters({
           placeholder={placeholder}
         >
           <TextField.Slot>
-            <MagnifyingGlassIcon height="16" width="16" />
+            <Icons.magnifyingGlassIcon height="16" width="16" />
           </TextField.Slot>
         </TextField.Root>
 
@@ -87,7 +87,7 @@ export function SearchFilters({
 
         {hasActiveFilters && (
           <Button variant="ghost" size="1" onClick={clearFilters}>
-            <Cross2Icon width={14} height={14} />
+            <Icons.close width={14} height={14} />
             Limpiar
           </Button>
         )}

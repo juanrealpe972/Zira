@@ -1,11 +1,8 @@
 'use client'
 
-import { User } from '@/services/users.service'
+import { User } from '@/types'
 import { Badge, Flex, Text, IconButton, Box } from '@radix-ui/themes'
-import { 
-  Pencil1Icon, TrashIcon, CheckCircledIcon, CrossCircledIcon 
-} from '@radix-ui/react-icons'
-import { AppAvatar } from '@/components/ui/AppAvatar'
+import { AppAvatar, Icons } from '@/components/ui'
 
 interface Props {
   users: User[]
@@ -88,7 +85,7 @@ export function UsersTable({ users, onEdit, onDelete, onToggleStatus, loading }:
                     onClick={() => onEdit(user)}
                     title="Editar"
                   >
-                    <Pencil1Icon width={14} height={14} />
+                    <Icons.edit width={14} height={14} />
                   </IconButton>
                   <IconButton 
                     variant="soft" 
@@ -97,8 +94,8 @@ export function UsersTable({ users, onEdit, onDelete, onToggleStatus, loading }:
                     title={user.is_active ? 'Desactivar' : 'Activar'}
                   >
                     {user.is_active 
-                      ? <CrossCircledIcon width={14} height={14} />
-                      : <CheckCircledIcon width={14} height={14} />
+                      ? <Icons.crossCircledIcon width={14} height={14} />
+                      : <Icons.check width={14} height={14} />
                     }
                   </IconButton>
                   <IconButton 
@@ -107,7 +104,7 @@ export function UsersTable({ users, onEdit, onDelete, onToggleStatus, loading }:
                     onClick={() => onDelete(user)}
                     title="Eliminar"
                   >
-                    <TrashIcon width={14} height={14} />
+                    <Icons.delete width={14} height={14} />
                   </IconButton>
                 </Flex>
               </td>

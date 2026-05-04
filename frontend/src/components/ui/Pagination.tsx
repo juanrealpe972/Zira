@@ -1,7 +1,7 @@
 'use client'
 
 import { Flex, IconButton, Text, Box } from '@radix-ui/themes'
-import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
+import { Icons } from '@/components/ui'
 
 interface Props {
   page: number
@@ -29,7 +29,7 @@ export function Pagination({ page, totalPages, count, onPageChange }: Props) {
           disabled={!canGoPrevious}
           onClick={() => onPageChange(1)}
         >
-          <ChevronLeftIcon width={14} height={14} />
+          <Icons.chevronLeft width={14} height={14} />
         </IconButton>
         
         <IconButton
@@ -38,7 +38,7 @@ export function Pagination({ page, totalPages, count, onPageChange }: Props) {
           disabled={!canGoPrevious}
           onClick={() => onPageChange(page - 1)}
         >
-          <ChevronLeftIcon width={14} height={14} />
+          <Icons.chevronLeft width={14} height={14} />
         </IconButton>
         
         <Box px="2">
@@ -53,7 +53,7 @@ export function Pagination({ page, totalPages, count, onPageChange }: Props) {
           disabled={!canGoNext}
           onClick={() => onPageChange(page + 1)}
         >
-          <ChevronRightIcon width={14} height={14} />
+          <Icons.chevronRight width={14} height={14} />
         </IconButton>
         
         <IconButton
@@ -62,7 +62,7 @@ export function Pagination({ page, totalPages, count, onPageChange }: Props) {
           disabled={!canGoNext}
           onClick={() => onPageChange(totalPages)}
         >
-          <ChevronRightIcon width={14} height={14} />
+          <Icons.chevronRight width={14} height={14} />
         </IconButton>
       </Flex>
     </Flex>

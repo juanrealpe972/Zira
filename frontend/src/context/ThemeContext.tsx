@@ -1,5 +1,4 @@
 'use client'
-
 import { createContext, useContext, useState, useEffect } from 'react'
 
 type AccentColor =
@@ -14,7 +13,6 @@ type Appearance = 'light' | 'dark'
 
 type Radius = 'none' | 'small' | 'medium' | 'large' | 'full'
 
-type Scaling = '90%' | '95%' | '100%' | '105%' | '110%'
 
 type ThemeConfig = {
   appearance: Appearance
@@ -22,7 +20,6 @@ type ThemeConfig = {
   grayColor: GrayColor
   fontFamily: FontFamily
   radius: Radius
-  scaling: Scaling
   panelBackground: 'solid' | 'translucent'
 }
 
@@ -33,7 +30,6 @@ type ThemeContextType = {
   setGrayColor: (v: GrayColor) => void
   setFontFamily: (v: FontFamily) => void
   setRadius: (v: Radius) => void
-  setScaling: (v: Scaling) => void
   setPanelBackground: (v: 'solid' | 'translucent') => void
 }
 
@@ -43,7 +39,6 @@ const defaultTheme: ThemeConfig = {
   grayColor: 'slate',
   fontFamily: 'inter',
   radius: 'medium',
-  scaling: '100%',
   panelBackground: 'translucent',
 }
 
@@ -63,17 +58,18 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   useEffect(() => {
-    localStorage.setItem('zira-theme', JSON.stringify(theme))
-
     const fontMap: Record<FontFamily, string> = {
-      'inter': "'Inter', sans-serif",
-      'dm-sans': "'DM Sans', sans-serif",
-      'nunito': "'Nunito Sans', sans-serif",
-      'public-sans': "'Public Sans', sans-serif",
+      'inter': 'var(--font-inter)',
+      'dm-sans': 'var(--font-dm)',
+      'nunito': 'var(--font-nunito)',
+      'public-sans': 'var(--font-public)',
     }
 
-    document.body.style.fontFamily = fontMap[theme.fontFamily]
-  }, [theme])
+    document.documentElement.style.setProperty(
+      '--app-font',
+      fontMap[theme.fontFamily]
+    )
+  }, [theme.fontFamily])
 
   const update = <K extends keyof ThemeConfig>(key: K, value: ThemeConfig[K]) =>
     setTheme(prev => ({ ...prev, [key]: value }))
@@ -86,7 +82,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       setGrayColor: (v) => update('grayColor', v),
       setFontFamily: (v) => update('fontFamily', v),
       setRadius: (v) => update('radius', v),
-      setScaling: (v) => update('scaling', v),
       setPanelBackground: (v) => update('panelBackground', v),
     }}>
       {children}

@@ -1,4 +1,4 @@
-import { Icons } from '@/components/ui/icons/icons'
+import { Icons } from '@/components/ui'
 
 export type NavItem = {
   label: string

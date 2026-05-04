@@ -1,17 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import {
-    Dialog, Flex, Box, Text, TextField, Select,
-    Button, Separator, Grid, Badge,
-} from '@radix-ui/themes'
-import {
-    PersonIcon, EnvelopeClosedIcon, LockClosedIcon,
-    MobileIcon, HomeIcon, IdCardIcon, CheckCircledIcon,
-    ExclamationTriangleIcon, Cross2Icon,
-} from '@radix-ui/react-icons'
-import { createUser, CreateUserRequest, User } from '@/services/users.service'
-import { AppToast } from '@/components/ui/AppToast'
+import { Dialog, Flex, Box, Text, TextField, Select, Button, Separator, Grid, Badge } from '@radix-ui/themes'
+import { createUser } from '@/services'
+import { User, CreateUserRequest } from '@/types'
+import { AppToast, Icons } from '@/components/ui'
 
 type Props = {
     open: boolean
@@ -19,9 +12,9 @@ type Props = {
     onCreated: (user: User) => void
 }
 
-const ROLES = ['admin', 'user', 'editor', 'viewer']
-const COUNTRIES = ['Colombia', 'México', 'Argentina', 'España', 'Estados Unidos']
-const PHONE_PREFIXES = ['+57', '+52', '+54', '+34', '+1']
+const ROLES = ['admin', 'free', 'premium']
+const COUNTRIES = ['Colombia', 'México', 'España', 'Estados Unidos', 'Peru', 'Argentina', 'Chile', 'Ecuador', 'Uruguay', 'Paraguay', 'Bolivia', 'Venezuela']
+const PHONE_PREFIXES = ['+57', '+52', '+54', '+34', '+1', '+51', '+56', '+593', '+598', '+595', '+591', '+58']
 
 const INITIAL: CreateUserRequest = {
     name: '',
@@ -31,7 +24,7 @@ const INITIAL: CreateUserRequest = {
     phone: '',
     address: '',
     company: '',
-    role: 'user',
+    role: 'free',
     country: '',
     city: '',
     national_id: '',
@@ -142,7 +135,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
                                         borderRadius: 6,
                                     }}
                                 >
-                                    <Cross2Icon width={16} height={16} />
+                                    <Icons.close width={16} height={16} />
                                 </Box>
                             </Dialog.Close>
                         </Flex>
@@ -166,7 +159,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
                                             transition: 'all 0.2s',
                                         }}
                                     >
-                                        {i < step ? <CheckCircledIcon width={14} /> : i + 1}
+                                        {i < step ? <Icons.check width={14} /> : i + 1}
                                     </Flex>
                                     <Text size="1" style={{ color: i <= step ? 'white' : 'rgba(255,255,255,0.6)', fontWeight: i === step ? 600 : 400 }}>
                                         {s.label}
@@ -193,7 +186,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
                                 border: '1px solid var(--red-6)',
                             }}
                         >
-                            <ExclamationTriangleIcon style={{ color: 'var(--red-9)', flexShrink: 0 }} />
+                            <Icons.error style={{ color: 'var(--red-9)', flexShrink: 0 }} />
                             <Text size="2" style={{ color: 'var(--red-11)' }}>{apiError}</Text>
                         </Flex>
                     )}
@@ -211,7 +204,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
                                         placeholder="Juan Pérez"
                                         size="2"
                                     >
-                                        <TextField.Slot><PersonIcon /></TextField.Slot>
+                                        <TextField.Slot><Icons.user /></TextField.Slot>
                                     </TextField.Root>
                                 </Field>
 
@@ -223,7 +216,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
                                         type="email"
                                         size="2"
                                     >
-                                        <TextField.Slot><EnvelopeClosedIcon /></TextField.Slot>
+                                        <TextField.Slot><Icons.mail /></TextField.Slot>
                                     </TextField.Root>
                                 </Field>
 
@@ -235,7 +228,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
                                         type="password"
                                         size="2"
                                     >
-                                        <TextField.Slot><LockClosedIcon /></TextField.Slot>
+                                        <TextField.Slot><Icons.security /></TextField.Slot>
                                     </TextField.Root>
                                 </Field>
 
@@ -248,7 +241,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
                                                     <Flex align="center" gap="2">
                                                         <Badge
                                                             size="1"
-                                                            color={r === 'admin' ? 'red' : r === 'editor' ? 'blue' : 'gray'}
+                                                            color={r === 'admin' ? 'orange' : r === 'free' ? 'green' : 'yellow'}
                                                             variant="soft"
                                                         >
                                                             {r}
@@ -272,7 +265,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
                                         placeholder="123456789"
                                         size="2"
                                     >
-                                        <TextField.Slot><IdCardIcon /></TextField.Slot>
+                                        <TextField.Slot><Icons.money /></TextField.Slot>
                                     </TextField.Root>
                                 </Field>
 
@@ -303,7 +296,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
                                         placeholder="3001234567"
                                         size="2"
                                     >
-                                        <TextField.Slot><MobileIcon /></TextField.Slot>
+                                        <TextField.Slot><Icons.mobileIcon /></TextField.Slot>
                                     </TextField.Root>
                                 </Field>
 
@@ -335,7 +328,7 @@ export function CreateUserModal({ open, onClose, onCreated }: Props) {
                                             placeholder="Calle 123 # 45-67"
                                             size="2"
                                         >
-                                            <TextField.Slot><HomeIcon /></TextField.Slot>
+                                            <TextField.Slot><Icons.homeIcon /></TextField.Slot>
                                         </TextField.Root>
                                     </Field>
                                 </Box>
@@ -403,7 +396,7 @@ function Field({
             {children}
             {error && (
                 <Flex align="center" gap="1" mt="1">
-                    <ExclamationTriangleIcon width={12} style={{ color: 'var(--red-9)' }} />
+                    <Icons.error width={12} style={{ color: 'var(--red-9)' }} />
                     <Text size="1" style={{ color: 'var(--red-9)' }}>{error}</Text>
                 </Flex>
             )}

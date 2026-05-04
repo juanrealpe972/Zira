@@ -1,14 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Flex, TextField, Select, TextArea, Box } from '@radix-ui/themes'
-import { Icons } from '@/components/ui/icons/icons'
-import { FormField } from '@/components/ui/FormField'
-import { StepModal } from '@/components/ui/StepModal'
-import {
-    Income, IncomeRequest,
-    createIncome, updateIncome,
-} from '@/services/incomes.service'
+import { Flex, TextField, Select, TextArea } from '@radix-ui/themes'
+import { Icons, FormField, StepModal } from '@/components/ui'
+import { createIncome, updateIncome } from '@/services'
+import { Income, IncomeRequest} from '@/types'
 
 const CATEGORIES = [
     { value: 'salario', label: 'Salario' },

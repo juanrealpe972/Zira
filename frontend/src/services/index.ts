@@ -1,7 +1,3 @@
-/**
- * Servicios API - Exportaciones centralizadas example import { login, getUsers } from '@/services'
- */
-
 export * from './auth.service'
 export * from './bank-accounts.service'
 export * from './bank-cards.service'

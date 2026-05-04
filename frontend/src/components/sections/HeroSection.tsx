@@ -1,47 +1,53 @@
-import { Flex, Heading, Text, Button, Badge, Avatar, Container } from '@radix-ui/themes'
-import { LightningBoltIcon, ArrowRightIcon } from '@radix-ui/react-icons'
-import NavLink from 'next/link'
+import { Flex, Container, Avatar } from '@radix-ui/themes'
+import { AppButton, AppHeading, AppText } from '@/components/ui'
 
-export default function HeroSection() {
+export function HeroSection() {
   return (
     <Container size="3">
-      <Flex direction="column" align="center" py="9" gap="5" style={{ textAlign: 'center' }}>
+      <Flex
+        direction="column"
+        align="center"
+        justify="center"
+        gap="5"
+        px='8'
+        py={{ initial: '7', md: '9' }}
+        style={{ textAlign: 'center' }}
+      >
 
-        <Badge size="2" color="blue" variant="soft" radius="full">
-          <LightningBoltIcon /> Versión 1.0 ya disponible
-        </Badge>
+        <AppHeading size="9" style={{ maxWidth: 700 }}>
+          Organiza tu vida, tu dinero y tu trabajo en un solo lugar
+        </AppHeading>
 
-        <Heading size="9" style={{ maxWidth: 600, lineHeight: 1.1 }}>
-          La plataforma que impulsa tu negocio
-        </Heading>
+        <AppText style={{ maxWidth: 550 }}>
+          Controla tus gastos, tareas, préstamos, archivos y más con una plataforma
+          simple, potente y pensada para tu día a día.
+        </AppText>
 
-        <Text size="4" color="gray" style={{ maxWidth: 500 }}>
-          Gestiona, analiza y escala tu hogar con herramientas simples y poderosas.
-        </Text>
-
-        <Flex gap="3" mt="2">
-          <Button size="3" asChild>
-            <NavLink href="/register">
-              Comenzar gratis <ArrowRightIcon />
-            </NavLink>
-          </Button>
-          <Button size="3" variant="outline">
-            Ver demo
-          </Button>
+        <Flex gap="3" mt="2" wrap="wrap" justify="center">
+          <AppButton asChild>
+            <a href="https://wa.me/573157870001" target="_blank">
+              Contactar por WhatsApp
+            </a>
+          </AppButton>
         </Flex>
 
-        <Flex align="center" gap="2" mt="2">
+        <Flex align="center" gap="2" mt="3">
           <Flex>
             {['A', 'B', 'C', 'D'].map((letter, i) => (
               <Avatar
                 key={letter}
                 size="1"
                 fallback={letter}
-                style={{ marginLeft: i === 0 ? 0 : -6, border: '2px solid var(--color-background)' }}
+                style={{
+                  marginLeft: i === 0 ? 0 : -6,
+                  border: '2px solid var(--color-background)'
+                }}
               />
             ))}
           </Flex>
-          <Text size="2" color="gray">+2,000 equipos ya confían en nosotros</Text>
+          <AppText>
+            +2,000 usuarios organizando su vida con Zira
+          </AppText>
         </Flex>
 
       </Flex>

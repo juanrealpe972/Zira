@@ -30,7 +30,6 @@ export const API_CONFIG = {
 // Rutas de autenticación (redirigir si ya está logueado)
 export const AUTH_ROUTES = [
   '/auth/login',
-  '/auth/register',
 ]
 
 // Duración del token de acceso (15 minutos)

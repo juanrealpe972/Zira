@@ -1,6 +1,6 @@
 'use client'
 
-import * as Dialog from '@radix-ui/themes'
+import { Dialog } from '@radix-ui/themes'
 import { Flex, Text, Button } from '@radix-ui/themes'
 import { ReactNode } from 'react'
 
@@ -30,7 +30,6 @@ export function ConfirmDialog({
   variant = 'danger',
   onConfirm,
   loading = false,
-  icon,
 }: ConfirmDialogProps) {
   const colorMap = {
     danger: 'red',
@@ -62,7 +61,6 @@ export function ConfirmDialog({
           </Dialog.Close>
           
           <Button 
-            color={colorMap[variant]} 
             onClick={handleConfirm}
             disabled={loading}
           >

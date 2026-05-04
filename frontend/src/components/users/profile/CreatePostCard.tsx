@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Box, Flex, Card, Avatar, Button, IconButton, Separator } from '@radix-ui/themes'
-import { ImageIcon, Cross2Icon, PaperPlaneIcon } from '@radix-ui/react-icons'
+import { Icons } from '@/components/ui'
 
 type Props = {
   userName: string
@@ -14,15 +14,7 @@ type Props = {
   imagePreview?: string | null
 }
 
-export function CreatePostCard({
-  userName,
-  userPhoto,
-  newPost,
-  setNewPost,
-  handleCreatePost,
-  setImagePreview,
-  imagePreview,
-}: Props) {
+export function CreatePostCard({ userName, userPhoto, newPost, setNewPost, handleCreatePost, setImagePreview, imagePreview }: Props) {
   const [focused, setFocused] = useState(false)
 
   return (
@@ -79,7 +71,7 @@ export function CreatePostCard({
                   onClick={() => setImagePreview(null)}
                   style={{ position: 'absolute', top: 4, right: 4 }}
                 >
-                  <Cross2Icon />
+                  <Icons.close />
                 </IconButton>
               </Box>
             )}
@@ -104,7 +96,7 @@ export function CreatePostCard({
               />
               <IconButton variant="soft" size="2" asChild>
                 <span>
-                  <ImageIcon />
+                  <Icons.imageIcon />
                 </span>
               </IconButton>
             </label>
@@ -115,7 +107,7 @@ export function CreatePostCard({
             disabled={!newPost.trim()}
             onClick={handleCreatePost}
           >
-            <PaperPlaneIcon /> Publicar
+            <Icons.paperPlaneIcon /> Publicar
           </Button>
         </Flex>
       </Card>

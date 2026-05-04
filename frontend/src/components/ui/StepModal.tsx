@@ -1,7 +1,7 @@
 'use client'
 
 import { Dialog, Flex, Box, Text, Button, Separator } from '@radix-ui/themes'
-import { Cross2Icon, CheckCircledIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons'
+import { Icons } from '@/components/ui/icons/icons'
 import { AppToast } from '@/components/ui/AppToast'
 import { useState } from 'react'
 
@@ -59,7 +59,7 @@ export function StepModal({
               </Box>
               <Dialog.Close onClick={onClose}>
                 <Box style={{ cursor: 'pointer', color: 'rgba(255,255,255,0.8)', display: 'flex', padding: 4, borderRadius: 6 }}>
-                  <Cross2Icon width={16} height={16} />
+                  <Icons.close />
                 </Box>
               </Dialog.Close>
             </Flex>
@@ -79,7 +79,7 @@ export function StepModal({
                         fontSize: 11, fontWeight: 700, flexShrink: 0, transition: 'all 0.2s',
                       }}
                     >
-                      {i < currentStep ? <CheckCircledIcon width={14} /> : i + 1}
+                      {i < currentStep ? <Icons.check /> : i + 1}
                     </Flex>
                     <Text size="1" style={{ color: i <= currentStep ? 'white' : 'rgba(255,255,255,0.6)', fontWeight: i === currentStep ? 600 : 400 }}>
                       {s.label}
@@ -98,7 +98,7 @@ export function StepModal({
             <Flex align="center" gap="2" mx="5" mt="4" p="3"
               style={{ borderRadius: 8, background: 'var(--red-3)', border: '1px solid var(--red-6)' }}
             >
-              <ExclamationTriangleIcon style={{ color: 'var(--red-9)', flexShrink: 0 }} />
+              <Icons.error />
               <Text size="2" style={{ color: 'var(--red-11)' }}>{apiError}</Text>
             </Flex>
           )}

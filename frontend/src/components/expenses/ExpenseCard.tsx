@@ -1,5 +1,4 @@
 import { Box, Flex, Text, Badge, IconButton, Card } from '@radix-ui/themes'
-import { Pencil1Icon, TrashIcon } from '@radix-ui/react-icons'
 import { Expense } from '@/types/expense.types'
 import { Icons } from '@/components/ui/icons/icons'
 
@@ -110,7 +109,7 @@ export function ExpenseCard({ expense, onEdit, onDelete }: Props) {
               size="1"
               onClick={() => onEdit(expense)}
             >
-              <Pencil1Icon />
+              <Icons.edit />
             </IconButton>
             <IconButton
               variant="ghost"
@@ -118,7 +117,7 @@ export function ExpenseCard({ expense, onEdit, onDelete }: Props) {
               color="red"
               onClick={() => onDelete(expense.id)}
             >
-              <TrashIcon />
+              <Icons.delete />
             </IconButton>
           </Flex>
         </Flex>

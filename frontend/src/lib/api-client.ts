@@ -100,6 +100,25 @@ function isTokenExpiringSoon(): boolean {
   }
 }
 
+export function isTokenExpiring(): boolean {
+  if (typeof document === 'undefined') return false
+
+  const token = getToken()
+  if (!token) return true
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    const currentTime = Math.floor(Date.now() / 1000)
+
+    // margen de 2 minutos (puedes ajustarlo)
+    const REFRESH_MARGIN = 120
+
+    return payload.exp - currentTime < REFRESH_MARGIN
+  } catch {
+    return true
+  }
+}
+
 async function refreshAccessToken(): Promise<boolean> {
   const refreshToken = getClientRefreshToken()
   if (!refreshToken) return false

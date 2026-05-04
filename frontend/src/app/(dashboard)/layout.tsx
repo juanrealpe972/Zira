@@ -1,9 +1,7 @@
 'use client'
 
 import { Flex, Box } from '@radix-ui/themes'
-import DashboardHeader from '@/components/layout/DashboardHeader'
-import Footer from '@/components/layout/Footer'
-import Sidebar from '@/components/layout/Sidebar'
+import { Footer, DashboardHeader, Sidebar } from '@/components/layout'
 import { getUserById } from '@/services'
 import { User } from '@/types'
 import { useEffect, useState } from 'react'

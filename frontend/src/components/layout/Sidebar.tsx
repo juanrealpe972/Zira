@@ -3,17 +3,16 @@
 import { useState, useRef } from 'react'
 import { Flex, Text, Box, Badge, ScrollArea, Avatar } from '@radix-ui/themes'
 import NavLink from 'next/link'
-import { Icons } from '@/components/ui/icons/icons'
 import { usePathname } from 'next/navigation'
+import { Icons, ZiraLogo } from '@/components/ui'
 import { navigation } from '@/data/navigation'
-import { ZiraLogo } from '@/components/ui/ZiraLogo'
 import { User } from '@/types'
 
 type Props = {
   user: User | null
 }
 
-export default function Sidebar({ user }: Props) {
+export function Sidebar({ user }: Props) {
   const [expanded, setExpanded] = useState(true)
   const [openGroups, setOpenGroups] = useState<string[]>([])
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)

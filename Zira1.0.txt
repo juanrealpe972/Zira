@@ -3,196 +3,223 @@ https://bentogrids.com/
 https://minimals.cc/dashboard/booking
 https://www.figma.com/design/cAPz4pYPtQEXivqe11EcDE/-Preview--Minimal-Web.v6.0.0?node-id=0-1&p=f&t=rmTChJQTm6YxZNyZ-0
 https://dbdiagram.io/home
+http://localhost:8000/api/docs/swagger/
 
-Table usuarios {
-  id int [pk, increment]
-  cedula varchar
-  nombre varchar
-  correo varchar [not null, unique]
-  contraseña varchar [not null]
-  prefijo varchar
-  telefono varchar
-  direccion varchar
-  empresa varchar
-  rol enum('admin', 'free', 'premium') [default: 'free'] -------- Actualizar - Ya
-  pais varchar
-  ciudad varchar
-  foto varchar
-  verificado boolean
-  creado_en timestamp
+{
+  Table usuarios {
+    id int [pk, increment]
+    cedula varchar
+    nombre varchar
+    correo varchar [not null, unique]
+    contraseña varchar [not null]
+    prefijo varchar
+    telefono varchar
+    direccion varchar
+    empresa varchar
+    rol enum('admin', 'free', 'premium') [default: 'free'] -------- Actualizar - Ya
+    pais varchar
+    ciudad varchar
+    foto varchar
+    verificado boolean
+    creado_en timestamp
+  }
+
+  Table redes_sociales {
+    id int [pk, increment]
+    id_usuario int [ref: > usuarios.id]
+    plataforma enum('facebook', 'instagram', 'x', 'meta') -------- Actualizar - Ya
+    url varchar
+    username varchar
+    creado_en timestamp
+  }
+
+  Table suscripciones {
+    id int [pk, increment]
+    id_usuario int [ref: > usuarios.id]
+    nombre_plan varchar
+    estado enum('activa', 'cancelada'') -------- Actualizar - Ya
+    inicio timestamp
+    fin timestamp
+  }
+
+  Table tareas {
+    id int [pk, increment]
+    id_usuario int [ref: > usuarios.id]
+    titulo varchar
+    descripcion text
+    estado  enum('pendiente', 'en_progreso', 'completada') [default: 'pendiente'] -------- Actualizar - Ya
+    prioridad enum('baja', 'media', 'alta') [default: 'media'] -------- Actualizar - Ya
+    fecha_limite date
+    creado_en timestamp
+  }
+
+  Table productos {
+    id int [pk, increment]
+    id_usuario int [ref: > usuarios.id]
+    nombre varchar
+    descripcion text
+    precio decimal
+    stock int
+    creado_en timestamp
+  }
+
+  Table pedidos {
+    id int [pk, increment]
+    id_usuario int [ref: > usuarios.id]
+    total decimal
+    estado enum('pendiente', 'pagado', 'enviado') [default: 'pendiente'] ------- Actualizar - Ya
+    creado_en timestamp
+  }
+
+  Table detalle_pedido {
+    id int [pk, increment]
+    id_pedido int [ref: > pedidos.id]
+    id_producto int [ref: > productos.id]
+    cantidad int
+    precio decimal
+  }
+
+  Table publicaciones {
+    id int [pk, increment]
+    id_autor int [ref: > usuarios.id]
+    titulo varchar
+    contenido text
+    etiqueta enum('hogar', 'comida', 'electrodomestico') ------- Actualizar - Ya
+    publicado boolean
+    creado_en timestamp
+  }
+
+  Table comentarios {
+    id int [pk, increment]
+    id_publicacion int [ref: > publicaciones.id]
+    id_usuario int [ref: > usuarios.id]
+    contenido text
+    creado_en timestamp
+  }
+
+  Table notificaciones {
+    id int [pk, increment]
+    id_usuario int [ref: > usuarios.id]
+    tipo varchar
+    contenido text
+    leido boolean
+    creado_en timestamp
+  }
+
+  Table prestamos {
+    id int [pk, increment]
+    id_usuario int [ref: > usuarios.id]
+    id_persona int [ref: > usuarios.id]
+    monto decimal
+    fecha_prestamo date
+    pagado boolean
+    monto_pagado decimal
+    nota text
+    creado_en timestamp
+  }
+
+  Table ingresos {
+    id int [pk, increment]
+    id_usuario int [ref: > usuarios.id]
+    categoria enum('salario', 'venta', 'inversion') ------- Actualizar - Ya
+    monto decimal
+    descripcion text
+    fecha date
+    creado_en timestamp
+  }
+
+  Table egresos {
+    id int [pk, increment]
+    id_usuario int [ref: > usuarios.id]
+    categoria enum('comida', 'transporte', 'hogar', 'salud', 'educacion') ------- Actualizar - Ya
+    monto decimal     // suma total de productos (opcional si usas subtotales)
+    descripcion text
+    fecha date
+    creado_en timestamp
+  }
+
+  Table egresos_productos {
+    id int [pk, increment]
+    id_egreso int [ref: > egresos.id]
+    id_producto int [ref: > productos_consumidos.id]
+    cantidad int
+    subtotal decimal         // cantidad * precio_unitario (opcional)
+  }
+
+  Table productos_consumidos {
+    id int [pk, increment]
+    nombre varchar           // Ej: "TV Samsung", "Coca-Cola", etc.
+    descripcion text
+    categoria enum('comida', 'transporte', 'hogar', 'salud', 'educacion') ------- Actualizar - Ya
+    precio_unitario decimal  // Si compras más de uno
+    creado_en timestamp
+  }
+
+  Table ahorros {
+    id int [pk, increment]
+    id_usuario int [ref: > usuarios.id]
+    monto decimal
+    objetivo varchar
+    descripcion text
+    fecha_inicio date
+    fecha_fin date
+    creado_en timestamp
+  }
+
+  Table bancos {
+    id int [pk, increment]
+    id_usuario int [ref: > usuarios.id]
+    nombre_banco varchar // Nequi, Bancolombia, etc.
+    tipo_cuenta enum('ahorro', 'corriente')  ------- Actualizar - Ya
+    numero_cuenta varchar
+    saldo decimal
+    creado_en timestamp
+  }
+
+  Table tarjetas {
+    id int [pk, increment]
+    id_banco int [ref: > bancos.id]
+    tipo_tarjeta enum('credito', 'debito')  ------- Actualizar - Ya
+    numero_tarjeta varchar
+    nombre_titular varchar
+    fecha_expiracion date
+    cvv varchar
+    creada_en timestamp
+  }
 }
 
-Table redes_sociales {
-  id int [pk, increment]
-  id_usuario int [ref: > usuarios.id]
-  plataforma enum('facebook', 'instagram', 'x', 'meta') -------- Actualizar - Ya
-  url varchar
-  username varchar
-  creado_en timestamp
-}
-
-Table suscripciones {
-  id int [pk, increment]
-  id_usuario int [ref: > usuarios.id]
-  nombre_plan varchar
-  estado enum('activa', 'cancelada'') -------- Actualizar - Ya
-  inicio timestamp
-  fin timestamp
-}
-
-Table tareas {
-  id int [pk, increment]
-  id_usuario int [ref: > usuarios.id]
-  titulo varchar
-  descripcion text
-  estado  enum('pendiente', 'en_progreso', 'completada') [default: 'pendiente'] -------- Actualizar - Ya
-  prioridad enum('baja', 'media', 'alta') [default: 'media'] -------- Actualizar - Ya
-  fecha_limite date
-  creado_en timestamp
-}
-
-Table productos {
-  id int [pk, increment]
-  id_usuario int [ref: > usuarios.id]
-  nombre varchar
-  descripcion text
-  precio decimal
-  stock int
-  creado_en timestamp
-}
-
-Table pedidos {
-  id int [pk, increment]
-  id_usuario int [ref: > usuarios.id]
-  total decimal
-  estado enum('pendiente', 'pagado', 'enviado') [default: 'pendiente'] ------- Actualizar - Ya
-  creado_en timestamp
-}
-
-Table detalle_pedido {
-  id int [pk, increment]
-  id_pedido int [ref: > pedidos.id]
-  id_producto int [ref: > productos.id]
-  cantidad int
-  precio decimal
-}
-
-Table publicaciones {
-  id int [pk, increment]
-  id_autor int [ref: > usuarios.id]
-  titulo varchar
-  contenido text
-  etiqueta enum('hogar', 'comida', 'electrodomestico') ------- Actualizar - Ya
-  publicado boolean
-  creado_en timestamp
-}
-
-Table comentarios {
-  id int [pk, increment]
-  id_publicacion int [ref: > publicaciones.id]
-  id_usuario int [ref: > usuarios.id]
-  contenido text
-  creado_en timestamp
-}
-
-Table notificaciones {
-  id int [pk, increment]
-  id_usuario int [ref: > usuarios.id]
-  tipo varchar
-  contenido text
-  leido boolean
-  creado_en timestamp
-}
-
-Table prestamos {
-  id int [pk, increment]
-  id_usuario int [ref: > usuarios.id]
-  id_persona int [ref: > usuarios.id]
-  monto decimal
-  fecha_prestamo date
-  pagado boolean
-  monto_pagado decimal
-  nota text
-  creado_en timestamp
-}
-
-Table ingresos {
-  id int [pk, increment]
-  id_usuario int [ref: > usuarios.id]
-  categoria enum('salario', 'venta', 'inversion') ------- Actualizar - Ya
-  monto decimal
-  descripcion text
-  fecha date
-  creado_en timestamp
-}
-
-Table egresos {
-  id int [pk, increment]
-  id_usuario int [ref: > usuarios.id]
-  categoria enum('comida', 'transporte', 'hogar', 'salud', 'educacion') ------- Actualizar - Ya
-  monto decimal     // suma total de productos (opcional si usas subtotales)
-  descripcion text
-  fecha date
-  creado_en timestamp
-}
-
-Table egresos_productos {
-  id int [pk, increment]
-  id_egreso int [ref: > egresos.id]
-  id_producto int [ref: > productos_consumidos.id]
-  cantidad int
-  subtotal decimal         // cantidad * precio_unitario (opcional)
-}
-
-Table productos_consumidos {
-  id int [pk, increment]
-  nombre varchar           // Ej: "TV Samsung", "Coca-Cola", etc.
-  descripcion text
-  categoria enum('comida', 'transporte', 'hogar', 'salud', 'educacion') ------- Actualizar - Ya
-  precio_unitario decimal  // Si compras más de uno
-  creado_en timestamp
-}
-
-Table ahorros {
-  id int [pk, increment]
-  id_usuario int [ref: > usuarios.id]
-  monto decimal
-  objetivo varchar
-  descripcion text
-  fecha_inicio date
-  fecha_fin date
-  creado_en timestamp
-}
-
-Table bancos {
-  id int [pk, increment]
-  id_usuario int [ref: > usuarios.id]
-  nombre_banco varchar // Nequi, Bancolombia, etc.
-  tipo_cuenta enum('ahorro', 'corriente')  ------- Actualizar - Ya
-  numero_cuenta varchar
-  saldo decimal
-  creado_en timestamp
-}
-
-Table tarjetas {
-  id int [pk, increment]
-  id_banco int [ref: > bancos.id]
-  tipo_tarjeta enum('credito', 'debito')  ------- Actualizar - Ya
-  numero_tarjeta varchar
-  nombre_titular varchar
-  fecha_expiracion date
-  cvv varchar
-  creada_en timestamp
-}
+bank_accounts
+bank_cards
+comments
+expense_product
+expenses
+incomes
+loans
+notifications 
+order_items
+orders
+productos
+products_consumed
+publications
+savings
+social_networks
+subscriptions
+tasks
+users
 
 PowerShell
 .\venv\Scripts\Activate
 
 CMD
+cd .\backend\
 venv\Scripts\activate
 python manage.py runserver
 python manage.py makemigrations
 python manage.py migrate
+python manage.py test - python manage.py test
+python manage.py test users - python manage.py test users
+python manage.py test users.tests
+python manage.py test users.tests.UserAPITest.test_get_users
 
 django-admin startproject tasks .
 django-admin startapp products_consumeds
@@ -201,15 +228,24 @@ uvicorn
 
 Pgadmin = postgres - Juan123*
 
-
 Se necesita ->
 Django
 djangorestframework
 django-cors-headers
 
-
 SuperUser ->
+http://127.0.0.1:8000/
 python manage.py createsuperuser
 Juan_admin
 Juanrealpe972@gmail.com
+JuanRealpe
 Juan123*
+
+PGADMIN
+\l - listas bases de datos
+\c zira - ingresar a una db
+\dt - listar tablas
+\d nombre_tabla - ver columnas de una tablas
+\! cls
+
+SELECT * FROM nombre_tabla; - Ver datos de una tabla

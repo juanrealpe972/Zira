@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import { Box, Flex, Text, Dialog, IconButton } from '@radix-ui/themes'
-import { Cross2Icon, MagnifyingGlassIcon } from '@radix-ui/react-icons'
 import { MockGalleryItem } from '@/data/profile.mock'
+import { Icons } from '@/components/ui'
 
 export function GalleryTab({ gallery }: { gallery: MockGalleryItem[] }) {
   const [selected, setSelected] = useState<MockGalleryItem | null>(null)
@@ -74,7 +74,7 @@ export function GalleryTab({ gallery }: { gallery: MockGalleryItem[] }) {
               onMouseEnter={e => (e.currentTarget.style.background = 'rgba(0,0,0,0.15)')}
               onMouseLeave={e => (e.currentTarget.style.background = 'rgba(0,0,0,0)')}
             >
-              <MagnifyingGlassIcon width={24} height={24} style={{ color: 'transparent' }} />
+              <Icons.magnifyingGlassIcon width={24} height={24} style={{ color: 'transparent' }} />
             </Flex>
           </Box>
         ))}
@@ -95,7 +95,7 @@ export function GalleryTab({ gallery }: { gallery: MockGalleryItem[] }) {
               onClick={() => setSelected(null)}
               style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(0,0,0,0.5)', color: 'white' }}
             >
-              <Cross2Icon />
+              <Icons.crossIcon />
             </IconButton>
             {selected?.caption && (
               <Box p="3" style={{ borderTop: '1px solid var(--gray-4)' }}>
