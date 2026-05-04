@@ -1,6 +1,5 @@
 /**
  * Componentes UI - Exportaciones centralizadas
- * Proporciona una forma limpia de importar componentes
  */
 
 // Componentes básicos
@@ -13,12 +12,15 @@ export { AppLink } from './AppLink'
 export { AppText } from './AppText'
 export { AppTextField } from './AppTextField'
 export { AppToast } from './AppToast'
+export { Section } from './Section'
+export { AppSwitch } from './AppSwitch'
 
 // Componentes de layout
 export { Pagination } from './Pagination'
 export { SearchFilters } from './SearchFilters'
 export { ThemeWrapper } from './ThemeWrapper'
 export { ZiraLogo } from './ZiraLogo'
+export { BackButton } from './BackButton'
 export { StepModal } from './StepModal'
 export { PlatformIcon } from './PlatformIcon'
 

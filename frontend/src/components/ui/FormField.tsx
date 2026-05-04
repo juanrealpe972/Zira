@@ -1,5 +1,5 @@
 import { Box, Text, Flex } from '@radix-ui/themes'
-import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
+import { Icons } from '@/components/ui'
 
 type Props = {
   label: string
@@ -21,7 +21,7 @@ export function FormField({ label, error, hint, children, required }: Props) {
       )}
       {error && (
         <Flex align="center" gap="1" mt="1">
-          <ExclamationTriangleIcon width={12} style={{ color: 'var(--red-9)' }} />
+          <Icons.error width={12} style={{ color: 'var(--red-9)' }} />
           <Text size="1" style={{ color: 'var(--red-9)' }}>{error}</Text>
         </Flex>
       )}

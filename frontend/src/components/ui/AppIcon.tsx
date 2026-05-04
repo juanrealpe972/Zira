@@ -1,4 +1,4 @@
-import { Icons } from './icons/icons'
+import { Icons } from '@/components/ui'
 
 type IconName = keyof typeof Icons
 
@@ -8,7 +8,7 @@ type Props = {
     className?: string
 }
 
-export default function AppIcon({ name, size = 16, className }: Props) {
+export function AppIcon({ name, size = 16, className }: Props) {
     const IconComponent = Icons[name]
 
     if (!IconComponent) return null

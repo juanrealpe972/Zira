@@ -1,21 +1,15 @@
-import {
-  GlobeIcon,
-  Link2Icon,
-  ChatBubbleIcon,
-  PersonIcon,
-  VideoIcon,
-  CodeIcon,
-} from '@radix-ui/react-icons'
+'use client'
+import { Icons } from '@/components/ui'
 
 const PLATFORM_ICONS: Record<string, React.ComponentType<any>> = {
-  facebook: ChatBubbleIcon,
-  instagram: ChatBubbleIcon,
-  twitter: ChatBubbleIcon,
-  linkedin: PersonIcon,
-  youtube: VideoIcon,
-  tiktok: VideoIcon,
-  github: CodeIcon,
-  otro: GlobeIcon,
+  facebook: Icons.facebook,
+  instagram: Icons.instagram,
+  twitter: Icons.twitter,
+  linkedin: Icons.linkedin,
+  youtube: Icons.youtube,
+  tiktok: Icons.tiktok,
+  github: Icons.github,
+  otro: Icons.otro,
 }
 
 type Props = {
@@ -23,9 +17,9 @@ type Props = {
   size?: number
 }
 
-export default function PlatformIcon({ platform, size = 14 }: Props) {
+export function PlatformIcon({ platform, size = 14 }: Props) {
   const key = platform?.toLowerCase() || ''
-  const Icon = PLATFORM_ICONS[key] || Link2Icon
+  const Icon = PLATFORM_ICONS[key] || Icons.link
 
   return (
     <Icon

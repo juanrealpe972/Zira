@@ -1,9 +1,9 @@
 import { Box, Flex, Text } from '@radix-ui/themes'
-import { Post } from '@/types/social'
+import { MockPost } from '@/data/profile.mock'
 import { PostCard } from './PostCard'
-import { Icons } from '@/components/ui/icons/icons'
+import { Icons } from '@/components/ui'
 
-export function PostList({ posts }: { posts: Post[] }) {
+export function PostList({ posts }: { posts: MockPost[] }) {
   if (posts.length === 0) {
     return (
       <Flex

@@ -1,6 +1,5 @@
 import { Box, Flex, Text, Badge, IconButton, Card } from '@radix-ui/themes'
-import { Pencil1Icon, TrashIcon } from '@radix-ui/react-icons'
-import { Income } from '@/services/incomes.service'
+import { Income } from '@/types'
 import { Icons } from '@/components/ui/icons/icons'
 
 type Props = {
@@ -95,7 +94,7 @@ export function IncomeCard({ income, onEdit, onDelete }: Props) {
               size="1"
               onClick={() => onEdit(income)}
             >
-              <Pencil1Icon />
+              <Icons.edit />
             </IconButton>
             <IconButton
               variant="ghost"
@@ -103,7 +102,7 @@ export function IncomeCard({ income, onEdit, onDelete }: Props) {
               color="red"
               onClick={() => onDelete(income.id)}
             >
-              <TrashIcon />
+              <Icons.delete />
             </IconButton>
           </Flex>
         </Flex>

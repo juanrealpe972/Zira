@@ -2,9 +2,8 @@
 
 import { useState } from 'react'
 import { Box, Flex, Text, Card, Avatar, Button, TextField } from '@radix-ui/themes'
-import { MagnifyingGlassIcon } from '@radix-ui/react-icons'
 import { MockFollower } from '@/data/profile.mock'
-import { Icons } from '@/components/ui/icons/icons'
+import { Icons } from '@/components/ui'
 
 export function FollowersTab({ followers }: { followers: MockFollower[] }) {
   const [list, setList] = useState(followers)
@@ -30,7 +29,7 @@ export function FollowersTab({ followers }: { followers: MockFollower[] }) {
           value={search}
           onChange={e => setSearch(e.target.value)}
         >
-          <TextField.Slot><MagnifyingGlassIcon /></TextField.Slot>
+          <TextField.Slot><Icons.magnifyingGlassIcon /></TextField.Slot>
         </TextField.Root>
       </Box>
 

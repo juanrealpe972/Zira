@@ -2,13 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { Flex, TextField, Select, TextArea } from '@radix-ui/themes'
-import { Icons } from '@/components/ui/icons/icons'
-import { FormField } from '@/components/ui/FormField'
-import { StepModal } from '@/components/ui/StepModal'
-import { Expense, ExpenseRequest } from '@/types/expense.types'
-import {
-  createExpense, updateExpense,
-} from '@/services/expenses.service'
+import { Icons, FormField, StepModal } from '@/components/ui'
+import { Expense, ExpenseRequest } from '@/types'
+import { createExpense, updateExpense } from '@/services'
 
 const CATEGORIES = [
   { value: 'alimentacion', label: 'Alimentación' },

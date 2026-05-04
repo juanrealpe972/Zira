@@ -1,18 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import {
-    Dialog, Flex, Box, Text, TextField, Select,
-    Button, Separator, Grid, Badge, Spinner,
-} from '@radix-ui/themes'
-import {
-    PersonIcon, EnvelopeClosedIcon,
-    MobileIcon, HomeIcon, IdCardIcon,
-    ExclamationTriangleIcon, Cross2Icon,
-    CheckCircledIcon,
-} from '@radix-ui/react-icons'
-import { getUserById, updateUser, CreateUserRequest, User } from '@/services/users.service'
-import { AppToast } from '@/components/ui/AppToast'
+import { Dialog, Flex, Box, Text, TextField, Select, Button, Separator, Grid, Badge, Spinner } from '@radix-ui/themes'
+import { getUserById, updateUser } from '@/services'
+import { User, CreateUserRequest } from '@/types'
+import { AppToast, Icons } from '@/components/ui'
 
 type Props = {
     userId: number | null
@@ -21,7 +13,7 @@ type Props = {
     onUpdated: (user: User) => void
 }
 
-const ROLES = ['admin', 'user', 'editor', 'viewer']
+const ROLES = ['admin', 'free', 'premium']
 const COUNTRIES = ['Colombia', 'México', 'Argentina', 'España', 'Estados Unidos']
 const PHONE_PREFIXES = ['+57', '+52', '+54', '+34', '+1']
 
@@ -157,7 +149,7 @@ export function EditUserModal({ userId, open, onClose, onUpdated }: Props) {
                             </Box>
                             <Dialog.Close onClick={handleClose}>
                                 <Box style={{ cursor: 'pointer', color: 'rgba(255,255,255,0.8)', display: 'flex', alignItems: 'center', padding: 4, borderRadius: 6 }}>
-                                    <Cross2Icon width={16} height={16} />
+                                    <Icons.close width={16} height={16} />
                                 </Box>
                             </Dialog.Close>
                         </Flex>
@@ -178,7 +170,7 @@ export function EditUserModal({ userId, open, onClose, onUpdated }: Props) {
                                             transition: 'all 0.2s',
                                         }}
                                     >
-                                        {i < step ? <CheckCircledIcon width={14} /> : i + 1}
+                                        {i < step ? <Icons.check width={14} /> : i + 1}
                                     </Flex>
                                     <Text size="1" style={{ color: i <= step ? 'white' : 'rgba(255,255,255,0.6)', fontWeight: i === step ? 600 : 400 }}>
                                         {s.label}
@@ -196,7 +188,7 @@ export function EditUserModal({ userId, open, onClose, onUpdated }: Props) {
                         <Flex align="center" gap="2" mx="5" mt="4" p="3"
                             style={{ borderRadius: 8, background: 'var(--red-3)', border: '1px solid var(--red-6)' }}
                         >
-                            <ExclamationTriangleIcon style={{ color: 'var(--red-9)', flexShrink: 0 }} />
+                            <Icons.error style={{ color: 'var(--red-9)', flexShrink: 0 }} />
                             <Text size="2" style={{ color: 'var(--red-11)' }}>{apiError}</Text>
                         </Flex>
                     )}
@@ -220,7 +212,7 @@ export function EditUserModal({ userId, open, onClose, onUpdated }: Props) {
                                                 placeholder="Juan Pérez"
                                                 size="2"
                                             >
-                                                <TextField.Slot><PersonIcon /></TextField.Slot>
+                                                <TextField.Slot><Icons.user /></TextField.Slot>
                                             </TextField.Root>
                                         </Field>
 
@@ -232,7 +224,7 @@ export function EditUserModal({ userId, open, onClose, onUpdated }: Props) {
                                                 type="email"
                                                 size="2"
                                             >
-                                                <TextField.Slot><EnvelopeClosedIcon /></TextField.Slot>
+                                                <TextField.Slot><Icons.mail /></TextField.Slot>
                                             </TextField.Root>
                                         </Field>
 
@@ -281,7 +273,7 @@ export function EditUserModal({ userId, open, onClose, onUpdated }: Props) {
                                                 placeholder="123456789"
                                                 size="2"
                                             >
-                                                <TextField.Slot><IdCardIcon /></TextField.Slot>
+                                                <TextField.Slot><Icons.money /></TextField.Slot>
                                             </TextField.Root>
                                         </Field>
 
@@ -312,7 +304,7 @@ export function EditUserModal({ userId, open, onClose, onUpdated }: Props) {
                                                 placeholder="3001234567"
                                                 size="2"
                                             >
-                                                <TextField.Slot><MobileIcon /></TextField.Slot>
+                                                <TextField.Slot><Icons.mobileIcon /></TextField.Slot>
                                             </TextField.Root>
                                         </Field>
 
@@ -344,7 +336,7 @@ export function EditUserModal({ userId, open, onClose, onUpdated }: Props) {
                                                     placeholder="Calle 123 # 45-67"
                                                     size="2"
                                                 >
-                                                    <TextField.Slot><HomeIcon /></TextField.Slot>
+                                                    <TextField.Slot><Icons.homeIcon /></TextField.Slot>
                                                 </TextField.Root>
                                             </Field>
                                         </Box>
@@ -412,7 +404,7 @@ function Field({
             )}
             {error && (
                 <Flex align="center" gap="1" mt="1">
-                    <ExclamationTriangleIcon width={12} style={{ color: 'var(--red-9)' }} />
+                    <Icons.error width={12} style={{ color: 'var(--red-9)' }} />
                     <Text size="1" style={{ color: 'var(--red-9)' }}>{error}</Text>
                 </Flex>
             )}

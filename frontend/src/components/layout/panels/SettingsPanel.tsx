@@ -1,9 +1,10 @@
 'use client'
 
 import { Flex, Text, Box, Heading } from '@radix-ui/themes'
-import { Cross1Icon, GearIcon, SunIcon, MoonIcon } from '@radix-ui/react-icons'
+import { AppSwitch, Icons } from '@/components/ui'
 import { useTheme } from '@/context/ThemeContext'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { SettingsCard } from './SettingsCard'
 
 type Props = {
   open: boolean
@@ -38,17 +39,40 @@ const radiusOptions = [
   { value: 'full', label: 'Full' },
 ] as const
 
-export default function SettingsPanel({ open, onClose }: Props) {
-  const {
-    theme,
-    setAppearance,
-    setAccentColor,
-    setFontFamily,
-    setRadius,
-    setScaling,
-  } = useTheme()
-
+export function SettingsPanel({ open, onClose }: Props) {
+  const { theme, setAppearance, setAccentColor, setFontFamily, setRadius } = useTheme()
   const [visible, setVisible] = useState(open)
+  const panelRef = useRef<HTMLDivElement>(null)
+  const [showScroll, setShowScroll] = useState(false)
+  let timeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  function handleMouseEnter() {
+    setShowScroll(true)
+
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+  }
+
+  function handleMouseLeave() {
+    timeoutRef.current = setTimeout(() => {
+      setShowScroll(false)
+    }, 1000)
+  }
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
+        onClose()
+      }
+    }
+
+    if (open) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [open, onClose])
 
   useEffect(() => {
     if (open) {
@@ -56,6 +80,18 @@ export default function SettingsPanel({ open, onClose }: Props) {
     } else {
       const timeout = setTimeout(() => setVisible(false), 300)
       return () => clearTimeout(timeout)
+    }
+  }, [open])
+
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+
+    return () => {
+      document.body.style.overflow = ''
     }
   }, [open])
 
@@ -68,14 +104,18 @@ export default function SettingsPanel({ open, onClose }: Props) {
         style={{
           position: 'fixed',
           inset: 0,
-          background: 'rgba(0,0,0,0.3)',
           zIndex: 40,
-          opacity: open ? 1 : 0,
+          background: 'rgba(0,0,0,0.3)',
+          opacity: open ? 0 : 0,
           transition: 'opacity 0.3s',
         }}
       />
 
       <Box
+        ref={panelRef}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className={`custom-scroll ${showScroll ? '' : 'scroll-hidden'}`}
         style={{
           position: 'fixed',
           top: 0,
@@ -84,6 +124,10 @@ export default function SettingsPanel({ open, onClose }: Props) {
           width: 320,
           background: 'var(--color-background)',
           borderLeft: '1px solid var(--gray-4)',
+          willChange: 'transform',
+          contain: 'layout style',
+          fontFamily: 'var(--default-font)',
+          fontSize: '16px',
           zIndex: 50,
           transform: open ? 'translateX(0)' : 'translateX(100%)',
           transition: 'transform 0.3s ease',
@@ -99,11 +143,11 @@ export default function SettingsPanel({ open, onClose }: Props) {
           style={{ borderBottom: '1px solid var(--gray-4)', flexShrink: 0 }}
         >
           <Flex align="center" gap="2">
-            <GearIcon />
+            <Icons.settings />
             <Heading size="4">Configuración</Heading>
           </Flex>
           <Box onClick={onClose} style={{ cursor: 'pointer' }}>
-            <Cross1Icon />
+            <Icons.crossIcon />
           </Box>
         </Flex>
 
@@ -113,142 +157,142 @@ export default function SettingsPanel({ open, onClose }: Props) {
             <Text size="1" weight="bold" color="gray" style={{ textTransform: 'uppercase', letterSpacing: 1 }}>
               Modo
             </Text>
-            <Flex gap="2" mt="2">
-              {(['light', 'dark'] as const).map((mode) => (
-                <Box
-                  key={mode}
-                  onClick={() => setAppearance(mode)}
-                  style={{
-                    flex: 1,
-                    padding: '10px 0',
-                    borderRadius: 8,
-                    border: `2px solid ${theme.appearance === mode ? 'var(--accent-9)' : 'var(--gray-4)'}`,
-                    background: mode === 'dark' ? '#1a1a2e' : '#f8fafc',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: 6,
-                    cursor: 'pointer',
-                    transition: 'border-color 0.2s',
-                  }}
-                >
-                  {mode === 'light'
-                    ? <SunIcon width={20} height={20} style={{ color: '#f59e0b' }} />
-                    : <MoonIcon width={20} height={20} style={{ color: '#818cf8' }} />
-                  }
-                  <Text size="1" style={{ color: mode === 'dark' ? '#fff' : '#1e293b' }}>
-                    {mode === 'light' ? 'Claro' : 'Oscuro'}
-                  </Text>
-                </Box>
-              ))}
-            </Flex>
+            <SettingsCard>
+              <Flex align="center" justify="between">
+
+                <Flex align="center" gap="3">
+                  <Box
+                    style={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: 8,
+                      background: 'var(--accent-3)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {theme.appearance === 'dark' ? <Icons.moonIcon /> : <Icons.sunIcon />}
+                  </Box>
+
+                  <Flex direction="column">
+                    <Text size="2" weight="bold">Modo</Text>
+                    <Text size="1" color="gray">
+                      {theme.appearance === 'dark' ? 'Oscuro' : 'Claro'}
+                    </Text>
+                  </Flex>
+                </Flex>
+
+                <AppSwitch
+                  checked={theme.appearance === 'dark'}
+                  onChange={(v) => setAppearance(v ? 'dark' : 'light')}
+                />
+              </Flex>
+            </SettingsCard>
           </Box>
 
           <Box>
             <Text size="1" weight="bold" color="gray" style={{ textTransform: 'uppercase', letterSpacing: 1 }}>
               Color
             </Text>
-            <Flex gap="2" mt="2" wrap="wrap">
-              {accentColors.map(({ value, bg }) => (
-                <Box
-                  key={value}
-                  onClick={() => setAccentColor(value)}
-                  style={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: '50%',
-                    background: bg,
-                    cursor: 'pointer',
-                    border: theme.accentColor === value
-                      ? '3px solid var(--gray-12)'
-                      : '3px solid transparent',
-                    transition: 'border-color 0.15s',
-                    boxSizing: 'border-box',
-                  }}
-                />
-              ))}
-            </Flex>
+            <SettingsCard>
+              <Flex gap="2" wrap="wrap" justify='center'>
+                {accentColors.map(({ value, bg }) => (
+                  <Box
+                    key={value}
+                    onClick={() => setAccentColor(value)}
+                    style={{
+                      width: 50,
+                      height: 50,
+                      borderRadius: 10,
+                      border: theme.accentColor === value
+                        ? '2px solid var(--accent-9)'
+                        : '1px solid var(--gray-4)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <Box
+                      style={{
+                        width: 24,
+                        height: 24,
+                        borderRadius: 6,
+                        background: bg,
+                      }}
+                    />
+                  </Box>
+                ))}
+              </Flex>
+            </SettingsCard>
           </Box>
 
           <Box>
             <Text size="1" weight="bold" color="gray" style={{ textTransform: 'uppercase', letterSpacing: 1 }}>
               Bordes
             </Text>
-            <Flex gap="2" mt="2" wrap="wrap">
-              {radiusOptions.map(({ value, label }) => (
-                <Box
-                  key={value}
-                  onClick={() => setRadius(value)}
-                  style={{
-                    padding: '4px 10px',
-                    borderRadius:
-                      value === 'none' ? 0 :
-                        value === 'small' ? 4 :
-                          value === 'medium' ? 8 :
-                            value === 'large' ? 12 : 999,
-                    border: `1px solid ${theme.radius === value ? 'var(--accent-9)' : 'var(--gray-6)'}`,
-                    cursor: 'pointer',
-                    background: theme.radius === value ? 'var(--accent-3)' : 'transparent',
-                    transition: 'all 0.15s',
-                  }}
-                >
-                  <Text size="1">{label}</Text>
-                </Box>
-              ))}
-            </Flex>
+            <SettingsCard>
+              <Flex gap="2" wrap="wrap" justify='center'>
+                {radiusOptions.map(({ value, label }) => {
+                  const active = theme.radius === value
+
+                  return (
+                    <Box
+                      key={value}
+                      onClick={() => setRadius(value)}
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius:
+                          value === 'none' ? 0 :
+                            value === 'small' ? 4 :
+                              value === 'medium' ? 8 :
+                                value === 'large' ? 12 : 999,
+                        border: '2px solid',
+                        borderColor: active ? 'var(--accent-9)' : 'var(--accent-6)',
+                        background: active ? 'var(--accent-3)' : 'var(--accent-1)',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                      }}
+                    >
+                      <Text size="1">{label}</Text>
+                    </Box>
+                  )
+                })}
+              </Flex>
+            </SettingsCard>
           </Box>
 
- {/*          <Box>
+          <Box>
             <Text size="1" weight="bold" color="gray" style={{ textTransform: 'uppercase', letterSpacing: 1 }}>
               Fuente
             </Text>
-            <Flex direction="column" gap="2" mt="2">
-              {fontOptions.map(({ value, label }) => (
-                <Box
-                  key={value}
-                  onClick={() => setFontFamily(value)}
-                  style={{
-                    padding: '10px 14px',
-                    borderRadius: 8,
-                    border: `1px solid ${theme.fontFamily === value ? 'var(--accent-9)' : 'var(--gray-4)'}`,
-                    background: theme.fontFamily === value ? 'var(--accent-3)' : 'transparent',
-                    cursor: 'pointer',
-                    transition: 'all 0.15s',
-                    fontFamily: label,
-                  }}
-                >
-                  <Text size="2" weight={theme.fontFamily === value ? 'bold' : 'regular'}>
-                    {label}
-                  </Text>
-                </Box>
-              ))}
-            </Flex>
-          </Box> */}
-
-          <Box>
-            <Flex justify="between" align="center" mb="2">
-              <Text size="1" weight="bold" color="gray" style={{ textTransform: 'uppercase', letterSpacing: 1 }}>
-                Tamaño
-              </Text>
-              <Text size="1" color="gray">{theme.scaling}</Text>
-            </Flex>
-
-            <input
-              type="range"
-              min={0}
-              max={4}
-              value={['90%', '95%', '100%', '105%', '110%'].indexOf(theme.scaling)}
-              onChange={(e) => {
-                const values = ['90%', '95%', '100%', '105%', '110%'] as const
-                setScaling(values[Number(e.target.value)])
-              }}
-              style={{ width: '100%', accentColor: 'var(--accent-9)' }}
-            />
-
-            <Flex justify="between">
-              <Text size="1" color="gray">90%</Text>
-              <Text size="1" color="gray">110%</Text>
-            </Flex>
+            <SettingsCard>
+              <Flex gap="2" wrap="wrap" justify='center'>
+                {fontOptions.map(({ value, label }) => (
+                  <Box
+                    key={value}
+                    onClick={() => setFontFamily(value)}
+                    style={{
+                      padding: 10,
+                      borderRadius: 10,
+                      border: theme.fontFamily === value
+                        ? '2px solid var(--accent-9)'
+                        : '1px solid var(--gray-4)',
+                      cursor: 'pointer',
+                      minWidth: 80,
+                      textAlign: 'center',
+                      fontFamily: label,
+                    }}
+                  >
+                    <Flex align="center" direction="column" justify="center" mb="1">
+                      <Text size="3">Aa</Text>
+                      <Text size="1">{label}</Text>
+                    </Flex>
+                  </Box>
+                ))}
+              </Flex>
+            </SettingsCard>
           </Box>
 
         </Flex>

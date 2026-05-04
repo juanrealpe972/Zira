@@ -2,7 +2,7 @@
 
 import { Component, ReactNode } from 'react'
 import { Flex, Text, Button, Box } from '@radix-ui/themes'
-import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
+import { Icons } from '@/components/ui'
 
 // ============================================
 // TIPOS
@@ -53,7 +53,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
           style={{ minHeight: '50vh', padding: 24 }}
         >
           <Box style={{ textAlign: 'center', maxWidth: 400 }}>
-            <ExclamationTriangleIcon 
+            <Icons.error 
               width={48} 
               height={48} 
               style={{ color: 'var(--red-9)', marginBottom: 16 }} 

@@ -1,14 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Flex, TextField, Select, Box, Text } from '@radix-ui/themes'
-import { Icons } from '@/components/ui/icons/icons'
-import { FormField } from '@/components/ui/FormField'
-import { StepModal } from '@/components/ui/StepModal'
-import {
-  BankAccount, BankAccountRequest,
-  createBankAccount, updateBankAccount,
-} from '@/services/bank-accounts.service'
+import { Flex, TextField, Select, Text } from '@radix-ui/themes'
+import { Icons, FormField, StepModal } from '@/components/ui'
+import { createBankAccount, updateBankAccount } from '@/services'
+import { BankAccount, BankAccountRequest } from '@/types'
 
 const BANKS = ['Bancolombia', 'Davivienda', 'BBVA', 'Nequi', 'Banco de Bogotá', 'Scotiabank', 'Otro']
 const ACCOUNT_TYPES = [

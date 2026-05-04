@@ -1,16 +1,14 @@
-import HeroSection from '@/components/sections/HeroSection'
-import FeaturesSection from '@/components/sections/FeaturesSection'
-import TestimonialsSection from '@/components/sections/TestimonialsSection'
-import { Separator } from '@radix-ui/themes'
+import { HeroSection, FeaturesSection, TestimonialsSection } from '@/components/sections'
+import { Box, Separator } from '@radix-ui/themes'
 
 export default function HomePage() {
   return (
-    <>
+    <Box>
       <HeroSection />
       <Separator size="4" />
       <FeaturesSection />
       <Separator size="4" />
       <TestimonialsSection />
-    </>
+    </Box>
   )
 }

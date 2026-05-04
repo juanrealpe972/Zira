@@ -7,7 +7,7 @@ import {
   XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, PieChart, Pie, Cell, Legend,
 } from 'recharts'
-import { BankAccount } from '@/services/bank-accounts.service'
+import { BankAccount } from '@/types'
 
 type Props = { accounts: BankAccount[] }
 

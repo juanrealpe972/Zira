@@ -2,15 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { Flex, TextField, Select } from '@radix-ui/themes'
-import { Icons } from '@/components/ui/icons/icons'
-import { FormField } from '@/components/ui/FormField'
-import { StepModal } from '@/components/ui/StepModal'
-import {
-  createSocialNetwork,
-  updateSocialNetwork,
-  SocialNetwork,
-  SocialNetworkRequest,
-} from '@/services/social-networks.service'
+import { Icons, FormField, StepModal } from '@/components/ui'
+import { createSocialNetwork, updateSocialNetwork } from '@/services'
+import { SocialNetwork, SocialNetworkRequest } from '@/types'
 
 const PLATFORMS = [
   { value: 'facebook', label: 'Facebook' },

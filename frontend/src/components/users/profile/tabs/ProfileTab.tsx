@@ -2,19 +2,14 @@
 
 import { useEffect, useState } from 'react'
 import { Box, Flex, Text, Card, Heading, IconButton } from '@radix-ui/themes'
-import { PlusIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons'
-import { Icons } from '@/components/ui/icons/icons'
+import { Icons, PlatformIcon } from '@/components/ui'
+import {  } from '@/components/users/profile/tabs'
 import { MockPost } from '@/data/profile.mock'
 import { PostCard } from '../PostCard'
 import { CreatePostCard } from '../CreatePostCard'
-import { User } from '@/services/users.service'
+import { User, SocialNetwork } from '@/types'
 import { SocialNetworkModal } from '../SocialNetworkModal'
-import {
-  getSocialNetworks,
-  deleteSocialNetwork,
-  SocialNetwork,
-} from '@/services/social-networks.service'
-import PlatformIcon from '../../../ui/PlatformIcon'
+import { getSocialNetworks, deleteSocialNetwork } from '@/services'
 
 type Props = {
   user: User
@@ -117,7 +112,7 @@ export function ProfileTab({
                 size="1"
                 onClick={() => { setEditingSocial(null); setSocialModalOpen(true) }}
               >
-                <PlusIcon />
+                <Icons.plusIcon />
               </IconButton>
             )}
           </Flex>
@@ -196,7 +191,7 @@ export function ProfileTab({
                         size="1"
                         onClick={() => { setEditingSocial(social); setSocialModalOpen(true) }}
                       >
-                        <Pencil1Icon />
+                        <Icons.edit />
                       </IconButton>
                       <IconButton
                         variant="ghost"
@@ -204,7 +199,7 @@ export function ProfileTab({
                         color="red"
                         onClick={() => handleDelete(social.id)}
                       >
-                        <TrashIcon />
+                        <Icons.delete />
                       </IconButton>
                     </Flex>
                   )}
