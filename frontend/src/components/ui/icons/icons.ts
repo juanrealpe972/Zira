@@ -49,7 +49,10 @@ import {
   MagnifyingGlassIcon,
   CrossCircledIcon,
   ImageIcon,
-  PaperPlaneIcon
+  PaperPlaneIcon,
+  StarFilledIcon,
+  LightningBoltIcon,
+  ArrowRightIcon
 } from '@radix-ui/react-icons'
 
 export const Icons = {
@@ -95,6 +98,9 @@ export const Icons = {
   crossCircledIcon: CrossCircledIcon,
   imageIcon: ImageIcon,
   paperPlaneIcon: PaperPlaneIcon,
+  starFilledIcon: StarFilledIcon,
+  lightningBoltIcon: LightningBoltIcon,
+  arrowRightIcon: ArrowRightIcon,
 
   // Redes sociales
   github: GitHubLogoIcon,

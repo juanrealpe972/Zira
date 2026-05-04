@@ -5,7 +5,7 @@ type AppTextProps = ComponentProps<typeof Text>
 
 export function AppText({ children, ...props }: AppTextProps) {
   return (
-    <Text size="2" color="gray" {...props}>
+    <Text size="3" color="gray" style={{ lineHeight: 1.5 }} {...props}>
       {children}
     </Text>
   )

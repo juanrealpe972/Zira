@@ -19,7 +19,7 @@ const languages = [
   { code: 'fr', label: 'Français' },
 ]
 
-export default function DashboardHeader() {
+export function DashboardHeader() {
   const [notifOpen, setNotifOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)

@@ -12,7 +12,7 @@ type Props = {
   user: User | null
 }
 
-export default function Sidebar({ user }: Props) {
+export function Sidebar({ user }: Props) {
   const [expanded, setExpanded] = useState(true)
   const [openGroups, setOpenGroups] = useState<string[]>([])
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
