@@ -1,29 +1,28 @@
 'use client'
 
+import { PageHeader } from '@/components/common/PageHeader'
+import { StatusTabs } from '@/components/common/StatusTabs'
+import { UsersTableHeader } from '@/components/users/UsersTableHeader'
+import { UsersTableData } from '@/components/users/UsersTableData'
+import { UsersTableToolbar } from '@/components/users/UsersTableToolbar'
+import { UsersTableActions } from '@/components/users/UsersTableActions'
+import { UsersTablePagination } from '@/components/users/UsersTablePagination'
+
 import { useEffect, useState, useMemo } from 'react'
-import {
-  Box, Flex, Heading, Text, Card, Badge, Avatar,
-  TextField, Select, DropdownMenu, IconButton,
-  Checkbox, Button, Separator,
-} from '@radix-ui/themes'
-import {
-  MagnifyingGlassIcon, DotsHorizontalIcon, Pencil1Icon,
-  PersonIcon, DownloadIcon, UploadIcon, ChevronLeftIcon, ChevronRightIcon, DotsVerticalIcon,
-  MixerHorizontalIcon,
-} from '@radix-ui/react-icons'
+import { Box, Flex, Text, Card, Badge, Avatar, Dialog } from '@radix-ui/themes'
+import { PersonIcon } from '@radix-ui/react-icons'
 import { getUsers, updateUserStatus } from '@/services'
-import { User, PaginatedResponse } from '@/types'
+import { User } from '@/types'
 import { useRouter } from 'next/navigation'
 import { CreateUserModal } from '@/components/users/CreateUserModal'
 import { EditUserModal } from '@/components/users/EditUserModal'
-
+import { AppToast } from '@/components/ui'
 
 type ColumnKey = 'name' | 'email' | 'phone' | 'role' | 'company' |
   'country' | 'city' | 'verified' | 'is_staff' | 'created_at' | 'status' | 'description' | 'national_id'
 
 const ALL_COLUMNS: { key: ColumnKey; label: string }[] = [
   { key: 'name', label: 'Nombre' },
-  { key: 'email', label: 'Email' },
   { key: 'phone', label: 'Teléfono' },
   { key: 'role', label: 'Rol' },
   { key: 'company', label: 'Empresa' },
@@ -37,15 +36,13 @@ const ALL_COLUMNS: { key: ColumnKey; label: string }[] = [
   { key: 'national_id', label: 'ID nacional' },
 ]
 
-const DEFAULT_COLUMNS: ColumnKey[] = ['name', 'email', 'phone', 'role', 'status']
+const DEFAULT_COLUMNS: ColumnKey[] = ['name', 'phone', 'role', 'status', 'verified']
 
 const STATUS_TABS = [
   { key: 'all', label: 'Todos' },
   { key: 'active', label: 'Activos' },
   { key: 'inactive', label: 'Inactivos' },
 ] as const
-
-const ROWS_OPTIONS = [5, 10, 25, 50]
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('es-CO', {
@@ -63,21 +60,42 @@ export default function UsersListPage() {
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(1)
   const [selected, setSelected] = useState<number[]>([])
-  const [visibleColumns, setVisibleColumns] = useState<ColumnKey[]>(DEFAULT_COLUMNS)
   const [createOpen, setCreateOpen] = useState(false)
-  const [hoveredRow, setHoveredRow] = useState<number | null>(null)
   const [editUserId, setEditUserId] = useState<number | null>(null)
+  const [visibleColumns, setVisibleColumns] = useState<ColumnKey[]>(DEFAULT_COLUMNS)
+  const [settingsOpen, setSettingsOpen] = useState(false)
+  const [toastMessage, setToastMessage] = useState('')
+  const [toastType, setToastType] = useState<'success' | 'error'>('success')
+  const [toastOpen, setToastOpen] = useState(false)
+
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToastMessage(message)
+    setToastType(type)
+    setToastOpen(true)
+  }
 
   useEffect(() => {
-    getUsers()
-      .then((data: User[] | PaginatedResponse<User>) => {
-        const parsed = Array.isArray(data) ? data : data.results
-        // console.log(`Usuarios cargados: ${parsed.length}`)
-        setUsers(parsed)
-      })
-      .catch(() => setUsers([]))
-      .finally(() => setLoading(false))
+    loadUsers()
   }, [])
+
+  async function loadUsers() {
+    try {
+      setLoading(true)
+      const data = await getUsers()
+      const parsed = Array.isArray(data) ? data : data.results
+      setUsers(parsed)
+    } catch (error) {
+      console.error('Error cargando usuarios:', error)
+      // Verificar si hay token disponible
+      const token = document.cookie.split('; ').find(row => row.startsWith('zira_access='))
+      console.log('Token disponible:', !!token)
+      const errorMessage = error instanceof Error ? error.message : 'Error al cargar usuarios'
+      showToast(errorMessage, 'error')
+      setUsers([])
+    } finally {
+      setLoading(false)
+    }
+  }
 
   function handleUserCreated(user: User) {
     setUsers(prev => [user, ...prev])
@@ -132,399 +150,282 @@ export default function UsersListPage() {
     )
   }
 
-  function toggleColumn(key: ColumnKey) {
-    setVisibleColumns(prev =>
-      prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
-    )
-  }
-
   async function handleToggleStatus(user: User) {
     try {
       await updateUserStatus(user.id, !user.is_active)
       setUsers(prev =>
         prev.map(u => u.id === user.id ? { ...u, is_active: !u.is_active } : u)
       )
-    } catch {
-      console.error('Error al actualizar estado')
+      showToast(
+        `Usuario ${user.is_active ? 'inactivado' : 'activado'} correctamente`,
+        'success'
+      )
+    } catch (error) {
+      console.error('Error al actualizar estado:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Error al actualizar estado del usuario'
+      showToast(errorMessage, 'error')
     }
   }
 
-  function renderCell(user: User, col: ColumnKey) {
-    switch (col) {
-      case 'name':
-        return (
-          <Flex align="center" gap="2">
-            <Avatar
-              size="2"
-              src={user.photo ?? undefined}
-              fallback={<PersonIcon />}
-              radius="full"
-              style={{ background: 'var(--accent-3)', flexShrink: 0 }}
-            />
-            <Box>
-              <Text
-                size="2"
-                weight="medium"
-                onClick={() => router.push(`/dashboard/users/profile/${user.id}`)}
-                style={{
-                  display: 'block',
-                  cursor: 'pointer',
-                  color: 'var(--gray-12)',
-                  textDecoration: hoveredRow === user.id ? 'underline solid var(--accent-9)' : 'none',
-                  transition: 'text-decoration 0.15s',
-                }}
-              >
-                {user.name}
-              </Text>
-              {/* Email debajo del nombre */}
-              <Text size="1" color="gray" style={{ display: 'block' }}>
-                {user.email}
-              </Text>
-            </Box>
-          </Flex>
-        )
-      case 'email':
-        return <Text size="2" color="gray">{user.email}</Text>
-      case 'phone':
-        return (
-          <Text size="2" color="gray">
-            {user.phone_prefix && user.phone
-              ? `${user.phone_prefix} ${user.phone}`
-              : user.phone ?? '—'}
-          </Text>
-        )
-      case 'role':
-        return <Text size="2">{user.role ?? '—'}</Text>
-      case 'company':
-        return <Text size="2" color="gray">{user.company ?? '—'}</Text>
-      case 'country':
-        return <Text size="2" color="gray">{user.country ?? '—'}</Text>
-      case 'city':
-        return <Text size="2" color="gray">{user.city ?? '—'}</Text>
-      case 'verified':
-        return (
-          <Badge size="1" color={user.verified ? 'green' : 'gray'} variant="soft" radius="full">
-            {user.verified ? 'Verificado' : 'No verificado'}
-          </Badge>
-        )
-      case 'is_staff':
-        return (
-          <Badge size="1" color={user.is_staff ? 'blue' : 'gray'} variant="soft" radius="full">
-            {user.is_staff ? 'Staff' : 'Usuario'}
-          </Badge>
-        )
-      case 'created_at':
-        return <Text size="2" color="gray">{formatDate(user.created_at)}</Text>
-      case 'status':
-        return (
-          <Badge
-            size="1"
-            color={user.is_active ? 'green' : 'red'}
-            variant="soft"
-            radius="full"
-          >
-            {user.is_active ? 'Activo' : 'Inactivo'}
-          </Badge>
-        )
-      default:
-        return null
+  function handleExport() {
+    const selectedUsers = users.filter(u => selected.includes(u.id))
+    if (selectedUsers.length === 0) {
+      alert('Selecciona usuarios para exportar')
+      return
     }
+    const csv = [
+      visibleColumns.join(','),
+      ...selectedUsers.map(u =>
+        visibleColumns.map(col => {
+          switch (col) {
+            case 'name': return u.name
+            case 'email': return u.email
+            case 'phone': return u.phone
+            case 'role': return u.role
+            case 'company': return u.company
+            case 'country': return u.country
+            case 'city': return u.city
+            case 'verified': return u.verified ? 'Sí' : 'No'
+            case 'is_staff': return u.is_staff ? 'Sí' : 'No'
+            case 'created_at': return formatDate(u.created_at)
+            case 'status': return u.is_active ? 'Activo' : 'Inactivo'
+            case 'description': return u.description
+            case 'national_id': return u.national_id
+            default: return ''
+          }
+        }).join(',')
+      )
+    ].join('\n')
+    const blob = new Blob([csv], { type: 'text/csv' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'usuarios.csv'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  function handleImport() {
+    alert('Funcionalidad de importación no implementada aún')
+  }
+
+  const getColumns = () => {
+    return visibleColumns.map(key => {
+      const col = ALL_COLUMNS.find(c => c.key === key)
+      if (!col) return null
+
+      let render: (user: User) => React.ReactNode
+
+      switch (key) {
+        case 'name':
+          render = (user) => (
+            <Flex align="center" gap="2">
+              <Avatar
+                size="2"
+                src={user.photo ?? undefined}
+                fallback={<PersonIcon />}
+                radius="full"
+              />
+
+              <Box>
+                <Text
+                  size="2"
+                  weight="medium"
+                  onClick={() => router.push(`/dashboard/users/profile/${user.id}`)}
+                  style={{
+                    cursor: 'pointer',
+                    display: 'block',
+                  }}
+                >
+                  {user.name}
+                </Text>
+
+                <Text
+                  size="1"
+                  color="gray"
+                  style={{
+                    display: 'block',
+                  }}
+                >
+                  {user.email}
+                </Text>
+              </Box>
+            </Flex>
+          )
+          break
+        case 'email':
+          render = (user) => user.email ?? '—'
+          break
+        case 'phone':
+          render = (user) => user.phone ?? '—'
+          break
+        case 'role':
+          render = (user) => user.role ?? '—'
+          break
+        case 'company':
+          render = (user) => user.company ?? '—'
+          break
+        case 'country':
+          render = (user) => user.country ?? '—'
+          break
+        case 'city':
+          render = (user) => user.city ?? '—'
+          break
+        case 'verified':
+          render = (user) => user.verified ? 'Sí' : 'No'
+          break
+        case 'is_staff':
+          render = (user) => user.is_staff ? 'Sí' : 'No'
+          break
+        case 'created_at':
+          render = (user) => formatDate(user.created_at)
+          break
+        case 'status':
+          render = (user) => (
+            <Badge
+              color={user.is_active ? 'green' : 'red'}
+              variant="soft"
+              radius="full"
+            >
+              {user.is_active ? 'Activo' : 'Inactivo'}
+            </Badge>
+          )
+          break
+        case 'description':
+          render = (user) => user.description ?? '—'
+          break
+        case 'national_id':
+          render = (user) => user.national_id ?? '—'
+          break
+        default:
+          render = () => '—'
+      }
+
+      return { key, label: col.label, render }
+    }).filter(Boolean) as { key: string; label: string; render: (user: User) => React.ReactNode }[]
   }
 
   return (
     <Box p="5">
 
-      {/* Header */}
-      <Flex justify="between" align="center" mb="2">
-        <Box>
-          <Heading size="6">Cuentas</Heading>
-          <Flex align="center" gap="1" mt="1">
-            <Text size="1" color="gray">Dashboard</Text>
-            <Text size="1" color="gray">•</Text>
-            <Text size="1" color="gray">Usuarios</Text>
-            <Text size="1" color="gray">•</Text>
-            <Text size="1">Cuentas</Text>
-          </Flex>
-        </Box>
-        <Button size="2" onClick={() => setCreateOpen(true)}>
-          <PersonIcon /> Agregar usuario
-        </Button>
-      </Flex>
+      <PageHeader
+        title="Cuentas"
+        breadcrumb={['Dashboard', 'Usuarios', 'Cuentas']}
+        actionLabel="Agregar usuario"
+        onAction={() => setCreateOpen(true)}
+        icon={<PersonIcon />}
+      />
 
       <Card mt="4" size="2">
 
-        {/* Tabs */}
-        <Flex gap="4" mb="4" style={{ borderBottom: '1px solid var(--gray-4)' }}>
-          {STATUS_TABS.map(tab => (
-            <Box
-              key={tab.key}
-              onClick={() => { setActiveTab(tab.key); setCurrentPage(1) }}
-              style={{
-                cursor: 'pointer',
-                paddingBottom: 12,
-                borderBottom: activeTab === tab.key
-                  ? '2px solid var(--accent-9)'
-                  : '2px solid transparent',
-                transition: 'border-color 0.15s ease',
-              }}
-            >
-              <Flex align="center" gap="2">
-                <Text
-                  size="2"
-                  weight={activeTab === tab.key ? 'bold' : 'regular'}
-                  style={{ color: activeTab === tab.key ? 'var(--accent-9)' : 'var(--gray-11)' }}
-                >
-                  {tab.label}
-                </Text>
-                <Badge
-                  size="1"
-                  variant="soft"
-                  color={activeTab === tab.key ? 'indigo' : 'gray'}
-                  radius="full"
-                >
-                  {counts[tab.key as keyof typeof counts]}
-                </Badge>
-              </Flex>
-            </Box>
-          ))}
-        </Flex>
+        <StatusTabs
+          tabs={STATUS_TABS}
+          active={activeTab}
+          counts={counts}
+          onChange={(key) => {
+            setActiveTab(key)
+            setCurrentPage(1)
+          }}
+        />
 
-        {/* Filtros */}
-        <Flex gap="3" mb="4" align="center" wrap="wrap">
-          {/* Rol */}
-          <Select.Root
-            value={roleFilter}
-            onValueChange={v => { setRoleFilter(v); setCurrentPage(1) }}
-          >
-            <Select.Trigger placeholder="Rol" style={{ minWidth: 140 }} />
-            <Select.Content>
-              <Select.Item value="all">Todos los roles</Select.Item>
-              {roles.map(role => (
-                <Select.Item key={role} value={role}>{role}</Select.Item>
-              ))}
-            </Select.Content>
-          </Select.Root>
+        <UsersTableHeader
+          roleFilter={roleFilter}
+          onRoleFilterChange={(v) => { setRoleFilter(v); setCurrentPage(1) }}
+          search={search}
+          onSearchChange={(v) => { setSearch(v); setCurrentPage(1) }}
+          roles={roles}
+        />
 
-          {/* Búsqueda */}
-          <Box style={{ flex: 1, minWidth: 200 }}>
-            <TextField.Root
-              placeholder="Buscar por nombre o email..."
-              value={search}
-              onChange={e => { setSearch(e.target.value); setCurrentPage(1) }}
-            >
-              <TextField.Slot>
-                <MagnifyingGlassIcon />
-              </TextField.Slot>
-            </TextField.Root>
-          </Box>
+        <UsersTableToolbar
+          selectedCount={selected.length}
+          columns={ALL_COLUMNS}
+          visibleColumns={visibleColumns}
+          onExport={handleExport}
+          onImport={handleImport}
+          onToggleColumn={(key) => {
+            setVisibleColumns(prev =>
+              prev.includes(key)
+                ? prev.filter(c => c !== key)
+                : [...prev, key]
+            )
+          }}
+        />
 
-          {/* Contador resultados */}
-          {(search || roleFilter !== 'all' || activeTab !== 'all') && (
-            <Text size="1" color="gray">
-              {filtered.length} resultado{filtered.length !== 1 ? 's' : ''}
-            </Text>
+        <UsersTableData
+          data={paginated}
+          loading={loading}
+          selected={selected}
+          onSelect={toggleSelect}
+          onSelectAll={toggleAll}
+          columns={getColumns()}
+          actions={(user) => (
+            <UsersTableActions
+              user={user}
+              onEdit={setEditUserId}
+              onViewProfile={(id) => router.push(`/dashboard/users/profile/${id}`)}
+              onToggleStatus={handleToggleStatus}
+            />
           )}
+        />
 
-          {/* Columnas visibles */}
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger>
-              <IconButton variant="outline" size="2" title="Columnas visibles">
-                <MixerHorizontalIcon />
-              </IconButton>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Content align="end">
-              <Text size="1" color="gray" style={{ padding: '4px 8px', display: 'block' }}>
-                Columnas visibles
-              </Text>
-              <DropdownMenu.Separator />
-              {ALL_COLUMNS.map(col => (
-                <DropdownMenu.Item
-                  key={col.key}
-                  onSelect={e => { e.preventDefault(); toggleColumn(col.key) }}
-                >
-                  <Flex align="center" gap="2">
-                    <Checkbox checked={visibleColumns.includes(col.key)} />
-                    <Text size="2">{col.label}</Text>
-                  </Flex>
-                </DropdownMenu.Item>
-              ))}
-            </DropdownMenu.Content>
-          </DropdownMenu.Root>
+        <UsersTablePagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          rowsPerPage={rowsPerPage}
+          totalItems={filtered.length}
+          onPageChange={setCurrentPage}
+          onRowsPerPageChange={(rows: number) => { setRowsPerPage(rows); setCurrentPage(1) }}
+        />
 
-          {/* Imprimir / Exportar / Importar */}
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger>
-              <IconButton variant="ghost" size="2">
-                <DotsHorizontalIcon />
-              </IconButton>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Content align="end">
-              <DropdownMenu.Item><UploadIcon /> Imprimir</DropdownMenu.Item>
-              <DropdownMenu.Item><DownloadIcon /> Exportar</DropdownMenu.Item>
-              <DropdownMenu.Item><UploadIcon /> Importar</DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Root>
-        </Flex>
-
-        {loading ? (
-          <Flex align="center" justify="center" py="8">
-            <Text color="gray">Cargando usuarios...</Text>
-          </Flex>
-        ) : paginated.length === 0 ? (
-          <Flex align="center" justify="center" py="8">
-            <Text color="gray">No se encontraron usuarios</Text>
-          </Flex>
-        ) : (
-          <>
-            <Box style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                  <tr style={{ background: 'var(--gray-2)' }}>
-                    <th style={{ width: 40, padding: '10px 12px' }}>
-                      <Checkbox
-                        checked={selected.length === paginated.length && paginated.length > 0}
-                        onCheckedChange={toggleAll}
-                      />
-                    </th>
-                    {visibleColumns.map(col => (
-                      <th
-                        key={col}
-                        style={{
-                          padding: '10px 12px',
-                          textAlign: 'left',
-                          fontSize: 11,
-                          fontWeight: 700,
-                          color: 'var(--gray-10)',
-                          textTransform: 'uppercase',
-                          letterSpacing: 0.5,
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        {ALL_COLUMNS.find(c => c.key === col)?.label}
-                      </th>
-                    ))}
-                    <th style={{ padding: '10px 12px', width: 40 }} />
-                  </tr>
-                </thead>
-                <tbody>
-                  {paginated.map((user, i) => (
-                    <tr
-                      key={user.id}
-                      onMouseEnter={() => setHoveredRow(user.id)}
-                      onMouseLeave={() => setHoveredRow(null)}
-                      style={{
-                        borderTop: '1px solid var(--gray-3)',
-                        background: selected.includes(user.id)
-                          ? 'var(--accent-2)'
-                          : hoveredRow === user.id
-                            ? 'var(--gray-2)'        // ← fondo sutil en hover
-                            : i % 2 === 0 ? 'transparent' : 'var(--gray-1)',
-                        transition: 'background 0.15s',
-                      }}
-                    >
-                      <td style={{ padding: '10px 12px' }}>
-                        <Checkbox
-                          checked={selected.includes(user.id)}
-                          onCheckedChange={() => toggleSelect(user.id)}
-                        />
-                      </td>
-
-                      {visibleColumns.map(col => (
-                        <td key={col} style={{ padding: '10px 12px' }}>
-                          {renderCell(user, col)}
-                        </td>
-                      ))}
-
-                      {/* Acciones */}
-                      <td style={{ padding: '10px 12px' }}>
-                        <DropdownMenu.Root>
-                          <DropdownMenu.Trigger>
-                            <IconButton variant="ghost" size="1">
-                              <DotsVerticalIcon />
-                            </IconButton>
-                          </DropdownMenu.Trigger>
-                          <DropdownMenu.Content align="end" size="1">
-                            <DropdownMenu.Item onClick={() => setEditUserId(user.id)}>
-                              <Pencil1Icon /> Editar
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Item
-                              onClick={() => router.push(`/dashboard/users/profile/${user.id}`)}
-                            >
-                              <PersonIcon /> Ver perfil
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Separator />
-                            <DropdownMenu.Item
-                              color={user.is_active ? 'red' : 'green'}
-                              onClick={() => handleToggleStatus(user)}
-                            >
-                              {user.is_active ? 'Inactivar' : 'Activar'}
-                            </DropdownMenu.Item>
-                          </DropdownMenu.Content>
-                        </DropdownMenu.Root>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </Box>
-
-            <Separator size="4" mt="3" />
-
-            {/* Paginación */}
-            <Flex justify="between" align="center" mt="3" wrap="wrap" gap="2">
-              <Flex align="center" gap="2">
-                <Text size="1" color="gray">Filas por página:</Text>
-                <Select.Root
-                  value={String(rowsPerPage)}
-                  onValueChange={v => { setRowsPerPage(Number(v)); setCurrentPage(1) }}
-                >
-                  <Select.Trigger style={{ minWidth: 70 }} />
-                  <Select.Content>
-                    {ROWS_OPTIONS.map(n => (
-                      <Select.Item key={n} value={String(n)}>{n}</Select.Item>
-                    ))}
-                  </Select.Content>
-                </Select.Root>
-              </Flex>
-
-              <Flex align="center" gap="3">
-                <Text size="1" color="gray">
-                  {(currentPage - 1) * rowsPerPage + 1}–{Math.min(currentPage * rowsPerPage, filtered.length)} de {filtered.length}
-                </Text>
-                <Flex gap="1">
-                  <IconButton
-                    variant="ghost"
-                    size="1"
-                    disabled={currentPage === 1}
-                    onClick={() => setCurrentPage(p => p - 1)}
-                  >
-                    <ChevronLeftIcon />
-                  </IconButton>
-                  <IconButton
-                    variant="ghost"
-                    size="1"
-                    disabled={currentPage === totalPages}
-                    onClick={() => setCurrentPage(p => p + 1)}
-                  >
-                    <ChevronRightIcon />
-                  </IconButton>
-                </Flex>
-              </Flex>
-            </Flex>
-          </>
-        )}
       </Card>
+
+      <AppToast
+        open={toastOpen}
+        onOpenChange={setToastOpen}
+        message={toastMessage}
+        type={toastType}
+      />
+
+      <Dialog.Root open={settingsOpen} onOpenChange={setSettingsOpen}>
+        <Dialog.Content>
+          <Dialog.Title>Configurar columnas</Dialog.Title>
+          <Dialog.Description>
+            Selecciona las columnas que quieres mostrar en la tabla.
+          </Dialog.Description>
+          <Flex direction="column" gap="2" mt="4">
+            {ALL_COLUMNS.map(col => (
+              <label key={col.key} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <input
+                  type="checkbox"
+                  checked={visibleColumns.includes(col.key)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setVisibleColumns(prev => [...prev, col.key])
+                    } else {
+                      setVisibleColumns(prev => prev.filter(c => c !== col.key))
+                    }
+                  }}
+                />
+                {col.label}
+              </label>
+            ))}
+          </Flex>
+        </Dialog.Content>
+      </Dialog.Root>
+
       <CreateUserModal
         open={createOpen}
         onClose={() => setCreateOpen(false)}
         onCreated={handleUserCreated}
       />
+
       <EditUserModal
         userId={editUserId}
         open={editUserId !== null}
         onClose={() => setEditUserId(null)}
         onUpdated={handleUserUpdated}
       />
+
     </Box>
   )
 }

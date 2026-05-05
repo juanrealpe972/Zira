@@ -9,14 +9,22 @@ export async function getUsers(params?: {
   role?: string
   is_active?: boolean
 }): Promise<PaginatedResponse<User>> {
-  const queryParams = new URLSearchParams()
-  if (params?.page) queryParams.set('page', params.page.toString())
-  if (params?.search) queryParams.set('search', params.search)
-  if (params?.role) queryParams.set('role', params.role)
-  if (params?.is_active !== undefined) queryParams.set('is_active', params.is_active.toString())
+  try {
+    const queryParams = new URLSearchParams()
+    if (params?.page) queryParams.set('page', params.page.toString())
+    if (params?.search) queryParams.set('search', params.search)
+    if (params?.role) queryParams.set('role', params.role)
+    if (params?.is_active !== undefined) queryParams.set('is_active', params.is_active.toString())
 
-  const query = queryParams.toString()
-  return apiGet<PaginatedResponse<User>>(`${USERS_ENDPOINT}${query ? `?${query}` : ''}`)
+    const query = queryParams.toString()
+    const result = await apiGet<PaginatedResponse<User>>(`${USERS_ENDPOINT}${query ? `?${query}` : ''}`)
+    return result
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 401) {
+      throw new Error('No autorizado. Por favor inicia sesión nuevamente')
+    }
+    throw error
+  }
 }
 
 export async function getUserById(id: number): Promise<User> {
@@ -54,7 +62,21 @@ export async function updateUser(id: number, data: Partial<CreateUserRequest>): 
 }
 
 export async function updateUserStatus(id: number, is_active: boolean): Promise<User> {
-  return apiPatch<User>(`${USERS_ENDPOINT}/${id}/`, { is_active })
+  try {
+    const result = await apiPatch<User>(`${USERS_ENDPOINT}/${id}/`, { is_active })
+    return result
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 401) {
+      throw new Error('No autorizado. Por favor inicia sesión nuevamente')
+    }
+    if (error instanceof ApiError && error.status === 400) {
+      throw new Error('Error al actualizar estado del usuario')
+    }
+    if (error instanceof ApiError && error.status === 404) {
+      throw new Error('Usuario no encontrado')
+    }
+    throw error
+  }
 }
 
 export async function deleteUser(id: number): Promise<void> {
