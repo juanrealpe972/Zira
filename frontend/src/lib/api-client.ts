@@ -175,13 +175,19 @@ function getHeaders(includeAuth = true): HeadersInit {
 async function handleResponse<T>(response: Response): Promise<T> {
   if (response.status === 401 && !isRefreshing) {
     const refreshed = await ensureValidToken()
-    if (refreshed) {
+    if (!refreshed) {
+      // Si no se pudo refrescar, redirigir a login
+      if (typeof window !== 'undefined') {
+        window.location.href = '/auth/login'
+      }
       throw new ApiError(
         'Sesión expirada. Por favor inicia sesión nuevamente.',
         401,
         'TOKEN_EXPIRED'
       )
     }
+    // Si el refresh fue exitoso, el error será atrapado por el componente que llama
+    // y podrá reintentar la solicitud
   }
 
   if (!response.ok) {
@@ -211,11 +217,26 @@ async function handleResponse<T>(response: Response): Promise<T> {
 // ============================================
 
 export async function apiGet<T>(endpoint: string, includeAuth = true): Promise<T> {
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    method: 'GET',
-    headers: getHeaders(includeAuth),
-  })
-  return handleResponse<T>(response)
+  try {
+    const response = await fetch(`${API_URL}${endpoint}`, {
+      method: 'GET',
+      headers: getHeaders(includeAuth),
+    })
+    return await handleResponse<T>(response)
+  } catch (error) {
+    // Si es error 401 y no está refrescando, intenta refrescar y reintentar
+    if (error instanceof ApiError && error.status === 401 && includeAuth && !isRefreshing) {
+      const refreshed = await ensureValidToken()
+      if (refreshed) {
+        const response = await fetch(`${API_URL}${endpoint}`, {
+          method: 'GET',
+          headers: getHeaders(includeAuth),
+        })
+        return await handleResponse<T>(response)
+      }
+    }
+    throw error
+  }
 }
 
 export async function apiPost<T>(endpoint: string, data?: unknown, includeAuth = true): Promise<T> {
@@ -228,12 +249,28 @@ export async function apiPost<T>(endpoint: string, data?: unknown, includeAuth =
 }
 
 export async function apiPatch<T>(endpoint: string, data: unknown): Promise<T> {
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    method: 'PATCH',
-    headers: getHeaders(true),
-    body: JSON.stringify(data),
-  })
-  return handleResponse<T>(response)
+  try {
+    const response = await fetch(`${API_URL}${endpoint}`, {
+      method: 'PATCH',
+      headers: getHeaders(true),
+      body: JSON.stringify(data),
+    })
+    return await handleResponse<T>(response)
+  } catch (error) {
+    // Si es error 401 y no está refrescando, intenta refrescar y reintentar
+    if (error instanceof ApiError && error.status === 401 && !isRefreshing) {
+      const refreshed = await ensureValidToken()
+      if (refreshed) {
+        const response = await fetch(`${API_URL}${endpoint}`, {
+          method: 'PATCH',
+          headers: getHeaders(true),
+          body: JSON.stringify(data),
+        })
+        return await handleResponse<T>(response)
+      }
+    }
+    throw error
+  }
 }
 
 export async function apiPut<T>(endpoint: string, data: unknown): Promise<T> {
