@@ -52,7 +52,10 @@ import {
   PaperPlaneIcon,
   StarFilledIcon,
   LightningBoltIcon,
-  ArrowRightIcon
+  ArrowRightIcon,
+  DownloadIcon,
+  UploadIcon,
+  DotsVerticalIcon
 } from '@radix-ui/react-icons'
 
 export const Icons = {
@@ -101,6 +104,9 @@ export const Icons = {
   starFilledIcon: StarFilledIcon,
   lightningBoltIcon: LightningBoltIcon,
   arrowRightIcon: ArrowRightIcon,
+  downloadIcon: DownloadIcon,
+  uploadIcon: UploadIcon,
+  dotsVerticalIcon: DotsVerticalIcon,
 
   // Redes sociales
   github: GitHubLogoIcon,

@@ -9,16 +9,16 @@ export interface LoginResponse {
 }
 
 export interface RegisterRequest {
-  email: string
-  password: string
   name: string
-  phone_prefix?: string
   phone?: string
-  address?: string
-  company?: string
   role?: string
+  company?: string
   country?: string
   city?: string
+  email: string
+  password: string
+  phone_prefix?: string
+  address?: string
   national_id?: string
 }
 
