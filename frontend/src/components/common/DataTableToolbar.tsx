@@ -1,7 +1,7 @@
 'use client'
 
 import { Flex, Button, DropdownMenu, IconButton, Badge } from '@radix-ui/themes'
-import { DownloadIcon, UploadIcon, MixerHorizontalIcon } from '@radix-ui/react-icons'
+import { Icons } from '@/components/ui'
 
 type Column<T> = {
     key: keyof T
@@ -17,43 +17,33 @@ type Props<T> = {
     onImport?: () => void
 }
 
-export function UsersTableToolbar<T>({
-    selectedCount,
-    columns,
-    visibleColumns,
-    onToggleColumn,
-    onExport,
-    onImport,
-}: Props<T>) {
+export function DataTableToolbar<T>({ selectedCount, columns, visibleColumns, onToggleColumn, onExport, onImport }: Props<T>) {
     return (
         <Flex justify="between" align="center" mb="4">
             <Flex gap="2" align="center">
-                {selectedCount > 0 && (
-                    <Badge color="blue" variant="soft">
-                        {selectedCount} seleccionados
-                    </Badge>
-                )}
+                <Badge color="blue" variant="soft">
+                    {selectedCount === 1 ? '1 registro seleccionado' : `${selectedCount} registros seleccionados`}
+                </Badge>
             </Flex>
 
             <Flex gap="2" align="center">
 
                 {onImport && (
                     <Button variant="soft" onClick={onImport}>
-                        <UploadIcon /> Importar
+                        <Icons.uploadIcon /> Importar
                     </Button>
                 )}
 
                 {onExport && (
                     <Button variant="soft" onClick={onExport}>
-                        <DownloadIcon /> Exportar
+                        <Icons.downloadIcon /> Exportar
                     </Button>
                 )}
 
-                {/* 🔥 Columnas */}
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger>
                         <IconButton variant="ghost" size="1">
-                            <MixerHorizontalIcon />
+                            <Icons.filter />
                         </IconButton>
                     </DropdownMenu.Trigger>
 

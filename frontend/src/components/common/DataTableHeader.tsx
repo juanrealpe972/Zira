@@ -1,34 +1,29 @@
 'use client'
 
 import { Box, Flex, Select, TextField } from '@radix-ui/themes'
-import { MagnifyingGlassIcon } from '@radix-ui/react-icons'
+import { Icons } from '@/components/ui'
 
 type Props = {
-  roleFilter: string
-  onRoleFilterChange: (value: string) => void
+  dataFilter: string
+  onDataFilterChange: (value: string) => void
   search: string
   onSearchChange: (value: string) => void
-  roles: string[]
+  optionsFilters: string[]
+  titleFilters: string
 }
 
-export function UsersTableHeader({
-  roleFilter,
-  onRoleFilterChange,
-  search,
-  onSearchChange,
-  roles,
-}: Props) {
+export function DataTableHeader({ dataFilter, onDataFilterChange, search, onSearchChange, optionsFilters, titleFilters }: Props) {
   return (
     <Flex gap="3" mb="4" align="center" wrap="wrap">
       <Select.Root
-        value={roleFilter}
-        onValueChange={onRoleFilterChange}
+        value={dataFilter}
+        onValueChange={onDataFilterChange}
       >
         <Select.Trigger placeholder="Rol" style={{ minWidth: 140 }} />
         <Select.Content>
-          <Select.Item value="all">Todos los roles</Select.Item>
-          {roles.map(role => (
-            <Select.Item key={role} value={role}>{role}</Select.Item>
+          <Select.Item value="all">{titleFilters}</Select.Item>
+          {optionsFilters.map(optionFilter => (
+            <Select.Item key={optionFilter} value={optionFilter}>{optionFilter}</Select.Item>
           ))}
         </Select.Content>
       </Select.Root>
@@ -40,7 +35,7 @@ export function UsersTableHeader({
           onChange={e => onSearchChange(e.target.value)}
         >
           <TextField.Slot>
-            <MagnifyingGlassIcon />
+            <Icons.magnifyingGlassIcon />
           </TextField.Slot>
         </TextField.Root>
       </Box>

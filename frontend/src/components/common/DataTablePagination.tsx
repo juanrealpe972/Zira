@@ -1,7 +1,7 @@
 'use client'
 
 import { Flex, Button, Text, Select } from '@radix-ui/themes'
-import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
+import { Icons } from '@/components/ui'
 
 type Props = {
   currentPage: number
@@ -13,15 +13,7 @@ type Props = {
   rowsOptions?: number[]
 }
 
-export function UsersTablePagination({
-  currentPage,
-  totalPages,
-  rowsPerPage,
-  totalItems,
-  onPageChange,
-  onRowsPerPageChange,
-  rowsOptions = [5, 10, 25, 50],
-}: Props) {
+export function DataTablePagination({ currentPage, totalPages, rowsPerPage, totalItems, onPageChange, onRowsPerPageChange, rowsOptions = [5, 10, 25, 50] }: Props) {
   const startItem = (currentPage - 1) * rowsPerPage + 1
   const endItem = Math.min(currentPage * rowsPerPage, totalItems)
 
@@ -53,7 +45,7 @@ export function UsersTablePagination({
           disabled={currentPage === 1}
           onClick={() => onPageChange(currentPage - 1)}
         >
-          <ChevronLeftIcon />
+          <Icons.chevronLeft />
         </Button>
 
         <Text size="2">
@@ -65,7 +57,7 @@ export function UsersTablePagination({
           disabled={currentPage === totalPages}
           onClick={() => onPageChange(currentPage + 1)}
         >
-          <ChevronRightIcon />
+          <Icons.chevronRight />
         </Button>
       </Flex>
     </Flex>

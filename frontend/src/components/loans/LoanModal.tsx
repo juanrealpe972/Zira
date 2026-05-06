@@ -2,13 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { Flex, TextField, Select, TextArea, Box } from '@radix-ui/themes'
-import { Icons } from '@/components/ui/icons/icons'
-import { FormField } from '@/components/ui/FormField'
-import { StepModal } from '@/components/ui/StepModal'
-import {
-  Loan, LoanRequest,
-  createLoan, updateLoan,
-} from '@/services/loans.service'
+import { FormField, StepModal, Icons } from '@/components/ui'
+import { createLoan, updateLoan } from '@/services'
+import { Loan, LoanRequest } from '@/types'
 
 const LOAN_TYPES = [
   { value: 'prestado', label: 'Prestado (yo presté)' },

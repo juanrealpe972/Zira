@@ -1,25 +1,16 @@
 'use client'
 
-import { PageHeader } from '@/components/common/PageHeader'
-import { StatusTabs } from '@/components/common/StatusTabs'
-import { UsersTableHeader } from '@/components/users/UsersTableHeader'
-import { UsersTableData } from '@/components/users/UsersTableData'
-import { UsersTableToolbar } from '@/components/users/UsersTableToolbar'
-import { UsersTableActions } from '@/components/users/UsersTableActions'
-import { UsersTablePagination } from '@/components/users/UsersTablePagination'
-
+import { TableActions, TableAction, DataTable, DataTableHeader, DataTablePagination, DataTableToolbar, StatusTabs, PageHeader } from '@/components/common'
 import { useEffect, useState, useMemo } from 'react'
-import { Box, Flex, Text, Card, Badge, Avatar, Dialog } from '@radix-ui/themes'
-import { PersonIcon } from '@radix-ui/react-icons'
+import { Box, Flex, Text, Card, Badge, Avatar } from '@radix-ui/themes'
 import { getUsers, updateUserStatus } from '@/services'
 import { User } from '@/types'
 import { useRouter } from 'next/navigation'
 import { CreateUserModal } from '@/components/users/CreateUserModal'
 import { EditUserModal } from '@/components/users/EditUserModal'
-import { AppToast } from '@/components/ui'
+import { AppToast, Icons } from '@/components/ui'
 
-type ColumnKey = 'name' | 'email' | 'phone' | 'role' | 'company' |
-  'country' | 'city' | 'verified' | 'is_staff' | 'created_at' | 'status' | 'description' | 'national_id'
+type ColumnKey = 'name' | 'email' | 'phone' | 'role' | 'company' | 'country' | 'city' | 'verified' | 'is_staff' | 'created_at' | 'status' | 'description' | 'national_id'
 
 const ALL_COLUMNS: { key: ColumnKey; label: string }[] = [
   { key: 'name', label: 'Nombre' },
@@ -63,10 +54,38 @@ export default function UsersListPage() {
   const [createOpen, setCreateOpen] = useState(false)
   const [editUserId, setEditUserId] = useState<number | null>(null)
   const [visibleColumns, setVisibleColumns] = useState<ColumnKey[]>(DEFAULT_COLUMNS)
-  const [settingsOpen, setSettingsOpen] = useState(false)
   const [toastMessage, setToastMessage] = useState('')
   const [toastType, setToastType] = useState<'success' | 'error'>('success')
   const [toastOpen, setToastOpen] = useState(false)
+
+  const userActions: TableAction<User>[] = [
+    {
+      label: 'Editar',
+      icon: <Icons.edit />,
+      onClick: (user) => setEditUserId(user.id),
+    },
+    {
+      label: 'Ver perfil',
+      icon: <Icons.user />,
+      onClick: (user) => router.push(`/dashboard/users/profile/${user.id}`),
+    },
+    {
+      label: 'Inactivar',
+      icon: <Icons.security />,
+      color: 'red',
+      separator: true,
+      hidden: (user) => !user.is_active,
+      onClick: handleToggleStatus,
+    },
+    {
+      label: 'Activar',
+      icon: <Icons.security />,
+      color: 'green',
+      separator: true,
+      hidden: (user) => user.is_active,
+      onClick: handleToggleStatus,
+    },
+  ]
 
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
     setToastMessage(message)
@@ -223,7 +242,7 @@ export default function UsersListPage() {
               <Avatar
                 size="2"
                 src={user.photo ?? undefined}
-                fallback={<PersonIcon />}
+                fallback={<Icons.user />}
                 radius="full"
               />
 
@@ -313,7 +332,7 @@ export default function UsersListPage() {
         breadcrumb={['Dashboard', 'Usuarios', 'Cuentas']}
         actionLabel="Agregar usuario"
         onAction={() => setCreateOpen(true)}
-        icon={<PersonIcon />}
+        icon={<Icons.user />}
       />
 
       <Card mt="4" size="2">
@@ -328,15 +347,16 @@ export default function UsersListPage() {
           }}
         />
 
-        <UsersTableHeader
-          roleFilter={roleFilter}
-          onRoleFilterChange={(v) => { setRoleFilter(v); setCurrentPage(1) }}
+        <DataTableHeader
+          dataFilter={roleFilter}
+          onDataFilterChange={(v) => { setRoleFilter(v); setCurrentPage(1) }}
           search={search}
           onSearchChange={(v) => { setSearch(v); setCurrentPage(1) }}
-          roles={roles}
+          optionsFilters={roles}
+          titleFilters="Todos los roles"
         />
 
-        <UsersTableToolbar
+        <DataTableToolbar
           selectedCount={selected.length}
           columns={ALL_COLUMNS}
           visibleColumns={visibleColumns}
@@ -351,24 +371,21 @@ export default function UsersListPage() {
           }}
         />
 
-        <UsersTableData
+        <DataTable
           data={paginated}
           loading={loading}
+          loadingText="Cargando usuarios..."
+          emptyText="No se encontraron usuarios"
           selected={selected}
           onSelect={toggleSelect}
           onSelectAll={toggleAll}
           columns={getColumns()}
           actions={(user) => (
-            <UsersTableActions
-              user={user}
-              onEdit={setEditUserId}
-              onViewProfile={(id) => router.push(`/dashboard/users/profile/${id}`)}
-              onToggleStatus={handleToggleStatus}
-            />
+            <TableActions row={user} actions={userActions} />
           )}
         />
 
-        <UsersTablePagination
+        <DataTablePagination
           currentPage={currentPage}
           totalPages={totalPages}
           rowsPerPage={rowsPerPage}
@@ -385,33 +402,6 @@ export default function UsersListPage() {
         message={toastMessage}
         type={toastType}
       />
-
-      <Dialog.Root open={settingsOpen} onOpenChange={setSettingsOpen}>
-        <Dialog.Content>
-          <Dialog.Title>Configurar columnas</Dialog.Title>
-          <Dialog.Description>
-            Selecciona las columnas que quieres mostrar en la tabla.
-          </Dialog.Description>
-          <Flex direction="column" gap="2" mt="4">
-            {ALL_COLUMNS.map(col => (
-              <label key={col.key} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <input
-                  type="checkbox"
-                  checked={visibleColumns.includes(col.key)}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setVisibleColumns(prev => [...prev, col.key])
-                    } else {
-                      setVisibleColumns(prev => prev.filter(c => c !== col.key))
-                    }
-                  }}
-                />
-                {col.label}
-              </label>
-            ))}
-          </Flex>
-        </Dialog.Content>
-      </Dialog.Root>
 
       <CreateUserModal
         open={createOpen}
