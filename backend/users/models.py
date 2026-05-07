@@ -45,7 +45,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     description = models.CharField(max_length=255, null=True, blank=True)
 
     # 🔴 Control
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='free')
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     verified = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
