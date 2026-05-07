@@ -24,7 +24,7 @@ const INITIAL: CreateUserRequest = {
     phone: '',
     address: '',
     company: '',
-    role: 'free',
+    role: '',
     country: '',
     city: '',
     national_id: '',

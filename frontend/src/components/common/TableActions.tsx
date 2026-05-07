@@ -7,8 +7,8 @@ export type TableAction<T> = {
   label: string
   icon?: React.ReactNode
   color?: 'red' | 'green' | 'blue' | 'orange' | 'gray'
-  separator?: boolean                        // pone separador ANTES de este item
-  hidden?: (row: T) => boolean               // oculta el item según la fila
+  separator?: boolean
+  hidden?: (row: T) => boolean
   onClick: (row: T) => void
 }
 
