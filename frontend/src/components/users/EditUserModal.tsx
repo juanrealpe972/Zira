@@ -27,7 +27,7 @@ type FieldError = Partial<Record<keyof CreateUserRequest, string>>
 const EMPTY: CreateUserRequest = {
     name: '', email: '', password: '',
     phone_prefix: '', phone: '', address: '',
-    company: '', role: 'user', country: '',
+    company: '', role: '', country: '',
     city: '', national_id: '',
 }
 
@@ -58,7 +58,7 @@ export function EditUserModal({ userId, open, onClose, onUpdated }: Props) {
                     phone: user.phone ?? '',
                     address: user.address ?? '',
                     company: user.company ?? '',
-                    role: user.role ?? 'user',
+                    role: user.role ?? '',
                     country: user.country ?? '',
                     city: user.city ?? '',
                     national_id: user.national_id ?? '',
