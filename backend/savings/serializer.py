@@ -4,7 +4,7 @@ from .models import Saving
 class SavingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Saving
-        fields = ['id', 'user', 'amount', 'goal', 'description', 'start_date', 'end_date', 'created_at']
+        fields = ['id', 'user', 'amount', 'goal', 'description', 'start_date', 'end_date', 'is_active', 'created_at']
         read_only_fields = ['id', 'created_at', 'user']
 
     # Validación individual de campos

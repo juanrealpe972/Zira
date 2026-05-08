@@ -31,6 +31,7 @@ class BankAccount(models.Model):
         decimal_places=2,
         default=0.00
     )  # saldo
+    is_active = models.BooleanField(default=True)
 
     created_at = models.DateTimeField(auto_now_add=True)  # fecha de creación
 

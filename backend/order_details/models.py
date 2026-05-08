@@ -17,6 +17,7 @@ class OrderItem(models.Model):
     )  # Product relationship
 
     quantity = models.IntegerField()  # Quantity of the product in the order
+    is_active = models.BooleanField(default=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)  # Price at moment of purchase
 
     def __str__(self):

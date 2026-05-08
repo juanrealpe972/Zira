@@ -34,6 +34,7 @@ class Bank_cards(models.Model):
     expiration_date = models.DateField()
     cvv = models.CharField(max_length=4)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.card_type} - {self.card_number[-4:]}"
