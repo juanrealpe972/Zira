@@ -13,6 +13,7 @@ class Saving(models.Model):  # Ahorros
     description = models.TextField(blank=True)  # Descripción
     start_date = models.DateField(db_index=True)  # Fecha de inicio
     end_date = models.DateField(db_index=True)  # Fecha de fin
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)  # Fecha de creación
 
     def __str__(self):

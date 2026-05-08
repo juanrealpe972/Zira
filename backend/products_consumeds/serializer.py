@@ -15,6 +15,7 @@ class ProductConsumedSerializer(serializers.ModelSerializer):
             "category",
             "unit_price",
             "created_at",
+            "is_active",
         ]
         read_only_fields = ["id", "user", "created_at"]
 

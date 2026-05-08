@@ -9,6 +9,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'user',
             'total',
             'status',
-            'created_at'
+            'created_at',
+            'is_active'
         ]
         read_only_fields = ['id', 'created_at']

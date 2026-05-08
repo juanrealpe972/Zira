@@ -9,6 +9,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
             'order',
             'product',
             'quantity',
-            'price'
+            'price',
+            'is_active'
         ]
         read_only_fields = ['id']

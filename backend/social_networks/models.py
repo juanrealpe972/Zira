@@ -26,6 +26,7 @@ class SocialNetwork(models.Model):
     )
 
     url = models.URLField(max_length=255, unique=True)
+    is_active = models.BooleanField(default=True)
     username = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
 

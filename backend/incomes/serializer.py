@@ -12,7 +12,8 @@ class IncomeSerializer(serializers.ModelSerializer):
             'amount',
             'description',
             'date',
-            'created_at'
+            'created_at',
+            'is_active'
         ]
         read_only_fields = ['id', 'created_at']
     

@@ -11,7 +11,7 @@ class CardSerializer(serializers.ModelSerializer):
         model = Bank_cards
         fields = ["id", "user", "bank_account", "card_type", "card_number", 
                   "masked_card_number", "cardholder_name", "expiration_date", 
-                  "cvv", "created_at"]
+                  "cvv", "created_at", "is_active"]
         read_only_fields = ["id", "created_at"]
     
     def get_masked_card_number(self, obj):

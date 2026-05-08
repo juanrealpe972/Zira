@@ -27,6 +27,7 @@ class ExpenseProduct(models.Model):
     )
 
     quantity = models.PositiveIntegerField()
+    is_active = models.BooleanField(default=True)
     subtotal = models.DecimalField(
         max_digits=12,
         decimal_places=2,
