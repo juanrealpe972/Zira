@@ -16,7 +16,7 @@ class Order(models.Model):
     )
 
     total = models.DecimalField(max_digits=10, decimal_places=2)
-
+    is_active = models.BooleanField(default=True)
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,

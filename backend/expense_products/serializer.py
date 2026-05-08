@@ -11,6 +11,7 @@ class ExpenseProductSerializer(serializers.ModelSerializer):
             "product",
             "quantity",
             "subtotal",
+            "is_active"
         ]
         read_only_fields = ["id", "subtotal"]
 

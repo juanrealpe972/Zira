@@ -14,7 +14,8 @@ class LoanSerializer(serializers.ModelSerializer):
             'is_paid',
             'paid_amount',
             'note',
-            'created_at'
+            'created_at',
+            'is_active'
         ]
         read_only_fields = ['id', 'created_at']
     

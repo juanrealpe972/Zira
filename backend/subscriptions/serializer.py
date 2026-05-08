@@ -12,6 +12,7 @@ class SubscriptionSerializer(serializers.ModelSerializer):
             'status',
             'start_date',
             'end_date',
+            'is_active',
             'created_at'
         ]
         read_only_fields = ['id', 'created_at']
