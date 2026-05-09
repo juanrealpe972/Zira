@@ -8,6 +8,7 @@ export type Expense = {
   description: string
   type: string
   is_active: boolean
+  created_at: string
 }
 
 export type ExpenseRequest = {
@@ -18,4 +19,5 @@ export type ExpenseRequest = {
   date: string
   description: string
   type: string
+  is_active?: boolean
 }

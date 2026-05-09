@@ -19,6 +19,7 @@ export function filtersExpenses(
 
         const matchSearch =
             !search ||
+            e.title?.toLowerCase().includes(search.toLowerCase()) ||
             e.category?.toLowerCase().includes(search.toLowerCase()) ||
             e.date?.toLowerCase().includes(search.toLowerCase())
 
