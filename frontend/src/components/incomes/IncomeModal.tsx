@@ -23,12 +23,11 @@ type Props = {
 }
 
 const EMPTY = {
-    title: '',
     amount: '',
     category: '',
-    source: '',
     date: '',
-    notes: '',
+    description: '',
+    is_active: '',
 }
 
 type FormErrors = Partial<Record<keyof typeof EMPTY, string>>
@@ -46,12 +45,11 @@ export function IncomeModal({ open, onClose, userId, existing, onSaved }: Props)
     useEffect(() => {
         if (open && existing) {
             setForm({
-                title: existing.title ?? '',
                 amount: String(existing.amount ?? ''),
                 category: existing.category ?? '',
-                source: existing.source ?? '',
                 date: existing.date ?? '',
-                notes: existing.notes ?? '',
+                description: existing.description ?? '',
+                is_active: String(existing.is_active ?? ''),
             })
         } else if (open) {
             setForm(EMPTY)
@@ -68,11 +66,9 @@ export function IncomeModal({ open, onClose, userId, existing, onSaved }: Props)
 
     function validate(): boolean {
         const newErrors: FormErrors = {}
-        if (!form.title.trim()) newErrors.title = 'El título es obligatorio'
         if (!form.amount.trim()) newErrors.amount = 'El monto es obligatorio'
         else if (isNaN(Number(form.amount)) || Number(form.amount) <= 0) newErrors.amount = 'Monto inválido'
         if (!form.category) newErrors.category = 'Selecciona una categoría'
-        if (!form.source.trim()) newErrors.source = 'La fuente es obligatoria'
         if (!form.date) newErrors.date = 'La fecha es obligatoria'
         setErrors(newErrors)
         return Object.keys(newErrors).length === 0
@@ -85,16 +81,16 @@ export function IncomeModal({ open, onClose, userId, existing, onSaved }: Props)
         try {
             const payload: IncomeRequest = {
                 user: userId,
-                title: form.title,
-                amount: Number(form.amount),
                 category: form.category,
-                source: form.source,
+                amount: Number(form.amount),
+                description: form.description,
                 date: form.date,
-                notes: form.notes,
+                is_active: form.is_active === 'true',
             }
             const result = isEdit
                 ? await updateIncome(existing!.id, payload)
                 : await createIncome(payload)
+            console.log('Resultado API:', result)
             onSaved(result)
             setToastMessage(isEdit ? '¡Ingreso actualizado!' : '¡Ingreso creado!')
             setToastType('success')
@@ -102,6 +98,7 @@ export function IncomeModal({ open, onClose, userId, existing, onSaved }: Props)
             setTimeout(handleClose, 1500)
         } catch (err) {
             const msg = err instanceof Error ? err.message : 'Error inesperado'
+            console.log(err)
             setApiError(msg)
             setToastMessage(msg)
             setToastType('error')
@@ -138,19 +135,6 @@ export function IncomeModal({ open, onClose, userId, existing, onSaved }: Props)
         >
             <Flex direction="column" gap="3">
 
-                <FormField label="Título" error={errors.title} required>
-                    <TextField.Root
-                        value={form.title}
-                        onChange={e => update('title', e.target.value)}
-                        placeholder="Mi ingreso"
-                        size="2"
-                    >
-                        <TextField.Slot>
-                            <Icons.analytics width={13} style={{ color: 'var(--gray-9)' }} />
-                        </TextField.Slot>
-                    </TextField.Root>
-                </FormField>
-
                 <FormField label="Monto (COP)" error={errors.amount} required>
                     <TextField.Root
                         value={form.amount}
@@ -176,15 +160,6 @@ export function IncomeModal({ open, onClose, userId, existing, onSaved }: Props)
                     </Select.Root>
                 </FormField>
 
-                <FormField label="Fuente" error={errors.source} required>
-                    <TextField.Root
-                        value={form.source}
-                        onChange={e => update('source', e.target.value)}
-                        placeholder="Empresa XYZ"
-                        size="2"
-                    />
-                </FormField>
-
                 <FormField label="Fecha" error={errors.date} required>
                     <TextField.Root
                         value={form.date}
@@ -194,11 +169,11 @@ export function IncomeModal({ open, onClose, userId, existing, onSaved }: Props)
                     />
                 </FormField>
 
-                <FormField label="Notas" error={errors.notes}>
+                <FormField label="Descripción" error={errors.description}>
                     <TextArea
-                        value={form.notes}
-                        onChange={e => update('notes', e.target.value)}
-                        placeholder="Notas adicionales..."
+                        value={form.description}
+                        onChange={e => update('description', e.target.value)}
+                        placeholder="Descripción adicional..."
                         rows={2}
                     />
                 </FormField>
