@@ -1,187 +1,266 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Box, Flex, Heading, Text, Button, Grid, Spinner, Card } from '@radix-ui/themes'
-import { PlusIcon } from '@radix-ui/react-icons'
-import { Icons } from '@/components/ui/icons/icons'
-import {
-  getIncomes, deleteIncome
-} from '@/services'
-import { Income } from '@/types'
-import { IncomeCard } from '@/components/incomes/IncomeCard'
-import { IncomeModal } from '@/components/incomes/IncomeModal'
-import { AppToast } from '@/components/ui/AppToast'
+import { useEffect, useMemo, useState } from 'react'
+import { Box, Card } from '@radix-ui/themes'
+import { useParams } from 'next/navigation'
 
-function getUserIdFromToken(): number | null {
-  if (typeof document === 'undefined') return null
-  const match = document.cookie.match(/zira_access=([^;]+)/)
-  if (!match) return null
-  try {
-    return JSON.parse(atob(match[1].split('.')[1])).user_id
-  } catch { return null }
-}
+import { PageHeader, DataTable, DataTableHeader, DataTablePagination, DataTableToolbar, TableActions, StatusTabs } from '@/components/common'
+import { ALL_INCOME_COLUMNS, ColumnKey, exportIncomes, getIncomeActions, getIncomeColumns, importIncomes } from '@/data/incomes'
+import { getIncomes, updateIncome } from '@/services'
+import { Income } from '@/types'
+import { IncomeModal } from '@/components/incomes/IncomeModal'
+import { AppToast, Icons } from '@/components/ui'
+
+const DEFAULT_COLUMNS: ColumnKey[] = ['amount', 'category', 'date', 'description', 'is_active']
+
+const STATUS_TABS = [
+  { key: 'all', label: 'Todos' },
+  { key: 'active', label: 'Activos' },
+  { key: 'inactive', label: 'Inactivos' },
+] as const
 
 export default function IncomesPage() {
+  const params = useParams()
+  const userId = parseInt(params.id as string) || 0
+
   const [incomes, setIncomes] = useState<Income[]>([])
   const [loading, setLoading] = useState(true)
-  const [modalOpen, setModalOpen] = useState(false)
-  const [editingIncome, setEditingIncome] = useState<Income | null>(null)
-  const [userId, setUserId] = useState<number | null>(null)
-  const [toastOpen, setToastOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState('all')
+  const [search, setSearch] = useState('')
+  const [categoryFilter, setCategoryFilter] = useState('all')
+  const [typeFilter, setTypeFilter] = useState('all')
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [selected, setSelected] = useState<number[]>([])
+  const [createOpen, setCreateOpen] = useState(false)
+  const [editingIncomeId, setEditingIncomeId] = useState<number | null>(null)
+  const [visibleColumns, setVisibleColumns] = useState<ColumnKey[]>(DEFAULT_COLUMNS)
+
   const [toastMessage, setToastMessage] = useState('')
   const [toastType, setToastType] = useState<'success' | 'error'>('success')
+  const [toastOpen, setToastOpen] = useState(false)
 
-  useEffect(() => {
-    const id = getUserIdFromToken()
-    setUserId(id)
-    if (!id) return
-    getIncomes(id)
-      .then(response => setIncomes(response.results))
-      .catch(() => showToast('Error al cargar ingresos', 'error'))
-      .finally(() => setLoading(false))
-  }, [])
-
-  function showToast(message: string, type: 'success' | 'error') {
-    setToastMessage(message)
+  const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
+    setToastMessage(msg)
     setToastType(type)
     setToastOpen(true)
   }
 
-  function handleSaved(income: Income) {
-    setIncomes(prev => {
-      const exists = prev.find(i => i.id === income.id)
-      return exists
-        ? prev.map(i => i.id === income.id ? income : i)
-        : [...prev, income]
-    })
-    setEditingIncome(null)
-  }
+  useEffect(() => {
+    loadIncomes()
+  }, [userId])
 
-  async function handleDelete(id: number) {
+  async function loadIncomes() {
     try {
-      await deleteIncome(id)
-      setIncomes(prev => prev.filter(i => i.id !== id))
-      showToast('Ingreso eliminado', 'success')
-    } catch {
-      showToast('Error al eliminar ingreso', 'error')
+      setLoading(true)
+      const data = await getIncomes(userId)
+      const parsed = Array.isArray(data) ? data : data.results
+      setIncomes(parsed)
+    } catch (error) {
+      console.error(error)
+      showToast('Error al cargar ingresos', 'error')
+      setIncomes([])
+    } finally {
+      setLoading(false)
     }
   }
 
-  function handleEdit(income: Income) {
-    setEditingIncome(income)
-    setModalOpen(true)
+  const incomeActions = getIncomeActions(
+    (id) => setEditingIncomeId(id),
+    handleToggleStatus
+  )
+
+  async function handleToggleStatus(income: Income) {
+    const newStatus = !income.is_active
+
+    try {
+      await updateIncome(income.id, { is_active: newStatus })
+
+      setIncomes(prev =>
+        prev.map(e =>
+          e.id === income.id
+            ? { ...e, is_active: newStatus }
+            : e
+        )
+      )
+
+      showToast(
+        `Ingreso ${newStatus ? 'activado' : 'inactivado'} correctamente`
+      )
+
+    } catch {
+      showToast('Error al actualizar estado', 'error')
+    }
   }
 
-  function handleOpenNew() {
-    setEditingIncome(null)
-    setModalOpen(true)
-  }
+  const categories = useMemo(
+    () => [...new Set(incomes.map(i => i.category).filter(Boolean))] as string[],
+    [incomes]
+  )
 
-  if (loading) {
-    return (
-      <Flex align="center" justify="center" style={{ minHeight: '60vh' }} gap="2">
-        <Spinner /><Text color="gray">Cargando ingresos...</Text>
-      </Flex>
+  const counts = useMemo(() => ({
+    all: incomes.length,
+    active: incomes.filter(i => i.is_active).length,
+    inactive: incomes.filter(i => !i.is_active).length,
+  }), [incomes])
+
+  const filtered = useMemo(() => {
+    return incomes.filter(i => {
+      const matchTab =
+        activeTab === 'all'
+          ? true
+          : activeTab === 'active'
+            ? i.is_active
+            : !i.is_active
+
+      const matchCategory =
+        categoryFilter === 'all' || i.category === categoryFilter
+
+      const matchSearch =
+        !search ||
+        i.description.toLowerCase().includes(search.toLowerCase()) ||
+        i.category.toLowerCase().includes(search.toLowerCase()) ||
+        i.amount.toString().includes(search)
+
+      return matchTab && matchCategory && matchSearch
+    })
+  }, [incomes, categoryFilter, search, activeTab])
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / rowsPerPage))
+
+  const paginatedIncomes = filtered.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  )
+
+  function toggleSelect(id: number) {
+    setSelected(prev =>
+      prev.includes(id)
+        ? prev.filter(item => item !== id)
+        : [...prev, id]
     )
   }
 
-  // Calcular total
-  const totalIngresos = incomes.reduce(
-    (sum, i) => sum + Number(i.amount || 0),
-    0
-  )
+  function toggleAll() {
+    setSelected(
+      selected.length === paginatedIncomes.length
+        ? []
+        : paginatedIncomes.map(income => income.id)
+    )
+  }
+
+  const editingIncome = editingIncomeId
+    ? incomes.find(i => i.id === editingIncomeId)
+    : null
 
   return (
     <Box p="5">
+      <PageHeader
+        title="Ingresos"
+        breadcrumb={['Dashboard', 'Finanzas', 'Ingresos']}
+        actionLabel="Agregar ingreso"
+        onAction={() => setCreateOpen(true)}
+        icon={<Icons.analytics />}
+      />
 
-      {/* Header */}
-      <Flex justify="between" align="center" mb="5">
-        <Box>
-          <Heading size="6">Ingresos</Heading>
-          <Flex align="center" gap="1" mt="1">
-            <Text size="1" color="gray">Dashboard</Text>
-            <Text size="1" color="gray">•</Text>
-            <Text size="1" color="gray">Finanzas</Text>
-            <Text size="1" color="gray">•</Text>
-            <Text size="1">Ingresos</Text>
-          </Flex>
-        </Box>
-        <Button size="2" onClick={handleOpenNew}>
-          <PlusIcon /> Nuevo ingreso
-        </Button>
-      </Flex>
+      <Card mt="4" size="2">
+        <StatusTabs
+          tabs={STATUS_TABS}
+          active={activeTab}
+          counts={counts}
+          onChange={(key) => {
+            setActiveTab(key)
+            setCurrentPage(1)
+          }}
+        />
 
-      {/* Stats */}
-      <Card size="2" mb="5">
-        <Flex direction="column" gap="1">
-          <Text size="2" color="gray">Total de ingresos</Text>
-          <Text size="5" weight="bold" style={{ color: '#10B981' }}>
-            {new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(totalIngresos)}
-          </Text>
-        </Flex>
+        <DataTableHeader
+          dataFilter={categoryFilter}
+          onDataFilterChange={(value) => {
+            setCategoryFilter(value)
+            setCurrentPage(1)
+          }}
+          search={search}
+          onSearchChange={(value) => {
+            setSearch(value)
+            setCurrentPage(1)
+          }}
+          optionsFilters={categories}
+          titleFilters="Todas las categorías"
+        />
+
+        <DataTableToolbar<Income>
+          selectedCount={selected.length}
+          columns={ALL_INCOME_COLUMNS as { key: keyof Income; label: string }[]}
+          visibleColumns={visibleColumns as (keyof Income)[]}
+          onExport={() => exportIncomes(incomes, selected, visibleColumns)}
+          onImport={importIncomes}
+          onToggleColumn={(key) => {
+            setVisibleColumns(prev =>
+              prev.includes(key as ColumnKey)
+                ? prev.filter(column => column !== key)
+                : [...prev, key as ColumnKey]
+            )
+          }}
+        />
+
+        <DataTable
+          data={paginatedIncomes}
+          loading={loading}
+          loadingText="Cargando ingresos..."
+          emptyText="No hay ingresos registrados"
+          selected={selected}
+          onSelect={toggleSelect}
+          onSelectAll={toggleAll}
+          columns={getIncomeColumns(visibleColumns)}
+          actions={(income) => (
+            <TableActions row={income} actions={incomeActions} />
+          )}
+        />
+
+        <DataTablePagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          rowsPerPage={rowsPerPage}
+          totalItems={filtered.length}
+          onPageChange={setCurrentPage}
+          onRowsPerPageChange={(rows) => {
+            setRowsPerPage(rows)
+            setCurrentPage(1)
+          }}
+        />
       </Card>
 
-      {/* Ingresos */}
-      {incomes.length > 0 && (
-        <Box mb="5">
-          <Heading size="4" mb="3">Mis ingresos</Heading>
-          <Grid columns={{ initial: '1', sm: '2', md: '3' }} gap="4">
-            {incomes.map(income => (
-              <IncomeCard
-                key={income.id}
-                income={income}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-              />
-            ))}
-          </Grid>
-        </Box>
-      )}
-
-      {/* Sin ingresos */}
-      {incomes.length === 0 && (
-        <Card size="3" mb="5">
-          <Flex direction="column" align="center" justify="center" py="9" gap="3">
-            <Flex
-              align="center"
-              justify="center"
-              style={{ width: 64, height: 64, borderRadius: '50%', background: 'var(--gray-3)' }}
-            >
-              <Icons.analytics width={28} height={28} style={{ color: 'var(--gray-8)' }} />
-            </Flex>
-            <Box style={{ textAlign: 'center' }}>
-              <Text size="4" weight="bold" style={{ display: 'block', marginBottom: 4 }}>
-                Sin ingresos
-              </Text>
-              <Text size="2" color="gray">
-                Registra tus ingresos para hacer seguimiento
-              </Text>
-            </Box>
-            <Button size="2" onClick={handleOpenNew} mt="2">
-              <PlusIcon /> Agregar ingreso
-            </Button>
-          </Flex>
-        </Card>
-      )}
-
-      {/* Modal */}
-      {userId && (
-        <IncomeModal
-          open={modalOpen}
-          onClose={() => { setModalOpen(false); setEditingIncome(null) }}
-          userId={userId}
-          existing={editingIncome}
-          onSaved={handleSaved}
-        />
-      )}
-
-      {/* Toast */}
       <AppToast
         open={toastOpen}
         onOpenChange={setToastOpen}
         message={toastMessage}
         type={toastType}
       />
+
+      <IncomeModal
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        userId={userId}
+        onSaved={(e) => {
+          setIncomes(prev => [e, ...prev])
+          setCreateOpen(false)
+        }}
+      />
+
+      {editingIncome && (
+        <IncomeModal
+          open={editingIncomeId !== null}
+          onClose={() => setEditingIncomeId(null)}
+          userId={editingIncome.user}
+          existing={editingIncome}
+          onSaved={(e) =>
+            setIncomes(prev =>
+              prev.map(x => x.id === e.id ? e : x)
+            )
+          }
+        />
+      )}
 
     </Box>
   )

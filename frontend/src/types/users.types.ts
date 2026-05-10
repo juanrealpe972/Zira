@@ -12,8 +12,8 @@ export interface User {
   city: string | null
   photo: string | null
   verified: boolean
-  created_at: string
-  is_active: boolean
+  created_at: string  is_active: boolean
+
   is_staff: boolean
   description: string | null
 }

@@ -1,7 +1,7 @@
-import { Expense } from '@/types'
+import { Income } from '@/types'
 
-export function filtersExpenses(
-    users: Expense[],
+export function incomesExpenses(
+    users: Income[],
     activeTab: string,
     expenseFilter: string,
     search: string
@@ -15,11 +15,10 @@ export function filtersExpenses(
                     : !e.is_active
 
         const matchRole =
-            expenseFilter === 'all' || e.type === expenseFilter
+            expenseFilter === 'all' || e.category === expenseFilter
 
         const matchSearch =
             !search ||
-            e.title?.toLowerCase().includes(search.toLowerCase()) ||
             e.category?.toLowerCase().includes(search.toLowerCase()) ||
             e.date?.toLowerCase().includes(search.toLowerCase())
 

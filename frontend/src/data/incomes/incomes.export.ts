@@ -1,4 +1,4 @@
-import { Expense } from '@/types'
+import { Income } from '@/types'
 
 function formatDate(dateStr: string) {
     return new Date(dateStr).toLocaleDateString('es-CO', {
@@ -8,41 +8,35 @@ function formatDate(dateStr: string) {
     })
 }
 
-export function exportExpenses(
-    expenses: Expense[],
+export function exportIncomes(
+    incomes: Income[],
     selected: number[],
     columns: string[]
 ) {
-    const selectedExpenses = expenses.filter(e => selected.includes(e.id))
+    const selectedIncomes = incomes.filter(i => selected.includes(i.id))
 
-    if (selectedExpenses.length === 0) {
-        alert('Selecciona gastos para exportar')
+    if (selectedIncomes.length === 0) {
+        alert('Selecciona ingresos para exportar')
         return
     }
 
     const csv = [
         columns.join(','),
-
-        ...selectedExpenses.map(e =>
+        ...selectedIncomes.map(income =>
             columns.map(col => {
                 switch (col) {
-                    case 'id': return e.id.toString()
-                    case 'user': return e.user.toString()
-                    case 'title': return e.title
-                    case 'amount': return e.amount.toString()
-                    case 'category': return e.category
-                    case 'date': return e.date
-                    case 'description': return e.description
-                    case 'type': return e.type
-                    case 'is_active': return e.is_active ? 'Sí' : 'No'
-                    case 'created_at': return formatDate(e.created_at)
-                    case 'status': return e.is_active ? 'Activo' : 'Inactivo'
-                    case 'description': return e.description
-                    default: return (e as any)[col] ?? ''
+                    case 'id': return income.id.toString()
+                    case 'user': return income.user.toString()
+                    case 'amount': return income.amount.toString()
+                    case 'category': return income.category
+                    case 'date': return income.date
+                    case 'description': return income.description
+                    case 'is_active': return income.is_active ? 'Sí' : 'No'
+                    case 'created_at': return formatDate(income.created_at)
+                    default: return (income as any)[col] ?? ''
                 }
             }).join(',')
-        )
-
+        ),
     ].join('\n')
 
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
@@ -50,30 +44,27 @@ export function exportExpenses(
 
     const a = document.createElement('a')
     a.href = url
-    a.download = 'gastos.csv'
+    a.download = 'ingresos.csv'
     a.click()
 
     URL.revokeObjectURL(url)
 }
 
-export function importExpenses() {
+export function importIncomes() {
     const input = document.createElement('input')
     input.type = 'file'
     input.accept = '.csv'
 
     input.onchange = (e: any) => {
         const file = e.target.files[0]
-
         if (!file) return
 
         const reader = new FileReader()
 
         reader.onload = (event: any) => {
             const text = event.target.result as string
-
             console.log('CSV cargado:')
             console.log(text)
-
             alert('Archivo cargado correctamente (ver consola)')
         }
 

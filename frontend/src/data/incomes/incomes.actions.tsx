@@ -1,18 +1,17 @@
-import { TableAction } from '@/components/common'
+import { Income } from '@/types'
 import { Icons } from '@/components/ui'
-import { Expense } from '@/types'
+import { TableAction } from '@/components/common'
 
-export function getExpenseActions(
+export function getIncomeActions(
   onEdit: (id: number) => void,
-  onToggleStatus: (expense: Expense) => void
-): TableAction<Expense>[] {
+  onToggleStatus: (income: Income) => void
+): TableAction<Income>[] {
   return [
     {
       label: 'Editar',
       icon: <Icons.edit />,
-      onClick: (expense) => onEdit(expense.id),
+      onClick: (income) => onEdit(income.id),
     },
-
     {
       label: 'Inactivar',
       icon: <Icons.security />,
