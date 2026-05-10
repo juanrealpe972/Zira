@@ -1,20 +1,20 @@
 export type Income = {
   id: number
   user: number
-  title: string
+  description: string
   amount: number
   category: string
-  source: string
   date: string
   notes: string
+  is_active: boolean
+  created_at: string
 }
 
 export type IncomeRequest = {
-  user: number
-  title: string
-  amount: number
   category: string
-  source: string
+  amount: number
+  description: string
   date: string
-  notes: string
+  user: number
+  is_active?: boolean
 }

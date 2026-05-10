@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react'
 import { Box, Card } from '@radix-ui/themes'
-import { useRouter, useParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 
 import { TableActions, DataTable, DataTableHeader, DataTablePagination, DataTableToolbar, StatusTabs, PageHeader } from '@/components/common'
 import { ALL_EXPENSES_COLUMNS, ColumnKey, getExpensesColumns, getExpenseActions, exportExpenses, importExpenses } from '@/data/expenses'
@@ -20,7 +20,6 @@ const STATUS_TABS = [
 ] as const
 
 export default function ExpensesListPage() {
-  const router = useRouter()
   const params = useParams()
   const userId = parseInt(params.id as string) || 1
 
@@ -98,10 +97,6 @@ export default function ExpensesListPage() {
     return [...new Set(expenses.map(e => e.category).filter(Boolean))] as string[]
   }, [expenses])
 
-  const types = useMemo(() => {
-    return [...new Set(expenses.map(e => e.type).filter(Boolean))] as string[]
-  }, [expenses])
-
   const counts = useMemo(() => ({
     all: expenses.length,
     active: expenses.filter(e => e.is_active).length,
@@ -155,8 +150,8 @@ export default function ExpensesListPage() {
     )
   }
 
-  const editingExpense = editExpenseId 
-    ? expenses.find(e => e.id === editExpenseId) 
+  const editingExpense = editExpenseId
+    ? expenses.find(e => e.id === editExpenseId)
     : null
 
   return (
@@ -215,6 +210,8 @@ export default function ExpensesListPage() {
         <DataTable
           data={paginated}
           loading={loading}
+          loadingText="Cargando gastos..."
+          emptyText="No hay gastos registrados"
           selected={selected}
           onSelect={toggleSelect}
           onSelectAll={toggleAll}
