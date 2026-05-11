@@ -4,14 +4,12 @@ import { useState, useEffect } from 'react'
 import { Flex, TextField, Select, TextArea } from '@radix-ui/themes'
 import { Icons, FormField, StepModal } from '@/components/ui'
 import { createIncome, updateIncome } from '@/services'
-import { Income, IncomeRequest} from '@/types'
+import { Income, IncomeRequest } from '@/types'
 
 const CATEGORIES = [
     { value: 'salario', label: 'Salario' },
-    { value: 'freelance', label: 'Freelance' },
-    { value: 'inversiones', label: 'Inversiones' },
-    { value: 'bonus', label: 'Bono' },
-    { value: 'otro', label: 'Otro' },
+    { value: 'venta', label: 'Venta' },
+    { value: 'inversion', label: 'Inversión' },
 ]
 
 type Props = {
@@ -27,7 +25,6 @@ const EMPTY = {
     category: '',
     date: '',
     description: '',
-    is_active: '',
 }
 
 type FormErrors = Partial<Record<keyof typeof EMPTY, string>>
@@ -49,7 +46,6 @@ export function IncomeModal({ open, onClose, userId, existing, onSaved }: Props)
                 category: existing.category ?? '',
                 date: existing.date ?? '',
                 description: existing.description ?? '',
-                is_active: String(existing.is_active ?? ''),
             })
         } else if (open) {
             setForm(EMPTY)
@@ -84,8 +80,7 @@ export function IncomeModal({ open, onClose, userId, existing, onSaved }: Props)
                 category: form.category,
                 amount: Number(form.amount),
                 description: form.description,
-                date: form.date,
-                is_active: form.is_active === 'true',
+                date: form.date
             }
             const result = isEdit
                 ? await updateIncome(existing!.id, payload)
@@ -166,6 +161,7 @@ export function IncomeModal({ open, onClose, userId, existing, onSaved }: Props)
                         onChange={e => update('date', e.target.value)}
                         type="date"
                         size="2"
+                        max={new Date().toISOString().split('T')[0]}
                     />
                 </FormField>
 

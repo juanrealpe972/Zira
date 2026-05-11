@@ -30,8 +30,10 @@ export async function createIncome(data: IncomeRequest): Promise<Income> {
     return await apiPost<Income>(`${INCOMES_ENDPOINT}/`, data)
   } catch (error) {
     if (error instanceof ApiError && error.status === 400) {
+      // console.log(error)
       throw new Error('Datos inválidos para crear el ingreso')
     }
+    // console.log(error)
     throw error
   }
 }
