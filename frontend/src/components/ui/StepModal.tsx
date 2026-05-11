@@ -53,9 +53,18 @@ export function StepModal({
                 <Dialog.Title style={{ margin: 0, color: 'white', fontSize: 18 }}>
                   {title}
                 </Dialog.Title>
-                <Text size="1" style={{ color: 'rgba(255,255,255,0.7)', marginTop: 2, display: 'block' }}>
-                  {steps[currentStep]?.description}
-                </Text>
+                <Dialog.Description>
+                  <Text
+                    size="1"
+                    style={{
+                      color: 'rgba(255,255,255,0.7)',
+                      marginTop: 2,
+                      display: 'block'
+                    }}
+                  >
+                    {steps[currentStep]?.description}
+                  </Text>
+                </Dialog.Description>
               </Box>
               <Dialog.Close onClick={onClose}>
                 <Box style={{ cursor: 'pointer', color: 'rgba(255,255,255,0.8)', display: 'flex', padding: 4, borderRadius: 6 }}>

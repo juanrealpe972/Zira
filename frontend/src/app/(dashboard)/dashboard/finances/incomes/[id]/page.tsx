@@ -21,14 +21,13 @@ const STATUS_TABS = [
 
 export default function IncomesPage() {
   const params = useParams()
-  const userId = parseInt(params.id as string) || 0
+  const userId = parseInt(params.id as string) || 1
 
   const [incomes, setIncomes] = useState<Income[]>([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('all')
   const [search, setSearch] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('all')
-  const [typeFilter, setTypeFilter] = useState('all')
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(1)
   const [selected, setSelected] = useState<number[]>([])
