@@ -3,13 +3,13 @@
 import { useEffect, useState, useMemo } from 'react'
 import { Box, Card } from '@radix-ui/themes'
 import { useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 
 import { TableActions, DataTable, DataTableHeader, DataTablePagination, DataTableToolbar, StatusTabs, PageHeader } from '@/components/common'
 import { ALL_USER_COLUMNS, ColumnKey, getUserColumns, getUserActions, exportUsers, importUsers } from '@/data/users'
 import { getUsers, updateUserStatus } from '@/services'
 import { User } from '@/types'
-import { CreateUserModal } from '@/components/users/CreateUserModal'
-import { EditUserModal } from '@/components/users/EditUserModal'
+import { UserModal } from '@/components/users/UserModal'
 import { AppToast, Icons } from '@/components/ui'
 
 const DEFAULT_COLUMNS: ColumnKey[] = ['name', 'phone', 'role', 'status', 'verified']
@@ -22,6 +22,8 @@ const STATUS_TABS = [
 
 export default function UsersListPage() {
   const router = useRouter()
+  const params = useParams()
+  const userId = parseInt(params.id as string) || 1
 
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
@@ -233,22 +235,27 @@ export default function UsersListPage() {
         type={toastType}
       />
 
-      <CreateUserModal
+      <UserModal
         open={createOpen}
         onClose={() => setCreateOpen(false)}
-        onCreated={(u) => setUsers(prev => [u, ...prev])}
+        onSaved={(e) => {
+          setUsers(prev => [e, ...prev])
+          setCreateOpen(false)
+        }}
       />
 
-      <EditUserModal
-        userId={editUserId}
-        open={editUserId !== null}
-        onClose={() => setEditUserId(null)}
-        onUpdated={(u) =>
-          setUsers(prev =>
-            prev.map(x => x.id === u.id ? u : x)
-          )
-        }
-      />
+      {editUserId && (
+        <UserModal
+          open={editUserId !== null}
+          onClose={() => setEditUserId(null)}
+          userId={editUserId}
+          onSaved={(e) =>
+            setUsers(prev =>
+              prev.map(x => x.id === e.id ? e : x)
+            )
+          }
+        />
+      )}
 
     </Box>
   )
